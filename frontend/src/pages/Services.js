@@ -28,15 +28,15 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
 }
 
 const categoryIcons = {
-  "Manicure": "https://images.unsplash.com/photo-1772322586649-fc11154e76b9?crop=entropy&cs=srgb&fm=jpg&w=400&q=80",
-  "Pedicure": "https://images.pexels.com/photos/3997388/pexels-photo-3997388.jpeg?auto=compress&cs=tinysrgb&w=400",
-  "Depilacja laserowa": "https://images.pexels.com/photos/7664093/pexels-photo-7664093.jpeg?auto=compress&cs=tinysrgb&w=400",
-  "Kosmetyka": "https://images.unsplash.com/photo-1674867374000-a0a3178badfc?crop=entropy&cs=srgb&fm=jpg&w=400&q=80",
-  "Zabiegi na twarz": "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&w=400&q=80",
-  "Stylizacja paznokci": "https://images.unsplash.com/photo-1615146038466-ea2f700c5deb?crop=entropy&cs=srgb&fm=jpg&w=400&q=80",
-  "Makijaż": "https://images.pexels.com/photos/4974568/pexels-photo-4974568.jpeg?auto=compress&cs=tinysrgb&w=400",
-  "Modelowanie ciała": "https://images.pexels.com/photos/13068357/pexels-photo-13068357.jpeg?auto=compress&cs=tinysrgb&w=400",
-  "Piercing": "https://images.pexels.com/photos/1654834/pexels-photo-1654834.jpeg?auto=compress&cs=tinysrgb&w=400",
+  "Manicure": "/gallery/1023044393163080.jpg",
+  "Pedicure": "/gallery/834394008694787.jpg",
+  "Depilacja laserowa": "/gallery/1197425395724978.jpg",
+  "Kosmetyka": "/gallery/632346295566227.jpg",
+  "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
+  "Stylizacja paznokci": "/gallery/840030858131102.jpg",
+  "Makijaż": "/gallery/899421005525420.jpg",
+  "Modelowanie ciała": "/gallery/1137041761763342.jpg",
+  "Piercing": "/gallery/722422606558595.jpg",
 };
 
 export default function Services() {
@@ -74,8 +74,7 @@ export default function Services() {
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.pexels.com/photos/7664093/pexels-photo-7664093.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            alt="Usługi"
+            src="/gallery/632346295566227.jpg"
             className="w-full h-full object-cover"
           />
         </div>

@@ -161,15 +161,15 @@ function ServicesPreview() {
   }, []);
 
   const categoryImages = {
-    "Manicure": "https://images.unsplash.com/photo-1772322586649-fc11154e76b9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMG5haWwlMjBhcnQlMjBtYW5pY3VyZSUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzc0NDE4MTA3fDA&ixlib=rb-4.1.0&q=85",
-    "Pedicure": "https://images.pexels.com/photos/3997388/pexels-photo-3997388.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "Depilacja laserowa": "https://images.pexels.com/photos/7664093/pexels-photo-7664093.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "Kosmetyka": "https://images.unsplash.com/photo-1674867374000-a0a3178badfc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHw0fHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85",
-    "Zabiegi na twarz": "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85",
-    "Stylizacja paznokci": "https://images.unsplash.com/photo-1615146038466-ea2f700c5deb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwyfHxiZWF1dHklMjBzYWxvbiUyMG5haWwlMjBhcnQlMjBtYW5pY3VyZSUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzc0NDE4MTA3fDA&ixlib=rb-4.1.0&q=85",
-    "Makijaż": "https://images.pexels.com/photos/4974568/pexels-photo-4974568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "Modelowanie ciała": "https://images.pexels.com/photos/13068357/pexels-photo-13068357.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "Piercing": "https://images.pexels.com/photos/1654834/pexels-photo-1654834.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "Manicure": "/gallery/1023044393163080.jpg",
+    "Pedicure": "/gallery/834394008694787.jpg",
+    "Depilacja laserowa": "/gallery/1197425395724978.jpg",
+    "Kosmetyka": "/gallery/632346295566227.jpg",
+    "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
+    "Stylizacja paznokci": "/gallery/840030858131102.jpg",
+    "Makijaż": "/gallery/899421005525420.jpg",
+    "Modelowanie ciała": "/gallery/1137041761763342.jpg",
+    "Piercing": "/gallery/722422606558595.jpg",
   };
 
   return (
@@ -298,7 +298,7 @@ function CTASection() {
     <section data-testid="cta-section" className="relative py-32 md:py-40 overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="https://images.pexels.com/photos/4974568/pexels-photo-4974568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+          src="/gallery/465318305602361.jpg"
           alt="Salon kosmetyczny"
           className="w-full h-full object-cover"
         />

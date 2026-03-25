@@ -41,8 +41,7 @@ export default function About() {
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.pexels.com/photos/4974568/pexels-photo-4974568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            alt="O nas"
+            src="/gallery/465318305602361.jpg"
             className="w-full h-full object-cover"
           />
         </div>
@@ -71,7 +70,7 @@ export default function About() {
               <div className="relative">
                 <div className="img-zoom">
                   <img
-                    src="https://images.pexels.com/photos/13068357/pexels-photo-13068357.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                    src="/gallery/1023899656410887.jpg"
                     alt="Wnętrze salonu Place of Beauty"
                     className="w-full aspect-[4/5] object-cover"
                     data-testid="about-main-image"
@@ -151,7 +150,7 @@ export default function About() {
               <Card className="service-card rounded-none border-0 overflow-hidden" data-testid="team-member-0">
                 <div className="aspect-[3/4] img-zoom">
                   <img
-                    src="https://images.unsplash.com/photo-1674867374000-a0a3178badfc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHw0fHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85"
+                    src="/gallery/1185245526942965.jpg"
                     alt="Carika - specjalistka"
                     className="w-full h-full object-cover"
                   />

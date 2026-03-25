@@ -43,8 +43,7 @@ export default function Contact() {
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.pexels.com/photos/13068357/pexels-photo-13068357.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            alt="Kontakt"
+            src="/gallery/1080256257441893.jpg"
             className="w-full h-full object-cover"
           />
         </div>

@@ -43,7 +43,7 @@ export default function Gallery() {
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.unsplash.com/photo-1772322586649-fc11154e76b9?crop=entropy&cs=srgb&fm=jpg&w=1200&q=80"
+            src="/gallery/1023044393163080.jpg"
             alt="Galeria"
             className="w-full h-full object-cover"
           />

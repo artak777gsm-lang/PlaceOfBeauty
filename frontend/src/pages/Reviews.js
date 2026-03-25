@@ -37,8 +37,7 @@ export default function Reviews() {
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.pexels.com/photos/1654834/pexels-photo-1654834.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            alt="Opinie"
+            src="/gallery/840030858131102.jpg"
             className="w-full h-full object-cover"
           />
         </div>
