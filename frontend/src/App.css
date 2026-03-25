@@ -1,34 +1,103 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Place of Beauty - Custom Styles */
+
+.hero-gradient {
+    background: linear-gradient(135deg, rgba(28, 25, 23, 0.6) 0%, rgba(28, 25, 23, 0.3) 50%, rgba(180, 155, 103, 0.2) 100%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
+/* Glass header */
+.glass-header {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(250, 250, 249, 0.85);
+    border-bottom: 1px solid rgba(231, 229, 228, 0.5);
+}
+.glass-header-scrolled {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(250, 250, 249, 0.95);
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Parallax */
+.parallax-slow {
+    will-change: transform;
+}
+
+/* Service card hover */
+.service-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* Gold underline */
+.gold-underline {
+    position: relative;
+    display: inline-block;
+}
+.gold-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.gold-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Button fill effect */
+.btn-fill {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.btn-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gold);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: -1;
+}
+.btn-fill:hover::before {
+    transform: translateX(0);
+}
+
+/* Masonry grid */
+.masonry-grid {
+    columns: 3;
+    column-gap: 1rem;
+}
+.masonry-grid > * {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .masonry-grid {
+        columns: 2;
+    }
+}
+@media (max-width: 640px) {
+    .masonry-grid {
+        columns: 1;
     }
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Star rating */
+.star-filled {
+    color: var(--gold);
 }

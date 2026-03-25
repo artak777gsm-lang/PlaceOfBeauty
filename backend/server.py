@@ -6,67 +6,213 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
-
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
 app = FastAPI()
-
-# Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
+# Models
+class Service(BaseModel):
+    model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    category: str
+    name: str
+    description: Optional[str] = ""
+    price: str
+    duration: str
+    image: Optional[str] = ""
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class Review(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    date: str
+    service: str
+    text: str
+    rating: int = 5
 
-# Add your routes to the router instead of directly to app
+class GalleryItem(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    url: str
+    alt: str
+    category: str
+
+class SalonInfo(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str
+    address: str
+    phone: str
+    email: Optional[str] = ""
+    hours: dict
+    rating: float
+    reviews_count: int
+    amenities: List[str]
+    booksy_url: str
+    facebook_url: str
+    description: str
+
+# Seed data
+SERVICES_DATA = [
+    {"category": "Manicure", "name": "Manicure hybrydowe", "price": "120 zł", "duration": "1 godz.", "description": "Profesjonalny manicure z lakierem hybrydowym"},
+    {"category": "Manicure", "name": "Manicure klasyczne bez malowania", "price": "70 zł", "duration": "30 min", "description": "Klasyczna pielęgnacja paznokci"},
+    {"category": "Manicure", "name": "Manicure klasyczne z malowaniem", "price": "80 zł", "duration": "30 min", "description": "Manicure z tradycyjnym lakierem"},
+    {"category": "Manicure", "name": "Manicure męski", "price": "70 zł", "duration": "30 min", "description": "Profesjonalna pielęgnacja dłoni dla mężczyzn"},
+    {"category": "Pedicure", "name": "Pedicure klasyczne z lakierem", "price": "140 zł", "duration": "1 godz.", "description": "Klasyczny pedicure z malowaniem"},
+    {"category": "Pedicure", "name": "Pedicure klasyczny + hybryda", "price": "160 zł", "duration": "1 godz. 10 min", "description": "Pedicure z lakierem hybrydowym"},
+    {"category": "Pedicure", "name": "Pedicure kwasowe + hybryda", "price": "180 zł", "duration": "1 godz. 10 min", "description": "Zabieg kwasowy Mavex z hybryda"},
+    {"category": "Pedicure", "name": "Leczniczy pedicure", "price": "od 150 zł", "duration": "1 godz.", "description": "Zabieg podologiczny dostosowany indywidualnie do stanu stóp"},
+    {"category": "Stylizacja paznokci", "name": "Przedłużanie żelowe", "price": "od 180 zł", "duration": "1 godz. 30 min", "description": "Przedłużenie paznokci metodą żelową"},
+    {"category": "Stylizacja paznokci", "name": "Uzupełnienie żelowe", "price": "150 zł", "duration": "1 godz. 15 min", "description": "Uzupełnienie paznokci metodą żelową"},
+    {"category": "Depilacja laserowa", "name": "Pachy", "price": "200 zł", "duration": "15 min", "description": "Depilacja laserowa Primelase"},
+    {"category": "Depilacja laserowa", "name": "Całe nogi", "price": "550 zł", "duration": "50 min", "description": "Łydki i uda — depilacja laserowa Primelase"},
+    {"category": "Depilacja laserowa", "name": "Bikini płytkie", "price": "220 zł", "duration": "20 min", "description": "Depilacja laserowa Primelase"},
+    {"category": "Depilacja laserowa", "name": "Bikini głębokie", "price": "300 zł", "duration": "30 min", "description": "Depilacja laserowa Primelase"},
+    {"category": "Depilacja laserowa", "name": "Wąsik", "price": "100 zł", "duration": "10 min", "description": "Depilacja laserowa Primelase"},
+    {"category": "Depilacja laserowa", "name": "Nogi + pachy + bikini", "price": "750 zł", "duration": "1 godz. 45 min", "description": "Pakiet — depilacja laserowa Primelase"},
+    {"category": "Kosmetyka", "name": "Henna brwi", "price": "30 zł", "duration": "15 min", "description": "Koloryzacja brwi henną"},
+    {"category": "Kosmetyka", "name": "Henna + regulacja", "price": "40 zł", "duration": "20 min", "description": "Henna z regulacją kształtu brwi"},
+    {"category": "Kosmetyka", "name": "Henna rzęs", "price": "30 zł", "duration": "15 min", "description": "Koloryzacja rzęs henną"},
+    {"category": "Kosmetyka", "name": "Regulacja brwi", "price": "20 zł", "duration": "10 min", "description": "Profesjonalna regulacja brwi"},
+    {"category": "Kosmetyka", "name": "Depilacja wąsika nitką", "price": "15 zł", "duration": "5 min", "description": "Szybka i precyzyjna depilacja nitkowa"},
+    {"category": "Zabiegi na twarz", "name": "Dermaplaning", "price": "Zapytaj o cenę", "duration": "45 min", "description": "Zabieg złuszczający poprawiający wygląd skóry"},
+    {"category": "Zabiegi na twarz", "name": "Oczyszczanie twarzy", "price": "Zapytaj o cenę", "duration": "1 godz.", "description": "Głębokie oczyszczanie twarzy"},
+    {"category": "Zabiegi na twarz", "name": "Zabieg przeciwtrądzikowy", "price": "Zapytaj o cenę", "duration": "1 godz.", "description": "Specjalistyczny zabieg na trądzik"},
+    {"category": "Makijaż", "name": "Makijaż okazjonalny", "price": "Zapytaj o cenę", "duration": "1 godz.", "description": "Profesjonalny makijaż na każdą okazję"},
+    {"category": "Makijaż", "name": "Makijaż ślubny", "price": "Zapytaj o cenę", "duration": "1 godz. 30 min", "description": "Luksusowy makijaż na ślub"},
+    {"category": "Modelowanie ciała", "name": "Elektrostymulacja mięśni EMS", "price": "100 zł", "duration": "30 min", "description": "Technologia HI-EMT — budowanie mięśni i redukcja tkanki tłuszczowej"},
+    {"category": "Piercing", "name": "Przekłuwanie uszu", "price": "od 100 zł", "duration": "10 min", "description": "Profesjonalny piercing uszu"},
+    {"category": "Piercing", "name": "Przekłuwanie nosa", "price": "180 zł", "duration": "10 min", "description": "Profesjonalny piercing nosa"},
+]
+
+REVIEWS_DATA = [
+    {"name": "Katarzyna", "date": "marzec 2026", "service": "Manicure hybrydowe", "text": "Super, bardzo polecam.", "rating": 5},
+    {"name": "Sandra", "date": "luty 2026", "service": "Przekłuwanie uszu", "text": "Córka zadowolona, Pani przemiła. Polecam z całego serca!", "rating": 5},
+    {"name": "Katarzyna", "date": "styczeń 2026", "service": "Manicure hybrydowe", "text": "Super kontakt z klientem, pani bardzo miła, perfekcyjna stylizacja paznokci. Polecam bardzo!", "rating": 5},
+    {"name": "Наталя", "date": "styczeń 2026", "service": "Depilacja laserowa", "text": "Polecam!", "rating": 5},
+    {"name": "Edyta", "date": "grudzień 2025", "service": "Przedłużenie żelowe", "text": "Polecam bardzo!", "rating": 5},
+    {"name": "Paulina", "date": "listopad 2025", "service": "Depilacja laserowa", "text": "Bardzo profesjonalne podejście do Klienta. Super atmosfera i co najważniejsze efekty widoczne już po pierwszym razie.", "rating": 5},
+    {"name": "Izabela", "date": "listopad 2025", "service": "Przekłuwanie uszu", "text": "Polecam!", "rating": 5},
+    {"name": "Elżbieta", "date": "listopad 2025", "service": "Uzupełnienie żelowe + henna", "text": "Pięknie wykonany manicure, duży wybór niespotykanych kolorów lakierów, przemiła atmosfera.", "rating": 5},
+    {"name": "Bożena", "date": "październik 2025", "service": "Manicure hybrydowe", "text": "Miła profesjonalna wizyta. Zawsze dobre rady odnośnie doboru koloru paznokci. Jestem zadowolona i umówiona na kolejną wizytę.", "rating": 5},
+    {"name": "Malwina", "date": "październik 2025", "service": "Uzupełnienie żelowe", "text": "Od pierwszego razu wierna klientka. Paznokietki pięknie i estetycznie wykonane. Polecam p. Carikę!", "rating": 5},
+]
+
+GALLERY_DATA = [
+    {"url": "https://images.unsplash.com/photo-1772322586649-fc11154e76b9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwxfHxiZWF1dHklMjBzYWxvbiUyMG5haWwlMjBhcnQlMjBtYW5pY3VyZSUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzc0NDE4MTA3fDA&ixlib=rb-4.1.0&q=85", "alt": "Stylizacja paznokci - różowy manicure", "category": "Paznokcie"},
+    {"url": "https://images.unsplash.com/photo-1720086196723-a1e0656a90a5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwzfHxiZWF1dHklMjBzYWxvbiUyMG5haWwlMjBhcnQlMjBtYW5pY3VyZSUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzc0NDE4MTA3fDA&ixlib=rb-4.1.0&q=85", "alt": "Elegancki manicure", "category": "Paznokcie"},
+    {"url": "https://images.unsplash.com/photo-1672815554809-37e355eddd24?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHw0fHxiZWF1dHklMjBzYWxvbiUyMG5haWwlMjBhcnQlMjBtYW5pY3VyZSUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzc0NDE4MTA3fDA&ixlib=rb-4.1.0&q=85", "alt": "Delikatne paznokcie", "category": "Paznokcie"},
+    {"url": "https://images.pexels.com/photos/3997388/pexels-photo-3997388.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "alt": "Czerwony manicure klasyczny", "category": "Paznokcie"},
+    {"url": "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "alt": "Aplikacja lakieru", "category": "Paznokcie"},
+    {"url": "https://images.pexels.com/photos/13068357/pexels-photo-13068357.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "alt": "Wnętrze salonu", "category": "Salon"},
+    {"url": "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85", "alt": "Zabieg na twarz", "category": "Zabiegi"},
+    {"url": "https://images.unsplash.com/photo-1674867374000-a0a3178badfc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHw0fHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85", "alt": "Pielęgnacja twarzy", "category": "Zabiegi"},
+    {"url": "https://images.pexels.com/photos/7664093/pexels-photo-7664093.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "alt": "Luksusowy manicure", "category": "Paznokcie"},
+    {"url": "https://images.pexels.com/photos/1654834/pexels-photo-1654834.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "alt": "Salon fryzjerski", "category": "Salon"},
+    {"url": "https://images.unsplash.com/photo-1615146038466-ea2f700c5deb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwyfHxiZWF1dHklMjBzYWxvbiUyMG5haWwlMjBhcnQlMjBtYW5pY3VyZSUyMGNsb3NlJTIwdXB8ZW58MHx8fHwxNzc0NDE4MTA3fDA&ixlib=rb-4.1.0&q=85", "alt": "Stylizacja paznokci", "category": "Paznokcie"},
+    {"url": "https://images.pexels.com/photos/4974568/pexels-photo-4974568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "alt": "Nowoczesny salon kosmetyczny", "category": "Salon"},
+]
+
+SALON_INFO = {
+    "name": "Place of Beauty",
+    "address": "Garbarska 17/2, 05-825 Grodzisk Mazowiecki",
+    "phone": "+48 881 777 437",
+    "email": "",
+    "hours": {
+        "Poniedziałek": "9:00 - 20:00",
+        "Wtorek": "9:00 - 20:00",
+        "Środa": "9:00 - 20:00",
+        "Czwartek": "9:00 - 20:00",
+        "Piątek": "9:00 - 20:00",
+        "Sobota": "9:00 - 20:00",
+        "Niedziela": "Zamknięte"
+    },
+    "rating": 4.9,
+    "reviews_count": 272,
+    "amenities": ["Parking", "Akceptacja kart płatniczych", "Zwierzęta dozwolone", "Przyjazne dla dzieci"],
+    "booksy_url": "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki",
+    "facebook_url": "https://www.facebook.com/placeofbeauty",
+    "description": "Place of Beauty to salon kosmetyczny w Grodzisku Mazowieckim, oferujący szeroką gamę profesjonalnych zabiegów pielęgnacyjnych. Nasz zespół specjalistów zadba o Twoje piękno i dobre samopoczucie w przyjaznej, luksusowej atmosferze."
+}
+
+async def seed_data():
+    svc_count = await db.services.count_documents({})
+    if svc_count == 0:
+        for s in SERVICES_DATA:
+            svc = Service(**s)
+            doc = svc.model_dump()
+            await db.services.insert_one(doc)
+        logging.info("Seeded services data")
+
+    rev_count = await db.reviews.count_documents({})
+    if rev_count == 0:
+        for r in REVIEWS_DATA:
+            rev = Review(**r)
+            doc = rev.model_dump()
+            await db.reviews.insert_one(doc)
+        logging.info("Seeded reviews data")
+
+    gal_count = await db.gallery.count_documents({})
+    if gal_count == 0:
+        for g in GALLERY_DATA:
+            gal = GalleryItem(**g)
+            doc = gal.model_dump()
+            await db.gallery.insert_one(doc)
+        logging.info("Seeded gallery data")
+
+    info_count = await db.salon_info.count_documents({})
+    if info_count == 0:
+        await db.salon_info.insert_one(SALON_INFO)
+        logging.info("Seeded salon info")
+
+@app.on_event("startup")
+async def startup():
+    await seed_data()
+
+# Routes
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Place of Beauty API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
+@api_router.get("/services", response_model=List[Service])
+async def get_services():
+    services = await db.services.find({}, {"_id": 0}).to_list(1000)
+    return services
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.get("/services/{category}")
+async def get_services_by_category(category: str):
+    services = await db.services.find({"category": category}, {"_id": 0}).to_list(1000)
+    return services
 
-# Include the router in the main app
+@api_router.get("/reviews", response_model=List[Review])
+async def get_reviews():
+    reviews = await db.reviews.find({}, {"_id": 0}).to_list(1000)
+    return reviews
+
+@api_router.get("/gallery", response_model=List[GalleryItem])
+async def get_gallery():
+    items = await db.gallery.find({}, {"_id": 0}).to_list(1000)
+    return items
+
+@api_router.get("/salon-info")
+async def get_salon_info():
+    info = await db.salon_info.find_one({}, {"_id": 0})
+    return info
+
+@api_router.get("/categories")
+async def get_categories():
+    categories = await db.services.distinct("category")
+    return categories
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -77,7 +223,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
