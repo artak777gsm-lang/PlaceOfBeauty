@@ -1,0 +1,167 @@
+{
+  "identity": {
+    "persona": "E1 - The Anti-AI Designer",
+    "mission": "Create a maximally modern, luxurious beauty salon website that breaks generic templates. Focus on emotion, intimacy (close-ups), and premium aesthetics.",
+    "emotional_tone": "Luxurious, Intimate, Professional, Serene, High-End",
+    "archetype": "Jewel & Luxury (Adapted to Light Theme)"
+  },
+  "theme_strategy": {
+    "mode": "light",
+    "background_base": "bg-stone-50",
+    "foreground_base": "text-stone-900",
+    "accent_primary": "text-yellow-700",
+    "description": "A sophisticated light theme using warm stone/bone shades, deep charcoal for contrast, and metallic gold accents. Avoids sterile white. Uses textures like grain or marble hints."
+  },
+  "typography": {
+    "headings": {
+      "family": "Playfair Display, serif",
+      "weights": ["400", "600", "700"],
+      "usage": "All section titles, hero text. Use italic variants for emphasis words.",
+      "letter_spacing": "tracking-tight"
+    },
+    "body": {
+      "family": "Manrope, sans-serif",
+      "weights": ["300", "400", "500"],
+      "usage": "Paragraphs, UI elements, navigation.",
+      "letter_spacing": "tracking-wide"
+    },
+    "labels": {
+      "family": "Manrope, sans-serif",
+      "transform": "uppercase",
+      "letter_spacing": "tracking-[0.2em]",
+      "size": "text-xs"
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": "#fafaf9",
+      "foreground": "#1c1917",
+      "primary": "#1c1917",
+      "secondary": "#e7e5e4",
+      "accent": "#b49b67",
+      "accent_hover": "#9ca3af",
+      "muted": "#f5f5f4",
+      "border": "#e7e5e4"
+    },
+    "tailwind_map": {
+      "bg-page": "bg-stone-50",
+      "text-main": "text-stone-900",
+      "text-muted": "text-stone-500",
+      "bg-card": "bg-white",
+      "border-subtle": "border-stone-200",
+      "text-gold": "text-yellow-700",
+      "bg-gold": "bg-[#b49b67]"
+    }
+  },
+  "visual_enhancers": {
+    "textures": "Use subtle noise/grain overlays on backgrounds to avoid digital flatness.",
+    "shadows": "Soft, diffuse ambient shadows (shadow-xl) for floating elements. No hard drop shadows.",
+    "borders": "1px solid border-stone-200 for cards. Use 'Tracing Beam' effect on hover for service cards.",
+    "glassmorphism": "Use backdrop-blur-md with bg-white/70 for sticky headers and overlays.",
+    "animations": {
+      "scroll": "Lenis smooth scroll mandatory.",
+      "reveal": "Staggered fade-up for text and images.",
+      "parallax": "Parallax effect on hero images and section dividers.",
+      "micro": "Slow zoom on images on hover. Button fill animation on hover."
+    }
+  },
+  "layout_strategies": {
+    "grid_system": "Bento Grid (Mode A) for Service Catalog and Gallery. Asymmetrical layouts.",
+    "spacing": "Generous. py-24 or py-32 for section vertical spacing. gap-8 or gap-12 for grids.",
+    "container": "container mx-auto px-4 md:px-8 max-w-7xl",
+    "mobile": "Stack columns, ensure touch targets are large (min 44px). Images max-h-[80vh]."
+  },
+  "components": {
+    "navbar": {
+      "style": "Floating glass header.",
+      "items": ["Strona główna", "Usługi", "O nas", "Galeria", "Opinie", "Kontakt"],
+      "cta": "Booksy Button (Gold outline or Solid Gold)"
+    },
+    "hero": {
+      "type": "Immersive Split or Full Background",
+      "content": "High-impact beauty shot (face/skin). Large Serif Headline (Polish). 'Umów wizytę' CTA.",
+      "polish_text": {
+        "headline": "Piękno, na które zasługujesz",
+        "subheadline": "Odkryj luksusową pielęgnację w sercu Grodziska Mazowieckiego.",
+        "cta": "Umów wizytę na Booksy"
+      }
+    },
+    "services": {
+      "style": "Bento Grid or Accordion List with Hover Image Reveal.",
+      "categories": [
+        "Kosmetyka", "Manicure", "Pedicure", "Depilacja laserowa", 
+        "Stylizacja paznokci", "Modelowanie ciała EMS", "Makijaż", "Zabiegi na twarz"
+      ]
+    },
+    "testimonials": {
+      "style": "Infinite Marquee or Large Swipeable Cards.",
+      "source": "Booksy Reviews (4.9 rating)"
+    },
+    "gallery": {
+      "style": "Masonry Grid with Lightbox.",
+      "content": "Mix of interior, nail art, and treatment shots."
+    },
+    "contact": {
+      "style": "Minimalist Layout with Map integration.",
+      "info": {
+        "address": "Garbarska 17/2, 05-825 Grodzisk Mazowiecki",
+        "phone": "+48 881 777 437",
+        "hours": "Pon-Sob 9:00-20:00, Nd Zamknięte"
+      }
+    },
+    "footer": {
+      "style": "Large typography footer.",
+      "bg": "bg-stone-900 text-stone-50"
+    }
+  },
+  "images": {
+    "hero_main": {
+      "url": "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Woman with glowing skin close up",
+      "category": "hero"
+    },
+    "salon_interior": {
+      "url": "https://images.pexels.com/photos/4974568/pexels-photo-4974568.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Modern beauty salon interior",
+      "category": "about"
+    },
+    "service_nails": {
+      "url": "https://images.pexels.com/photos/7664093/pexels-photo-7664093.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Luxury manicure art",
+      "category": "services"
+    },
+    "service_laser": {
+      "url": "https://images.pexels.com/photos/35103885/pexels-photo-35103885.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Laser hair removal treatment",
+      "category": "services"
+    },
+    "service_face": {
+      "url": "https://images.unsplash.com/photo-1674867374000-a0a3178badfc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHw0fHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Facial treatment close up",
+      "category": "services"
+    }
+  },
+  "tech_stack": {
+    "framework": "React (Vite)",
+    "styling": "Tailwind CSS",
+    "icons": "Lucide React, Phosphor Icons (for elegance)",
+    "motion": "Framer Motion, Lenis Scroll",
+    "ui_lib": "Shadcn UI (Customized)"
+  },
+  "universal_guidelines": [
+    "Do not use gradients for text.",
+    "Ensure 4.5:1 contrast ratio for body text.",
+    "Use 'data-testid' on all interactive elements.",
+    "Do not center text by default; use asymmetry.",
+    "Use 'sonner' for toasts.",
+    "Images must be high quality and not distorted."
+  ],
+  "instructions_to_main_agent": {
+    "step_1": "Install 'lucide-react', 'framer-motion', '@studio-freight/react-lenis', 'clsx', 'tailwind-merge'.",
+    "step_2": "Setup Tailwind config with the 'Stone' and 'Gold' palette.",
+    "step_3": "Create a 'Layout' component that includes the Navbar and Footer.",
+    "step_4": "Build the Landing Page (Home) with Hero, Services Preview, Reviews, and Map.",
+    "step_5": "Create dedicated pages for Services, Gallery, About, Contact.",
+    "step_6": "Ensure the Booksy link (https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki) is used for all 'Book Now' buttons."
+  }
+}
