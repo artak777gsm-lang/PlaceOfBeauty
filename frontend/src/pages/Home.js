@@ -26,16 +26,22 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
   );
 }
 
-function Hero() {
+function Hero({ content }) {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 600], [0, 150]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+
+  const heroImage = content?.hero_image || "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85";
+  const heroSubtitle = content?.hero_subtitle || "Salon kosmetyczny \u2022 Grodzisk Mazowiecki";
+  const heroTitle = content?.hero_title || "Piękno, na które";
+  const heroTitleAccent = content?.hero_title_accent || "zasługujesz";
+  const heroDesc = content?.hero_description || "Odkryj profesjonalną pielęgnację i luksusowe zabiegi w sercu Grodziska Mazowieckiego.";
 
   return (
     <section data-testid="hero-section" className="relative h-[100vh] min-h-[600px] overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85"
+          src={heroImage}
           alt="Place of Beauty - salon kosmetyczny"
           className="w-full h-full object-cover scale-105"
         />
@@ -55,7 +61,7 @@ function Hero() {
               className="mb-4"
             >
               <span className="font-body text-xs uppercase tracking-[0.3em] text-white/70">
-                Salon kosmetyczny &bull; Grodzisk Mazowiecki
+                {heroSubtitle}
               </span>
             </motion.div>
 
@@ -65,7 +71,7 @@ function Hero() {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="font-heading text-4xl sm:text-5xl lg:text-6xl text-white font-semibold leading-tight mb-6"
             >
-              Piękno, na które <span className="italic text-gold-light">zasługujesz</span>
+              {heroTitle} <span className="italic text-gold-light">{heroTitleAccent}</span>
             </motion.h1>
 
             <motion.p
@@ -74,7 +80,7 @@ function Hero() {
               transition={{ duration: 0.8, delay: 0.7 }}
               className="font-body text-base md:text-lg text-white/80 mb-10 max-w-lg leading-relaxed"
             >
-              Odkryj profesjonalną pielęgnację i luksusowe zabiegi w sercu Grodziska Mazowieckiego.
+              {heroDesc}
             </motion.p>
 
             <motion.div
@@ -118,19 +124,20 @@ function Hero() {
 }
 
 const featureIcons = [Sparkles, Scissors, Heart];
-const features = [
+const defaultFeatures = [
   { title: "Profesjonalizm", desc: "Zespół doświadczonych specjalistów" },
   { title: "Szeroka oferta", desc: "Od manicure po depilację laserową" },
   { title: "Zadowolenie klientów", desc: "Ocena 4.9 na podstawie 272 opinii" },
 ];
 
-function FeaturesBar() {
+function FeaturesBar({ content }) {
+  const features = content?.features || defaultFeatures;
   return (
     <section data-testid="features-section" className="bg-stone-900 py-12 md:py-16">
       <div className="container mx-auto px-4 md:px-8 max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((f, i) => {
-            const Icon = featureIcons[i];
+            const Icon = featureIcons[i] || Sparkles;
             return (
               <AnimatedSection key={i} delay={i * 0.1}>
                 <div className="flex items-start gap-4" data-testid={`feature-${i}`}>
@@ -293,12 +300,18 @@ function ReviewsPreview() {
   );
 }
 
-function CTASection() {
+function CTASection({ content }) {
+  const ctaImage = content?.cta_image || "/gallery/465318305602361.jpg";
+  const ctaSubtitle = content?.cta_subtitle || "Zarezerwuj wizytę";
+  const ctaTitle = content?.cta_title || "Zadbaj o siebie";
+  const ctaTitleAccent = content?.cta_title_accent || "już dziś";
+  const ctaDesc = content?.cta_description || "Umów się na wizytę online przez Booksy i doświadcz profesjonalnej pielęgnacji.";
+
   return (
     <section data-testid="cta-section" className="relative py-32 md:py-40 overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="/gallery/465318305602361.jpg"
+          src={ctaImage}
           alt="Salon kosmetyczny"
           className="w-full h-full object-cover"
         />
@@ -307,12 +320,12 @@ function CTASection() {
 
       <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl text-center">
         <AnimatedSection>
-          <span className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-6 block">Zarezerwuj wizytę</span>
+          <span className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-6 block">{ctaSubtitle}</span>
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-white font-semibold mb-6 max-w-3xl mx-auto leading-tight">
-            Zadbaj o siebie <span className="italic">już dziś</span>
+            {ctaTitle} <span className="italic">{ctaTitleAccent}</span>
           </h2>
           <p className="font-body text-base text-white/70 mb-10 max-w-lg mx-auto">
-            Umów się na wizytę online przez Booksy i doświadcz profesjonalnej pielęgnacji.
+            {ctaDesc}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-booksy-btn">
@@ -381,13 +394,18 @@ function InfoBar() {
 }
 
 export default function Home() {
+  const [content, setContent] = useState(null);
+  useEffect(() => {
+    axios.get(`${API}/homepage`).then((r) => setContent(r.data)).catch(() => {});
+  }, []);
+
   return (
     <div data-testid="home-page">
-      <Hero />
-      <FeaturesBar />
+      <Hero content={content} />
+      <FeaturesBar content={content} />
       <ServicesPreview />
       <ReviewsPreview />
-      <CTASection />
+      <CTASection content={content} />
       <InfoBar />
     </div>
   );

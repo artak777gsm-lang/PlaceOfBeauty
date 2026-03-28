@@ -66,6 +66,20 @@ class GalleryItem(BaseModel):
     alt: str
     category: str
 
+class HomepageContent(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    hero_image: str
+    hero_subtitle: str
+    hero_title: str
+    hero_title_accent: str
+    hero_description: str
+    features: List[dict]
+    cta_image: str
+    cta_subtitle: str
+    cta_title: str
+    cta_title_accent: str
+    cta_description: str
+
 class SalonInfo(BaseModel):
     model_config = ConfigDict(extra="ignore")
     name: str
@@ -179,6 +193,24 @@ SALON_INFO = {
     "description": "Place of Beauty to salon kosmetyczny w Grodzisku Mazowieckim, oferujący szeroką gamę profesjonalnych zabiegów pielęgnacyjnych. Nasz zespół specjalistów zadba o Twoje piękno i dobre samopoczucie w przyjaznej, luksusowej atmosferze."
 }
 
+HOMEPAGE_DATA = {
+    "hero_image": "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85",
+    "hero_subtitle": "Salon kosmetyczny \u2022 Grodzisk Mazowiecki",
+    "hero_title": "Piękno, na które",
+    "hero_title_accent": "zasługujesz",
+    "hero_description": "Odkryj profesjonalną pielęgnację i luksusowe zabiegi w sercu Grodziska Mazowieckiego.",
+    "features": [
+        {"title": "Profesjonalizm", "desc": "Zespół doświadczonych specjalistów"},
+        {"title": "Szeroka oferta", "desc": "Od manicure po depilację laserową"},
+        {"title": "Zadowolenie klientów", "desc": "Ocena 4.9 na podstawie 272 opinii"},
+    ],
+    "cta_image": "/gallery/465318305602361.jpg",
+    "cta_subtitle": "Zarezerwuj wizytę",
+    "cta_title": "Zadbaj o siebie",
+    "cta_title_accent": "już dziś",
+    "cta_description": "Umów się na wizytę online przez Booksy i doświadcz profesjonalnej pielęgnacji.",
+}
+
 async def seed_data():
     svc_count = await db.services.count_documents({})
     if svc_count == 0:
@@ -208,6 +240,11 @@ async def seed_data():
     if info_count == 0:
         await db.salon_info.insert_one(SALON_INFO)
         logging.info("Seeded salon info")
+
+    hp_count = await db.homepage.count_documents({})
+    if hp_count == 0:
+        await db.homepage.insert_one(HOMEPAGE_DATA)
+        logging.info("Seeded homepage data")
 
 @app.on_event("startup")
 async def startup():
@@ -243,6 +280,11 @@ async def get_gallery():
 async def get_salon_info():
     info = await db.salon_info.find_one({}, {"_id": 0})
     return info
+
+@api_router.get("/homepage")
+async def get_homepage():
+    data = await db.homepage.find_one({}, {"_id": 0})
+    return data
 
 @api_router.get("/categories")
 async def get_categories():
@@ -342,6 +384,13 @@ async def upload_image(file: UploadFile = File(...), user: str = Depends(verify_
 async def update_salon_info(info: SalonInfo, user: str = Depends(verify_admin)):
     doc = info.model_dump()
     await db.salon_info.replace_one({}, doc, upsert=True)
+    return doc
+
+# --- Homepage update ---
+@api_router.put("/admin/homepage")
+async def update_homepage(content: HomepageContent, user: str = Depends(verify_admin)):
+    doc = content.model_dump()
+    await db.homepage.replace_one({}, doc, upsert=True)
     return doc
 
 # ==================== APP SETUP ====================

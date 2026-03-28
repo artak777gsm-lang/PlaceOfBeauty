@@ -21,6 +21,7 @@ echo "==========================================="
 echo ""
 
 cd "$APP_DIR"
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
 
 # Pull latest
 log "Загрузка обновлений..."

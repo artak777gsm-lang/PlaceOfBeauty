@@ -14,6 +14,7 @@ function Admin() {
   const [reviews, setReviews] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [salonInfo, setSalonInfo] = useState(null);
+  const [homepage, setHomepage] = useState(null);
 
   const [editItem, setEditItem] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -42,16 +43,18 @@ function Admin() {
   const loadData = useCallback(async () => {
     if (!auth) return;
     try {
-      const [svc, rev, gal, info] = await Promise.all([
+      const [svc, rev, gal, info, hp] = await Promise.all([
         axios.get(`${API}/api/services`),
         axios.get(`${API}/api/reviews`),
         axios.get(`${API}/api/gallery`),
         axios.get(`${API}/api/salon-info`),
+        axios.get(`${API}/api/homepage`),
       ]);
       setServices(svc.data);
       setReviews(rev.data);
       setGallery(gal.data);
       setSalonInfo(info.data);
+      setHomepage(hp.data);
     } catch (err) {
       console.error("Load error:", err);
     }
@@ -167,6 +170,28 @@ function Admin() {
     setSaving(false);
   };
 
+  // --- HOMEPAGE ---
+  const saveHomepage = async (data) => {
+    setSaving(true);
+    try {
+      await axios.put(`${API}/api/admin/homepage`, data, { headers });
+      showMsg("Strona główna zapisana");
+      await loadData();
+    } catch (err) {
+      showMsg("Błąd: " + (err.response?.data?.detail || err.message));
+    }
+    setSaving(false);
+  };
+
+  const uploadHomepageImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await axios.post(`${API}/api/admin/upload`, formData, {
+      headers: { ...headers, "Content-Type": "multipart/form-data" },
+    });
+    return res.data.url;
+  };
+
   // ==================== LOGIN SCREEN ====================
   if (!auth) {
     return (
@@ -198,6 +223,7 @@ function Admin() {
       {/* Tabs */}
       <div style={styles.tabs}>
         {[
+          ["homepage", "Strona główna"],
           ["services", "Usługi"],
           ["reviews", "Opinie"],
           ["gallery", "Galeria"],
@@ -253,6 +279,9 @@ function Admin() {
         )}
         {tab === "salon" && salonInfo && (
           <SalonTab info={salonInfo} saving={saving} onSave={saveSalonInfo} />
+        )}
+        {tab === "homepage" && homepage && (
+          <HomepageTab content={homepage} saving={saving} onSave={saveHomepage} onUpload={uploadHomepageImage} />
         )}
       </div>
     </div>
@@ -565,6 +594,135 @@ function SalonTab({ info, saving, onSave }) {
             {saving ? "Zapisywanie..." : "Zapisz zmiany"}
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ==================== HOMEPAGE TAB ====================
+function HomepageTab({ content, saving, onSave, onUpload }) {
+  const [form, setForm] = useState({ ...content });
+  const [heroPreview, setHeroPreview] = useState(content?.hero_image || "");
+  const [ctaPreview, setCtaPreview] = useState(content?.cta_image || "");
+  const [heroFile, setHeroFile] = useState(null);
+  const [ctaFile, setCtaFile] = useState(null);
+
+  const set = (k, v) => setForm({ ...form, [k]: v });
+  const setFeature = (idx, key, val) => {
+    const newFeatures = [...form.features];
+    newFeatures[idx] = { ...newFeatures[idx], [key]: val };
+    setForm({ ...form, features: newFeatures });
+  };
+
+  const handleHeroFile = (e) => {
+    const f = e.target.files[0];
+    if (f) { setHeroFile(f); setHeroPreview(URL.createObjectURL(f)); }
+  };
+  const handleCtaFile = (e) => {
+    const f = e.target.files[0];
+    if (f) { setCtaFile(f); setCtaPreview(URL.createObjectURL(f)); }
+  };
+
+  const handleSave = async () => {
+    let data = { ...form };
+    if (heroFile) {
+      data.hero_image = await onUpload(heroFile);
+    }
+    if (ctaFile) {
+      data.cta_image = await onUpload(ctaFile);
+    }
+    onSave(data);
+  };
+
+  return (
+    <div>
+      <h2 style={styles.sectionTitle}>Strona główna</h2>
+
+      {/* Hero Section */}
+      <div style={styles.formCard}>
+        <h3 style={styles.formTitle}>Sekcja Hero (baner główny)</h3>
+        <div style={styles.formGrid}>
+          <div style={{ gridColumn: "1/-1" }}>
+            <label style={styles.label}>Zdjęcie główne</label>
+            <input type="file" accept="image/*" onChange={handleHeroFile} style={styles.input} />
+            {heroPreview && (
+              <img src={heroPreview} alt="Hero preview" style={{ maxHeight: 200, marginTop: 8, borderRadius: 8, width: "100%", objectFit: "cover" }} />
+            )}
+            <p style={{ fontSize: 11, color: "#a8a29e", marginTop: 4 }}>
+              Lub wставьте URL:
+            </p>
+            <input style={styles.input} value={form.hero_image} onChange={e => set("hero_image", e.target.value)} placeholder="https://..." />
+          </div>
+          <div>
+            <label style={styles.label}>Подзаголовок (над заголовком)</label>
+            <input style={styles.input} value={form.hero_subtitle} onChange={e => set("hero_subtitle", e.target.value)} />
+          </div>
+          <div>
+            <label style={styles.label}>Заголовок (основной текст)</label>
+            <input style={styles.input} value={form.hero_title} onChange={e => set("hero_title", e.target.value)} />
+          </div>
+          <div>
+            <label style={styles.label}>Акцентное слово (курсивом)</label>
+            <input style={styles.input} value={form.hero_title_accent} onChange={e => set("hero_title_accent", e.target.value)} />
+          </div>
+          <div style={{ gridColumn: "1/-1" }}>
+            <label style={styles.label}>Описание</label>
+            <textarea style={{ ...styles.input, minHeight: 60 }} value={form.hero_description} onChange={e => set("hero_description", e.target.value)} />
+          </div>
+        </div>
+      </div>
+
+      {/* Features */}
+      <div style={styles.formCard}>
+        <h3 style={styles.formTitle}>Преимущества (3 блока под баннером)</h3>
+        {form.features?.map((f, i) => (
+          <div key={i} style={{ ...styles.formGrid, marginBottom: 12 }}>
+            <div>
+              <label style={styles.label}>Заголовок {i + 1}</label>
+              <input style={styles.input} value={f.title} onChange={e => setFeature(i, "title", e.target.value)} />
+            </div>
+            <div>
+              <label style={styles.label}>Описание {i + 1}</label>
+              <input style={styles.input} value={f.desc} onChange={e => setFeature(i, "desc", e.target.value)} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA Section */}
+      <div style={styles.formCard}>
+        <h3 style={styles.formTitle}>Секция "Запишись" (CTA)</h3>
+        <div style={styles.formGrid}>
+          <div style={{ gridColumn: "1/-1" }}>
+            <label style={styles.label}>Фоновое фото</label>
+            <input type="file" accept="image/*" onChange={handleCtaFile} style={styles.input} />
+            {ctaPreview && (
+              <img src={ctaPreview} alt="CTA preview" style={{ maxHeight: 150, marginTop: 8, borderRadius: 8, width: "100%", objectFit: "cover" }} />
+            )}
+          </div>
+          <div>
+            <label style={styles.label}>Подзаголовок</label>
+            <input style={styles.input} value={form.cta_subtitle} onChange={e => set("cta_subtitle", e.target.value)} />
+          </div>
+          <div>
+            <label style={styles.label}>Заголовок</label>
+            <input style={styles.input} value={form.cta_title} onChange={e => set("cta_title", e.target.value)} />
+          </div>
+          <div>
+            <label style={styles.label}>Акцентное слово</label>
+            <input style={styles.input} value={form.cta_title_accent} onChange={e => set("cta_title_accent", e.target.value)} />
+          </div>
+          <div style={{ gridColumn: "1/-1" }}>
+            <label style={styles.label}>Описание</label>
+            <textarea style={{ ...styles.input, minHeight: 60 }} value={form.cta_description} onChange={e => set("cta_description", e.target.value)} />
+          </div>
+        </div>
+      </div>
+
+      <div style={styles.formActions}>
+        <button style={styles.btnPrimary} disabled={saving} onClick={handleSave}>
+          {saving ? "Сохранение..." : "Сохранить изменения"}
+        </button>
       </div>
     </div>
   );
