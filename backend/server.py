@@ -1,9 +1,13 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import secrets
+import shutil
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
@@ -19,6 +23,21 @@ db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+security = HTTPBasic()
+
+ADMIN_USER = os.environ.get('ADMIN_USER', 'admin')
+ADMIN_PASS = os.environ.get('ADMIN_PASS', 'placeofbeauty2026')
+
+# Upload directory for gallery images
+UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/var/www/placeof.beauty/frontend/build/gallery'))
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_user = secrets.compare_digest(credentials.username, ADMIN_USER)
+    correct_pass = secrets.compare_digest(credentials.password, ADMIN_PASS)
+    if not (correct_user and correct_pass):
+        raise HTTPException(status_code=401, detail="Nieprawidłowy login lub hasło", headers={"WWW-Authenticate": "Basic"})
+    return credentials.username
 
 # Models
 class Service(BaseModel):
@@ -194,7 +213,8 @@ async def seed_data():
 async def startup():
     await seed_data()
 
-# Routes
+# ==================== PUBLIC ROUTES ====================
+
 @api_router.get("/")
 async def root():
     return {"message": "Place of Beauty API"}
@@ -228,6 +248,103 @@ async def get_salon_info():
 async def get_categories():
     categories = await db.services.distinct("category")
     return categories
+
+# ==================== ADMIN ROUTES ====================
+
+# Auth check
+@api_router.get("/admin/me")
+async def admin_me(user: str = Depends(verify_admin)):
+    return {"user": user}
+
+# --- Services CRUD ---
+@api_router.post("/admin/services")
+async def create_service(service: Service, user: str = Depends(verify_admin)):
+    doc = service.model_dump()
+    await db.services.insert_one(doc)
+    return doc
+
+@api_router.put("/admin/services/{service_id}")
+async def update_service(service_id: str, service: Service, user: str = Depends(verify_admin)):
+    doc = service.model_dump()
+    doc["id"] = service_id
+    result = await db.services.replace_one({"id": service_id}, doc)
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Usługa nie znaleziona")
+    return doc
+
+@api_router.delete("/admin/services/{service_id}")
+async def delete_service(service_id: str, user: str = Depends(verify_admin)):
+    result = await db.services.delete_one({"id": service_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Usługa nie znaleziona")
+    return {"ok": True}
+
+# --- Reviews CRUD ---
+@api_router.post("/admin/reviews")
+async def create_review(review: Review, user: str = Depends(verify_admin)):
+    doc = review.model_dump()
+    await db.reviews.insert_one(doc)
+    return doc
+
+@api_router.put("/admin/reviews/{review_id}")
+async def update_review(review_id: str, review: Review, user: str = Depends(verify_admin)):
+    doc = review.model_dump()
+    doc["id"] = review_id
+    result = await db.reviews.replace_one({"id": review_id}, doc)
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Opinia nie znaleziona")
+    return doc
+
+@api_router.delete("/admin/reviews/{review_id}")
+async def delete_review(review_id: str, user: str = Depends(verify_admin)):
+    result = await db.reviews.delete_one({"id": review_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Opinia nie znaleziona")
+    return {"ok": True}
+
+# --- Gallery CRUD ---
+@api_router.post("/admin/gallery")
+async def create_gallery_item(item: GalleryItem, user: str = Depends(verify_admin)):
+    doc = item.model_dump()
+    await db.gallery.insert_one(doc)
+    return doc
+
+@api_router.put("/admin/gallery/{item_id}")
+async def update_gallery_item(item_id: str, item: GalleryItem, user: str = Depends(verify_admin)):
+    doc = item.model_dump()
+    doc["id"] = item_id
+    result = await db.gallery.replace_one({"id": item_id}, doc)
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Zdjęcie nie znalezione")
+    return doc
+
+@api_router.delete("/admin/gallery/{item_id}")
+async def delete_gallery_item(item_id: str, user: str = Depends(verify_admin)):
+    result = await db.gallery.delete_one({"id": item_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Zdjęcie nie znalezione")
+    return {"ok": True}
+
+# --- Gallery image upload ---
+@api_router.post("/admin/upload")
+async def upload_image(file: UploadFile = File(...), user: str = Depends(verify_admin)):
+    ext = Path(file.filename).suffix.lower()
+    if ext not in ('.jpg', '.jpeg', '.png', '.webp', '.gif'):
+        raise HTTPException(status_code=400, detail="Dozwolone formaty: jpg, png, webp, gif")
+    filename = f"{uuid.uuid4().hex}{ext}"
+    filepath = UPLOAD_DIR / filename
+    with open(filepath, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    return {"url": f"/gallery/{filename}"}
+
+# --- Salon info update ---
+@api_router.put("/admin/salon-info")
+async def update_salon_info(info: SalonInfo, user: str = Depends(verify_admin)):
+    doc = info.model_dump()
+    await db.salon_info.replace_one({}, doc, upsert=True)
+    return doc
+
+# ==================== APP SETUP ====================
 
 app.include_router(api_router)
 
