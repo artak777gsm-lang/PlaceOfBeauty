@@ -395,9 +395,14 @@ function InfoBar() {
 
 export default function Home() {
   const [content, setContent] = useState(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    axios.get(`${API}/homepage`).then((r) => setContent(r.data)).catch(() => {});
+    axios.get(`${API}/homepage`).then((r) => setContent(r.data)).catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <div style={{ height: "100vh", background: "#1c1917" }} />;
+  }
 
   return (
     <div data-testid="home-page">
