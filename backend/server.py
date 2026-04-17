@@ -28,9 +28,10 @@ security = HTTPBasic()
 ADMIN_USER = os.environ.get('ADMIN_USER', 'admin')
 ADMIN_PASS = os.environ.get('ADMIN_PASS', 'placeofbeauty2026')
 
-# Upload directory for gallery images
-UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/var/www/placeof.beauty/frontend/build/gallery'))
+# Upload directory for gallery images (persistent, outside of build folder)
+UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/var/www/placeof.beauty/uploads'))
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+UPLOAD_URL_PREFIX = os.environ.get('UPLOAD_URL_PREFIX', '/uploads')
 
 def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
     correct_user = secrets.compare_digest(credentials.username, ADMIN_USER)
@@ -377,7 +378,7 @@ async def upload_image(file: UploadFile = File(...), user: str = Depends(verify_
     filepath = UPLOAD_DIR / filename
     with open(filepath, "wb") as f:
         shutil.copyfileobj(file.file, f)
-    return {"url": f"/gallery/{filename}"}
+    return {"url": f"{UPLOAD_URL_PREFIX}/{filename}"}
 
 # --- Salon info update ---
 @api_router.put("/admin/salon-info")

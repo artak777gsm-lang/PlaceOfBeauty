@@ -23,6 +23,17 @@ echo ""
 cd "$APP_DIR"
 git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
 
+# Ensure persistent uploads directory exists (survives rebuilds)
+mkdir -p "$APP_DIR/uploads"
+
+# Migrate any existing uploads from old location (build/gallery) to new persistent location
+if [ -d "$APP_DIR/frontend/build/gallery" ]; then
+  # Only copy files with UUID-style names (32 hex chars) — these are user uploads
+  find "$APP_DIR/frontend/build/gallery" -maxdepth 1 -type f -regextype posix-extended \
+    -regex '.*/[0-9a-f]{32}\.(jpg|jpeg|png|webp|gif)$' \
+    -exec cp -n {} "$APP_DIR/uploads/" \; 2>/dev/null || true
+fi
+
 # Pull latest
 log "Загрузка обновлений..."
 git fetch origin "$BRANCH"
@@ -143,8 +154,16 @@ server {
         access_log off;
     }
 
-    # Gallery images
+    # Gallery images (built-in)
     location /gallery/ {
+        expires 30d;
+        add_header Cache-Control "public";
+        access_log off;
+    }
+
+    # User-uploaded images (persistent — survives rebuilds)
+    location /uploads/ {
+        alias /var/www/placeof.beauty/uploads/;
         expires 30d;
         add_header Cache-Control "public";
         access_log off;
@@ -168,10 +187,38 @@ NGINX_EOF
 
 nginx -t && systemctl reload nginx
 
+# Migrate DB references from /gallery/UUID.jpg to /uploads/UUID.jpg for user uploads
+log "Миграция путей пользовательских изображений в БД..."
+mongosh placeofbeauty --quiet --eval '
+  // Find all user-uploaded images (32-char hex UUID) and move their URLs to /uploads/
+  db.homepage.find({}).forEach(function(doc) {
+    var changed = false;
+    if (doc.hero_image && /^\/gallery\/[0-9a-f]{32}\.(jpg|jpeg|png|webp|gif)$/.test(doc.hero_image)) {
+      doc.hero_image = doc.hero_image.replace("/gallery/", "/uploads/");
+      changed = true;
+    }
+    if (doc.cta_image && /^\/gallery\/[0-9a-f]{32}\.(jpg|jpeg|png|webp|gif)$/.test(doc.cta_image)) {
+      doc.cta_image = doc.cta_image.replace("/gallery/", "/uploads/");
+      changed = true;
+    }
+    if (changed) {
+      db.homepage.replaceOne({_id: doc._id}, doc);
+    }
+  });
+  db.gallery.find({}).forEach(function(doc) {
+    if (doc.url && /^\/gallery\/[0-9a-f]{32}\.(jpg|jpeg|png|webp|gif)$/.test(doc.url)) {
+      doc.url = doc.url.replace("/gallery/", "/uploads/");
+      db.gallery.replaceOne({_id: doc._id}, doc);
+    }
+  });
+' 2>/dev/null || true
+
 # Fix permissions & restart
 chown -R www-data:www-data "$APP_DIR"
+chown -R www-data:www-data "$APP_DIR/uploads"
 systemctl restart placeofbeauty
 systemctl reload nginx
 
 log "Готово! Сайт обновлён."
+log "Пользовательские фото сохранены в $APP_DIR/uploads/"
 echo ""
