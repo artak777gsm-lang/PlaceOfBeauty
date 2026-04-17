@@ -51,6 +51,23 @@ cd "$APP_DIR/frontend"
 yarn install --frozen-lockfile 2>/dev/null || yarn install
 yarn build
 
+# Generate favicon PNGs from SVG (if tools available)
+log "Генерация favicon..."
+BUILD_DIR="$APP_DIR/frontend/build"
+if command -v rsvg-convert &> /dev/null; then
+  rsvg-convert -w 32 -h 32 "$BUILD_DIR/favicon.svg" > "$BUILD_DIR/favicon-32x32.png" 2>/dev/null || true
+  rsvg-convert -w 180 -h 180 "$BUILD_DIR/favicon.svg" > "$BUILD_DIR/apple-touch-icon.png" 2>/dev/null || true
+elif command -v convert &> /dev/null; then
+  convert -background none -resize 32x32 "$BUILD_DIR/favicon.svg" "$BUILD_DIR/favicon-32x32.png" 2>/dev/null || true
+  convert -background none -resize 180x180 "$BUILD_DIR/favicon.svg" "$BUILD_DIR/apple-touch-icon.png" 2>/dev/null || true
+else
+  apt install -y -qq librsvg2-bin 2>/dev/null || true
+  if command -v rsvg-convert &> /dev/null; then
+    rsvg-convert -w 32 -h 32 "$BUILD_DIR/favicon.svg" > "$BUILD_DIR/favicon-32x32.png" 2>/dev/null || true
+    rsvg-convert -w 180 -h 180 "$BUILD_DIR/favicon.svg" > "$BUILD_DIR/apple-touch-icon.png" 2>/dev/null || true
+  fi
+fi
+
 # Fix permissions & restart
 chown -R www-data:www-data "$APP_DIR"
 systemctl restart placeofbeauty

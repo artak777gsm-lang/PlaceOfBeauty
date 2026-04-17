@@ -3,37 +3,92 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="Place of Beauty — salon kosmetyczny w Grodzisku Mazowieckim" />
+        <meta name="theme-color" content="#1c1917" />
+        <meta name="description" content="Place of Beauty — profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure, pedicure, depilacja laserowa, zabiegi na twarz, makijaż. Umów wizytę online!" />
+        <meta name="keywords" content="salon kosmetyczny, Grodzisk Mazowiecki, manicure, pedicure, depilacja laserowa, zabiegi kosmetyczne, makijaż, stylizacja paznokci, Place of Beauty" />
+        <meta name="author" content="Place of Beauty" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://placeof.beauty/" />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Place of Beauty" />
+        <meta property="og:title" content="Place of Beauty — Salon Kosmetyczny w Grodzisku Mazowieckim" />
+        <meta property="og:description" content="Profesjonalne zabiegi kosmetyczne: manicure, pedicure, depilacja laserowa, zabiegi na twarz, makijaż. Umów wizytę online!" />
+        <meta property="og:url" content="https://placeof.beauty/" />
+        <meta property="og:image" content="https://placeof.beauty/og-image.jpg" />
+        <meta property="og:locale" content="pl_PL" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Place of Beauty — Salon Kosmetyczny" />
+        <meta name="twitter:description" content="Profesjonalne zabiegi kosmetyczne w Grodzisku Mazowieckim. Umów wizytę online!" />
+        <meta name="twitter:image" content="https://placeof.beauty/og-image.jpg" />
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <!--
-        manifest.json provides metadata used when your web app is installed on a
-        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-        -->
-        <!--
-        Notice the use of %PUBLIC_URL% in the tags above.
-        It will be replaced with the URL of the `public` folder during the build.
-        Only files inside the `public` folder can be referenced from the HTML.
 
-        Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-        work correctly both with client-side routing and a non-root public URL.
-        Learn how to configure a non-root public URL by running `npm run build`.
-        -->
-        <title>Place of Beauty — Salon Kosmetyczny</title>
+        <title>Place of Beauty — Salon Kosmetyczny Grodzisk Mazowiecki</title>
+
+        <!-- Structured Data: LocalBusiness -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BeautySalon",
+            "name": "Place of Beauty",
+            "description": "Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim oferujący manicure, pedicure, depilację laserową, zabiegi na twarz i makijaż.",
+            "url": "https://placeof.beauty",
+            "telephone": "+48881777437",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Garbarska 17/2",
+                "addressLocality": "Grodzisk Mazowiecki",
+                "postalCode": "05-825",
+                "addressCountry": "PL"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "52.1065",
+                "longitude": "20.6314"
+            },
+            "openingHoursSpecification": [
+                {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                    "opens": "09:00",
+                    "closes": "20:00"
+                }
+            ],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "272",
+                "bestRating": "5"
+            },
+            "priceRange": "$$",
+            "image": "https://placeof.beauty/gallery/465318305602361.jpg",
+            "sameAs": [
+                "https://www.facebook.com/placeofbeauty",
+                "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki"
+            ]
+        }
+        </script>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <noscript>
+            <h1>Place of Beauty — Salon Kosmetyczny</h1>
+            <p>Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure, pedicure, depilacja laserowa, zabiegi na twarz, makijaż.</p>
+            <p>Adres: Garbarska 17/2, 05-825 Grodzisk Mazowiecki</p>
+            <p>Telefon: <a href="tel:+48881777437">+48 881 777 437</a></p>
+            <p><a href="https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki">Umów wizytę na Booksy</a></p>
+        </noscript>
         <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
     </body>
 </html>
