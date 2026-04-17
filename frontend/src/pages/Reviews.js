@@ -45,7 +45,10 @@ export default function Reviews() {
         <div className="absolute inset-0 opacity-20">
           <img
             src="/gallery/840030858131102.jpg"
+            alt="Opinie klientów Place of Beauty"
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl">

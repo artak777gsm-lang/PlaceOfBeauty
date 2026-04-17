@@ -49,7 +49,10 @@ export default function About() {
         <div className="absolute inset-0 opacity-20">
           <img
             src="/gallery/465318305602361.jpg"
+            alt="Salon Place of Beauty w Grodzisku Mazowieckim"
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl">

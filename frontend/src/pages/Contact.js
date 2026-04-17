@@ -51,7 +51,10 @@ export default function Contact() {
         <div className="absolute inset-0 opacity-20">
           <img
             src="/gallery/1080256257441893.jpg"
+            alt="Kontakt Place of Beauty — gabinet presoterapii"
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl">

@@ -43,8 +43,13 @@ function Hero({ content }) {
       <motion.div style={{ y }} className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Place of Beauty - salon kosmetyczny"
+          alt="Place of Beauty - salon kosmetyczny w Grodzisku Mazowieckim"
           className="w-full h-full object-cover scale-105"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
+          width="1920"
+          height="1080"
         />
         <div className="absolute inset-0 hero-gradient" />
       </motion.div>
@@ -205,8 +210,10 @@ function ServicesPreview() {
                     <div className="absolute inset-0 img-zoom">
                       <img
                         src={categoryImages[cat] || categoryImages["Manicure"]}
-                        alt={cat}
+                        alt={`Usługi ${cat} — Place of Beauty Grodzisk Mazowiecki`}
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-stone-900/40 group-hover:bg-stone-900/60 transition-all duration-500" />
                     </div>
@@ -313,8 +320,10 @@ function CTASection({ content }) {
       <div className="absolute inset-0">
         <img
           src={ctaImage}
-          alt="Salon kosmetyczny"
+          alt="Zarezerwuj wizytę w Place of Beauty"
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-stone-900/70" />
       </div>
