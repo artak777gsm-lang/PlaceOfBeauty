@@ -162,7 +162,8 @@ server {
     }
 
     # User-uploaded images (persistent — survives rebuilds)
-    location /uploads/ {
+    # ^~ modifier: takes precedence over regex locations (so .jpg/.jpeg rules don't intercept)
+    location ^~ /uploads/ {
         alias /var/www/placeof.beauty/uploads/;
         expires 30d;
         add_header Cache-Control "public";
