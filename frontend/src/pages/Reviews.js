@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { Star, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import SEO from "@/components/SEO";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -33,6 +34,12 @@ export default function Reviews() {
 
   return (
     <div data-testid="reviews-page">
+      <SEO
+        title="Opinie klientów"
+        description="Opinie klientów Place of Beauty z platformy Booksy. Ocena 4.9/5 na podstawie 272 opinii. Przeczytaj, co mówią nasi zadowoleni klienci o salonie kosmetycznym w Grodzisku Mazowieckim."
+        keywords="opinie salon kosmetyczny Grodzisk, Place of Beauty opinie, recenzje salonu, ocena salonu kosmetycznego, opinie Booksy Place of Beauty"
+        path="/opinie"
+      />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">

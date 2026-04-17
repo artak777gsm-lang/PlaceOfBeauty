@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { Award, Users, Heart, Clock, MapPin, Car, CreditCard, Dog, Baby } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import SEO from "@/components/SEO";
 
 function AnimatedSection({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
@@ -37,6 +38,12 @@ const values = [
 export default function About() {
   return (
     <div data-testid="about-page">
+      <SEO
+        title="O nas"
+        description="Place of Beauty — profesjonalny salon kosmetyczny w sercu Grodziska Mazowieckiego. Indywidualne podejście, pasja i najwyższa jakość. Ocena 4.9/5 na podstawie 272 opinii."
+        keywords="o nas Place of Beauty, salon kosmetyczny Grodzisk opinie, najlepszy salon kosmetyczny, Carika specjalistka, kosmetyczka Grodzisk Mazowiecki"
+        path="/o-nas"
+      />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -190,6 +197,40 @@ export default function About() {
                 </AnimatedSection>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 md:py-32 bg-stone-50">
+        <div className="container mx-auto px-4 md:px-8 max-w-4xl">
+          <AnimatedSection className="mb-12 text-center">
+            <span className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-4 block">FAQ</span>
+            <h2 className="font-heading text-3xl sm:text-4xl font-semibold text-stone-900">
+              Najczęstsze <span className="italic">pytania</span>
+            </h2>
+          </AnimatedSection>
+
+          <div className="space-y-4">
+            {[
+              { q: "Gdzie znajduje się salon Place of Beauty?", a: "Nasz salon mieści się przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim (05-825). Oferujemy parking dla klientów." },
+              { q: "Jak umówić wizytę?", a: "Wizytę można umówić online przez Booksy (dostępne 24/7) lub telefonicznie pod numerem +48 881 777 437." },
+              { q: "Jakie usługi oferuje salon?", a: "Oferujemy manicure hybrydowe i klasyczne, pedicure, stylizację paznokci żelowych, depilację laserową Primelase, zabiegi na twarz, makijaż okazjonalny i ślubny, henna brwi i rzęs, piercing oraz modelowanie ciała EMS." },
+              { q: "Ile kosztuje manicure hybrydowy?", a: "Manicure hybrydowy kosztuje 120 zł i trwa około 1 godziny. Manicure klasyczny bez malowania — 70 zł, z malowaniem — 80 zł." },
+              { q: "Ile kosztuje depilacja laserowa?", a: "Ceny depilacji laserowej Primelase: pachy — 200 zł, wąsik — 100 zł, bikini płytkie — 220 zł, bikini głębokie — 300 zł, całe nogi — 550 zł, pakiet (nogi + pachy + bikini) — 750 zł." },
+              { q: "W jakich godzinach otwarty jest salon?", a: "Salon jest otwarty od poniedziałku do soboty w godzinach 9:00–20:00. W niedzielę zamknięte." },
+              { q: "Czy w salonie można płacić kartą?", a: "Tak, akceptujemy płatności kartą oraz gotówką. Dostępny jest również parking dla klientów." },
+            ].map((item, i) => (
+              <AnimatedSection key={i} delay={i * 0.05}>
+                <details className="group bg-white border border-stone-200 p-6 cursor-pointer" data-testid={`faq-${i}`}>
+                  <summary className="font-body text-base font-medium text-stone-900 list-none flex justify-between items-center">
+                    {item.q}
+                    <span className="text-gold text-xl group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="font-body text-sm text-stone-600 leading-relaxed mt-4">{item.a}</p>
+                </details>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
       </section>

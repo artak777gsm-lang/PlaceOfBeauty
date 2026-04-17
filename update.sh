@@ -68,6 +68,106 @@ else
   fi
 fi
 
+# Update Nginx config for SEO (proper MIME types, better caching)
+log "Обновление Nginx конфига для SEO..."
+cat > /etc/nginx/sites-available/placeof.beauty << 'NGINX_EOF'
+server {
+    listen 80;
+    server_name placeof.beauty www.placeof.beauty;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name placeof.beauty www.placeof.beauty;
+
+    ssl_certificate /etc/letsencrypt/live/placeof.beauty/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/placeof.beauty/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    root /var/www/placeof.beauty/frontend/build;
+    index index.html;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(self)" always;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 256;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain text/css text/xml text/javascript
+        application/json application/javascript application/xml+rss
+        application/rss+xml application/atom+xml
+        image/svg+xml application/manifest+json;
+
+    # SEO files — proper MIME types
+    location = /robots.txt {
+        add_header Content-Type text/plain;
+        access_log off;
+    }
+    location = /sitemap.xml {
+        add_header Content-Type application/xml;
+        access_log off;
+    }
+    location = /manifest.json {
+        add_header Content-Type application/manifest+json;
+    }
+
+    # Frontend SPA
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header Cache-Control "no-cache, must-revalidate";
+    }
+
+    # Backend API
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 30s;
+        client_max_body_size 10M;
+    }
+
+    # Long-cache static assets (hashed filenames)
+    location /static/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # Gallery images
+    location /gallery/ {
+        expires 30d;
+        add_header Cache-Control "public";
+        access_log off;
+    }
+
+    # Other static files
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff2?|ttf|eot)$ {
+        expires 30d;
+        add_header Cache-Control "public";
+        access_log off;
+    }
+
+    # Block access to sensitive files
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+}
+NGINX_EOF
+
+nginx -t && systemctl reload nginx
+
 # Fix permissions & restart
 chown -R www-data:www-data "$APP_DIR"
 systemctl restart placeofbeauty

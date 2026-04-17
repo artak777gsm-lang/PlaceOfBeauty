@@ -5,6 +5,7 @@ import { ArrowRight, Star, Clock, MapPin, Sparkles, Scissors, Heart, Phone } fro
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import SEO from "@/components/SEO";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -406,6 +407,12 @@ export default function Home() {
 
   return (
     <div data-testid="home-page">
+      <SEO
+        title="Salon Kosmetyczny"
+        description="Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure hybrydowe, pedicure, depilacja laserowa Primelase, zabiegi na twarz, makijaż ślubny. Ocena 4.9/5 na Booksy."
+        keywords="salon kosmetyczny Grodzisk Mazowiecki, manicure Grodzisk, pedicure Grodzisk, depilacja laserowa Grodzisk, paznokcie Grodzisk, Place of Beauty, kosmetyczka Grodzisk Mazowiecki"
+        path="/"
+      />
       <Hero content={content} />
       <FeaturesBar content={content} />
       <ServicesPreview />

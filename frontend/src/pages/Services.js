@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import SEO from "@/components/SEO";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -70,6 +71,12 @@ export default function Services() {
 
   return (
     <div data-testid="services-page">
+      <SEO
+        title="Usługi i Cennik"
+        description="Pełny cennik usług kosmetycznych Place of Beauty Grodzisk Mazowiecki: manicure hybrydowe 120 zł, pedicure 140 zł, depilacja laserowa Primelase od 100 zł, zabiegi na twarz, makijaż, henna brwi."
+        keywords="cennik salon kosmetyczny Grodzisk, cena manicure, cena pedicure, cennik depilacji laserowej, cena manicure hybrydowego, cena przedłużania paznokci, usługi kosmetyczne Grodzisk Mazowiecki"
+        path="/uslugi"
+      />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">

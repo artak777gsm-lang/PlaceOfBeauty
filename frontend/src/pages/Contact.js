@@ -4,6 +4,7 @@ import { MapPin, Phone, Clock, Facebook, ArrowRight, Navigation } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import SEO from "@/components/SEO";
 
 const BOOKSY_URL = "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki";
 
@@ -39,6 +40,12 @@ export default function Contact() {
 
   return (
     <div data-testid="contact-page">
+      <SEO
+        title="Kontakt"
+        description="Skontaktuj się z Place of Beauty. Adres: Garbarska 17/2, 05-825 Grodzisk Mazowiecki. Telefon: +48 881 777 437. Godziny otwarcia: Pon-Sob 9:00-20:00. Parking, płatność kartą."
+        keywords="Place of Beauty kontakt, adres salon Grodzisk Mazowiecki, telefon salon kosmetyczny, godziny otwarcia, Garbarska 17 Grodzisk, dojazd do salonu"
+        path="/kontakt"
+      />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
