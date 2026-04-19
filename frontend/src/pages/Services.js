@@ -116,6 +116,41 @@ export default function Services() {
         </div>
       </section>
 
+      {/* Service Cards */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[
+              { name: "Manicure", slug: "manicure", img: "/gallery/1023044393163080.jpg" },
+              { name: "Pedicure", slug: "pedicure", img: "/gallery/834394008694787.jpg" },
+              { name: "Stylizacja paznokci", slug: "stylizacja-paznokci", img: "/gallery/840030858131102.jpg" },
+              { name: "Depilacja laserowa", slug: "depilacja-laserowa", img: "/gallery/1197425395724978.jpg" },
+              { name: "Zabiegi na twarz", slug: "zabiegi-na-twarz", img: "/gallery/1185245526942965.jpg" },
+              { name: "Kosmetyka", slug: "kosmetyka", img: "/gallery/632346295566227.jpg" },
+              { name: "Modelowanie ciała", slug: "modelowanie-ciala", img: "/gallery/1137041761763342.jpg" },
+              { name: "Piercing", slug: "piercing", img: "/gallery/722422606558595.jpg" },
+            ].map((s, i) => (
+              <AnimatedSection key={s.slug} delay={i * 0.05}>
+                <Link to={`/uslugi/${s.slug}`}>
+                  <Card className="service-card group relative overflow-hidden rounded-none border-0 h-44 sm:h-52 cursor-pointer">
+                    <div className="absolute inset-0 img-zoom">
+                      <img src={s.img} alt={s.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <div className="absolute inset-0 bg-stone-900/40 group-hover:bg-stone-900/60 transition-all duration-500" />
+                    </div>
+                    <div className="relative z-10 h-full flex flex-col justify-end p-4 sm:p-5">
+                      <h3 className="font-heading text-base sm:text-lg text-white font-medium leading-tight">{s.name}</h3>
+                      <span className="font-body text-xs text-gold mt-1 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                        Szczegóły <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </Card>
+                </Link>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Filters */}
       <section className="sticky top-16 md:top-20 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200">
         <div className="container mx-auto px-4 md:px-8 max-w-7xl py-4">
