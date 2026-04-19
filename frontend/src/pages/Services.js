@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const BOOKSY_URL = "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki";
@@ -35,9 +36,19 @@ const categoryIcons = {
   "Kosmetyka": "/gallery/632346295566227.jpg",
   "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
   "Stylizacja paznokci": "/gallery/840030858131102.jpg",
-  "Makijaż": "/gallery/899421005525420.jpg",
   "Modelowanie ciała": "/gallery/1137041761763342.jpg",
   "Piercing": "/gallery/722422606558595.jpg",
+};
+
+const categorySlugs = {
+  "Manicure": "manicure",
+  "Pedicure": "pedicure",
+  "Depilacja laserowa": "depilacja-laserowa",
+  "Kosmetyka": "kosmetyka",
+  "Zabiegi na twarz": "zabiegi-na-twarz",
+  "Stylizacja paznokci": "stylizacja-paznokci",
+  "Modelowanie ciała": "modelowanie-ciala",
+  "Piercing": "piercing",
 };
 
 export default function Services() {
@@ -167,12 +178,17 @@ export default function Services() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <h2 className="font-heading text-2xl font-semibold text-stone-900" data-testid={`category-title-${ci}`}>
                       {category}
                     </h2>
                     <span className="font-body text-sm text-stone-400">{items.length} usług</span>
                   </div>
+                  {categorySlugs[category] && (
+                    <Link to={`/uslugi/${categorySlugs[category]}`} className="font-body text-xs uppercase tracking-wider text-gold hover:text-stone-900 transition-colors flex items-center gap-1">
+                      Szczegóły <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
                 </div>
 
                 <div className="space-y-1">

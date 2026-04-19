@@ -180,9 +180,19 @@ function ServicesPreview() {
     "Kosmetyka": "/gallery/632346295566227.jpg",
     "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
     "Stylizacja paznokci": "/gallery/840030858131102.jpg",
-    "Makijaż": "/gallery/899421005525420.jpg",
     "Modelowanie ciała": "/gallery/1137041761763342.jpg",
     "Piercing": "/gallery/722422606558595.jpg",
+  };
+
+  const categorySlugs = {
+    "Manicure": "manicure",
+    "Pedicure": "pedicure",
+    "Depilacja laserowa": "depilacja-laserowa",
+    "Kosmetyka": "kosmetyka",
+    "Zabiegi na twarz": "zabiegi-na-twarz",
+    "Stylizacja paznokci": "stylizacja-paznokci",
+    "Modelowanie ciała": "modelowanie-ciala",
+    "Piercing": "piercing",
   };
 
   return (
@@ -205,7 +215,7 @@ function ServicesPreview() {
             const count = services.filter((s) => s.category === cat).length;
             return (
               <AnimatedSection key={cat} delay={i * 0.08}>
-                <Link to="/uslugi" data-testid={`service-card-${i}`}>
+                <Link to={categorySlugs[cat] ? `/uslugi/${categorySlugs[cat]}` : "/uslugi"} data-testid={`service-card-${i}`}>
                   <Card className="service-card group relative overflow-hidden rounded-none border-0 bg-white h-72 cursor-pointer">
                     <div className="absolute inset-0 img-zoom">
                       <img

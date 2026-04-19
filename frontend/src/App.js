@@ -9,6 +9,7 @@ import About from "@/pages/About";
 import Gallery from "@/pages/Gallery";
 import Reviews from "@/pages/Reviews";
 import Contact from "@/pages/Contact";
+import ServiceDetail from "@/pages/ServiceDetail";
 import Admin from "@/pages/Admin";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/uslugi" element={<Services />} />
+                  <Route path="/uslugi/:slug" element={<ServiceDetail />} />
                   <Route path="/o-nas" element={<About />} />
                   <Route path="/galeria" element={<Gallery />} />
                   <Route path="/opinie" element={<Reviews />} />
