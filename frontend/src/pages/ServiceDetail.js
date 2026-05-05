@@ -27,21 +27,37 @@ const SERVICE_DATA = {
   manicure: {
     category: "Manicure",
     title: "Manicure hybrydowe i klasyczne",
-    seoTitle: "Manicure hybrydowe i klasyczne",
-    seoDesc: "Profesjonalny manicure hybrydowe w Grodzisku Mazowieckim od 70 zł. Manicure klasyczne, hybrydowe, męskie. Salon Place of Beauty — ocena 4.9/5. Umów wizytę online!",
-    seoKeywords: "manicure Grodzisk Mazowiecki, manicure hybrydowe, manicure hybrydowy cena, manicure klasyczne, manicure męski, paznokcie Grodzisk, hybryda paznokcie",
+    seoTitle: "Manicure hybrydowe i klasyczne Grodzisk Mazowiecki",
+    seoDesc: "Profesjonalny manicure hybrydowe w Grodzisku Mazowieckim od 70 zł. Manicure klasyczne, hybrydowe, męskie. Salon Place of Beauty — ocena 4.9/5 na Booksy. Trwałość do 3 tygodni. Umów wizytę online!",
+    seoKeywords: "manicure Grodzisk Mazowiecki, manicure hybrydowe, manicure hybrydowy cena, manicure klasyczne, manicure męski, paznokcie Grodzisk, hybryda paznokcie, manicure blisko mnie, salon paznokci Grodzisk, manicure hybrydowy Grodzisk cena, stylizacja paznokci, lakier hybrydowy",
     image: "/gallery/1023044393163080.jpg",
-    description: "Manicure to podstawa pięknych dłoni. W naszym salonie oferujemy profesjonalny manicure hybrydowe, klasyczne oraz męskie. Używamy wyłącznie produktów najwyższej jakości, które zapewniają trwałość i piękny wygląd paznokci przez wiele tygodni.",
+    description: "Manicure hybrydowe to najpopularniejszy zabieg w naszym salonie — i nie bez powodu. Lakier hybrydowy łączy trwałość żelu z łatwością aplikacji klasycznego lakieru, dając efekt idealnych paznokci na 2-3 tygodnie bez odpryskiwań. W Place of Beauty w Grodzisku Mazowieckim oferujemy profesjonalny manicure hybrydowe, klasyczne z tradycyjnym lakierem, klasyczne bez malowania oraz manicure męski. Każdy zabieg zaczynamy od dokładnej pielęgnacji skórek i nadania kształtu paznokciom, a kończymy perfekcyjną stylizacją. Używamy wyłącznie produktów premium od renomowanych producentów, które zapewniają piękny kolor, blask i długotrwałość.",
     benefits: [
-      "Trwałość hybrydy do 3 tygodni",
-      "Szeroki wybór kolorów i wzorów",
+      "Trwałość hybrydy do 3 tygodni bez odpryskiwań",
+      "Ponad 200 kolorów lakierów do wyboru",
       "Profesjonalne produkty premium",
-      "Indywidualne podejście do klienta",
+      "Indywidualne doradztwo w doborze kolorów i kształtów",
+      "Pielęgnacja skórek i nawilżenie dłoni w cenie",
+      "Sterylne narzędzia jednorazowe lub autoklawowane",
+    ],
+    process: [
+      { step: "Konsultacja", desc: "Omawiamy Twoje oczekiwania, dobieramy kolor i kształt paznokci." },
+      { step: "Przygotowanie", desc: "Delikatne usunięcie skórek, nadanie kształtu i zmatowienie płytki." },
+      { step: "Aplikacja bazy", desc: "Nakładamy bazę ochronną, która chroni naturalny paznokieć." },
+      { step: "Koloryzacja", desc: "Dwie warstwy koloru utwardzane lampą LED." },
+      { step: "Wykończenie", desc: "Top coat zapewniający blask i ochronę. Nawilżenie skórek olejkiem." },
     ],
     faq: [
-      { q: "Ile kosztuje manicure hybrydowy?", a: "Manicure hybrydowe kosztuje 120 zł i trwa około 1 godziny." },
-      { q: "Jak długo utrzymuje się hybryda?", a: "Przy prawidłowej pielęgnacji manicure hybrydowe utrzymuje się 2-3 tygodnie." },
-      { q: "Czy oferujecie manicure dla mężczyzn?", a: "Tak, oferujemy profesjonalny manicure męski za 70 zł." },
+      { q: "Ile kosztuje manicure hybrydowy w Grodzisku Mazowieckim?", a: "Manicure hybrydowe w Place of Beauty kosztuje 120 zł i trwa około 1 godziny. W cenę wliczona jest pielęgnacja skórek, nadanie kształtu i stylizacja kolorem." },
+      { q: "Jak długo utrzymuje się manicure hybrydowy?", a: "Przy prawidłowej pielęgnacji manicure hybrydowe utrzymuje się 2-3 tygodnie bez odpryskiwań. Zalecamy używanie olejku do skórek dla przedłużenia efektu." },
+      { q: "Czym różni się manicure hybrydowy od klasycznego?", a: "Manicure hybrydowe utwardzany jest lampą LED i trzyma się 2-3 tygodnie, podczas gdy klasyczny lakier utrzymuje się kilka dni. Hybryda jest odporniejsza na zarysowania i zachowuje blask przez cały okres noszenia." },
+      { q: "Czy manicure hybrydowy niszczy paznokcie?", a: "Nie, przy profesjonalnym wykonaniu i zdejmowaniu manicure hybrydowe nie niszczy naturalnej płytki paznokcia. Ważne jest, aby nie zrywać hybrydy samodzielnie — zawsze zdejmuj ją w salonie." },
+      { q: "Czy oferujecie manicure dla mężczyzn?", a: "Tak, oferujemy profesjonalny manicure męski za 70 zł. Zabieg obejmuje pielęgnację skórek, nadanie kształtu i polerowanie płytki — bez malowania." },
+      { q: "Ile trwa zabieg manicure?", a: "Manicure hybrydowe trwa około 1 godziny, manicure klasyczne z malowaniem — 30 minut, bez malowania — 30 minut." },
+      { q: "Jak przygotować się do zabiegu?", a: "Nie musisz się specjalnie przygotowywać. Jeśli masz starą hybrydę, zdejmiemy ją na miejscu (wliczone w cenę). Zalecamy nie obcinać skórek samodzielnie przed wizytą." },
+      { q: "Jak dbać o paznokcie po manicure hybrydowym?", a: "Stosuj olejek do skórek codziennie, noś rękawiczki podczas sprzątania, unikaj mechanicznego uszkadzania paznokci i nie zrywaj hybrydy samodzielnie." },
+      { q: "Czy mogę wybrać wzory i zdobienia?", a: "Oczywiście! Oferujemy szeroki wybór zdobień: od prostych wzorów po artystyczne stylizacje. Możesz przynieść inspirację ze zdjęcia lub zdać się na nasze doradztwo." },
+      { q: "Jak umówić się na manicure?", a: "Najwygodniej przez Booksy — rezerwacja online dostępna 24/7. Możesz też zadzwonić pod numer +48 881 777 437." },
     ],
   },
   pedicure: {
@@ -67,22 +83,57 @@ const SERVICE_DATA = {
   "depilacja-laserowa": {
     category: "Depilacja laserowa",
     title: "Depilacja laserowa Primelase",
-    seoTitle: "Depilacja laserowa Primelase",
-    seoDesc: "Depilacja laserowa Primelase w Grodzisku Mazowieckim. Pachy 200 zł, nogi 550 zł, bikini od 220 zł. Trwałe usuwanie owłosienia. Salon Place of Beauty — umów wizytę!",
-    seoKeywords: "depilacja laserowa Grodzisk Mazowiecki, depilacja laserowa Primelase, depilacja laserowa cena, laser pachy, laser bikini, laser nogi, usuwanie owłosienia",
+    seoTitle: "Depilacja laserowa Primelase Grodzisk Mazowiecki",
+    seoDesc: "Depilacja laserowa Primelase w Grodzisku Mazowieckim. Pachy 200 zł, nogi 550 zł, bikini od 220 zł. Trwałe usuwanie owłosienia — efekty po 1. zabiegu. Salon Place of Beauty — ocena 4.9/5. Umów wizytę!",
+    seoKeywords: "depilacja laserowa Grodzisk Mazowiecki, depilacja laserowa Primelase, depilacja laserowa cena, laser pachy, laser bikini, laser nogi, usuwanie owłosienia, depilacja laserowa blisko mnie, trwała depilacja, epilacja laserowa, depilacja laserowa opinie, laser na włosy, depilacja laserowa ile zabiegów, depilacja laserowa bikini cena, depilacja Primelase opinie",
     image: "/gallery/1197425395724978.jpg",
-    description: "Depilacja laserowa Primelase to najnowocześniejsza technologia trwałego usuwania owłosienia. Zabieg jest bezpieczny, skuteczny i niemal bezbolesny. Laser Primelase działa na wszystkie fototypy skóry, zapewniając trwałe efekty już po kilku sesjach.",
+    description: "Depilacja laserowa Primelase w Place of Beauty to najnowocześniejsza metoda trwałego usuwania niechcianego owłosienia. Primelase to laser diodowy nowej generacji, który łączy trzy długości fali (755nm, 810nm, 1064nm), dzięki czemu skutecznie usuwa włosy na każdym fototypie skóry — od jasnej po ciemną. Zabieg jest bezpieczny, szybki i niemal bezbolesny dzięki zaawansowanemu systemowi chłodzenia. Już po pierwszym zabiegu zauważysz wyraźne zmniejszenie owłosienia. Po pełnej serii 6-8 zabiegów efekt jest trwały — gładka skóra bez golenia, woskowania i podrażnień. Nasz salon w Grodzisku Mazowieckim oferuje depilację laserową wszystkich partii ciała: pachy, nogi, bikini (płytkie i głębokie), wąsik, ręce oraz pakiety łączone w atrakcyjnych cenach.",
     benefits: [
-      "Technologia Primelase — najwyższa skuteczność",
-      "Bezbolesny i bezpieczny zabieg",
-      "Efekty widoczne po pierwszym zabiegu",
-      "Trwałe usunięcie owłosienia po serii zabiegów",
+      "Technologia Primelase z 3 długościami fali — najwyższa skuteczność",
+      "Bezbolesny zabieg dzięki systemowi chłodzenia kontaktowego",
+      "Efekty widoczne już po pierwszym zabiegu",
+      "Trwałe usunięcie 90-95% owłosienia po serii zabiegów",
+      "Bezpieczny dla wszystkich fototypów skóry (I-VI)",
+      "Szybki zabieg — pachy w 15 minut, nogi w 50 minut",
+      "Brak okresu rekonwalescencji — wracasz do codziennych aktywności od razu",
+      "Pakiet nogi + pachy + bikini w cenie 750 zł (oszczędność 220 zł)",
     ],
+    process: [
+      { step: "Konsultacja", desc: "Oceniamy fototyp skóry, kolor włosów i omawiamy przeciwwskazania. Dobieramy optymalne parametry lasera." },
+      { step: "Przygotowanie skóry", desc: "Oczyszczamy i dezynfekujemy okolicę poddawaną depilacji. Nakładamy żel kontaktowy." },
+      { step: "Zabieg laserowy", desc: "Aplikujemy impulsy laserowe Primelase. System chłodzenia zapewnia komfort. Zabieg trwa od 10 do 50 minut w zależności od partii ciała." },
+      { step: "Pielęgnacja po zabiegu", desc: "Nakładamy krem kojący. Omawiamy zasady pielęgnacji skóry po zabiegu." },
+      { step: "Plan kolejnych sesji", desc: "Ustalamy harmonogram kolejnych zabiegów (co 4-6 tygodni) dla optymalnych efektów." },
+    ],
+    forWhom: {
+      title: "Dla kogo jest depilacja laserowa?",
+      suitable: [
+        "Osoby zmęczone regularnym goleniem i woskowaniem",
+        "Osoby z problemem wrastających włosków",
+        "Kobiety i mężczyźni w każdym wieku (18+)",
+        "Osoby o każdym fototypie skóry (I-VI)",
+        "Osoby szukające trwałego rozwiązania na niechciane owłosienie",
+      ],
+      contraindications: [
+        "Ciąża i karmienie piersią",
+        "Aktywna opalenizna (2 tygodnie przed zabiegiem)",
+        "Choroby skóry w okolicy poddawanej depilacji",
+        "Przyjmowanie leków fotouczulających",
+        "Świeży tatuaż w okolicy zabiegowej",
+      ],
+    },
     faq: [
-      { q: "Ile kosztuje depilacja laserowa?", a: "Ceny: pachy — 200 zł, wąsik — 100 zł, bikini płytkie — 220 zł, bikini głębokie — 300 zł, całe nogi — 550 zł, pakiet (nogi + pachy + bikini) — 750 zł." },
-      { q: "Ile zabiegów potrzeba?", a: "Dla optymalnych efektów zalecamy serię 6-8 zabiegów w odstępach co 4-6 tygodni." },
-      { q: "Czy depilacja laserowa jest bolesna?", a: "Laser Primelase ma wbudowany system chłodzenia, dzięki czemu zabieg jest niemal bezbolesny." },
-      { q: "Jak przygotować się do zabiegu?", a: "Dzień przed zabiegiem należy ogolić okolicę poddawaną depilacji. Nie należy się opalać 2 tygodnie przed zabiegiem." },
+      { q: "Ile kosztuje depilacja laserowa w Grodzisku Mazowieckim?", a: "Cennik depilacji laserowej Primelase w Place of Beauty: pachy — 200 zł (15 min), wąsik — 100 zł (10 min), bikini płytkie — 220 zł (20 min), bikini głębokie — 300 zł (30 min), całe nogi — 550 zł (50 min). Pakiet nogi + pachy + bikini — 750 zł (1 godz. 45 min), co daje oszczędność 220 zł." },
+      { q: "Ile zabiegów depilacji laserowej potrzeba?", a: "Dla trwałego efektu zalecamy serię 6-8 zabiegów w odstępach co 4-6 tygodni. Włosy rosną w cyklach i laser działa tylko na włosy w fazie aktywnego wzrostu (anagen), dlatego potrzebna jest seria zabiegów, aby objąć wszystkie cykle." },
+      { q: "Czy depilacja laserowa jest bolesna?", a: "Laser Primelase ma zaawansowany system chłodzenia kontaktowego, dzięki czemu zabieg jest niemal bezbolesny. Większość klientów opisuje uczucie jako delikatne mrowienie lub ciepło. Wrażliwość zależy od partii ciała — np. pachy są mniej wrażliwe niż bikini." },
+      { q: "Jak przygotować się do depilacji laserowej?", a: "Dzień przed zabiegiem ogól okolicę poddawaną depilacji (nie woskuj ani nie wyrywaj włosków). Nie opalaj się 2 tygodnie przed zabiegiem. Nie stosuj samoopalacza. Skóra powinna być czysta, bez kremów i dezodorantów." },
+      { q: "Czym depilacja laserowa różni się od woskowania?", a: "Depilacja laserowa daje trwałe efekty — po serii zabiegów włosy nie odrastają. Woskowanie usuwa włosy tymczasowo (na 2-4 tygodnie) i musi być powtarzane przez całe życie. Laser jest mniej bolesny i nie powoduje wrastania włosków." },
+      { q: "Czy depilacja laserowa jest bezpieczna?", a: "Tak, depilacja laserowa Primelase jest w pełni bezpieczna i zatwierdzona medycznie. Laser działa selektywnie na melaninę we włosie, nie uszkadzając otaczającej skóry. W naszym salonie zabieg wykonuje przeszkolona specjalistka." },
+      { q: "Kiedy widać efekty depilacji laserowej?", a: "Pierwsze efekty widoczne są już 1-2 tygodnie po pierwszym zabiegu — włosy zaczynają wypadać. Po każdej kolejnej sesji owłosienie jest coraz rzadsze i cieńsze. Po pełnej serii 6-8 zabiegów usunięte jest 90-95% włosów." },
+      { q: "Czy depilacja laserowa działa na jasne włosy?", a: "Laser Primelase z trzema długościami fali radzi sobie z większością typów włosów. Najlepsze efekty osiąga na ciemnych włoskach, ale dzięki technologii trzech fal jest skuteczniejszy na jasne włosy niż tradycyjne lasery." },
+      { q: "Co po zabiegu depilacji laserowej?", a: "Po zabiegu unikaj słońca i solarium przez 2 tygodnie, nie używaj sauny i gorącej kąpieli przez 24-48 godzin, stosuj krem z filtrem SPF 50 na depilowane okolice. Lekkie zaczerwienienie po zabiegu jest normalne i ustępuje w ciągu kilku godzin." },
+      { q: "Czy mogę robić depilację laserową latem?", a: "Tak, pod warunkiem że chronisz depilowane okolice przed słońcem (filtr SPF 50) i nie opalasz się intensywnie. Zalecamy planowanie zabiegów tak, aby unikać bezpośredniej ekspozycji na słońce przez 2 tygodnie po zabiegu." },
+      { q: "Jak umówić się na depilację laserową?", a: "Umów wizytę online przez Booksy (dostępne 24/7) lub zadzwoń pod numer +48 881 777 437. Pierwsza konsultacja jest bezpłatna." },
     ],
   },
   "zabiegi-na-twarz": {
@@ -208,26 +259,43 @@ export default function ServiceDetail() {
     );
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": data.title,
-    "description": data.seoDesc,
-    "provider": {
-      "@type": "BeautySalon",
-      "name": "Place of Beauty",
-      "address": { "@type": "PostalAddress", "streetAddress": "Garbarska 17/2", "addressLocality": "Grodzisk Mazowiecki", "postalCode": "05-825", "addressCountry": "PL" },
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": data.title,
+      "description": data.seoDesc,
+      "provider": {
+        "@type": "BeautySalon",
+        "name": "Place of Beauty",
+        "address": { "@type": "PostalAddress", "streetAddress": "Garbarska 17/2", "addressLocality": "Grodzisk Mazowiecki", "postalCode": "05-825", "addressCountry": "PL" },
+        "telephone": "+48881777437",
+        "url": "https://placeof.beauty",
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Grodzisk Mazowiecki" },
+        { "@type": "City", "name": "Milanówek" },
+        { "@type": "City", "name": "Pruszków" },
+      ],
+      ...(services.length > 0 && services[0].price !== "Zapytaj o cenę" ? {
+        "offers": services.filter(s => s.price !== "Zapytaj o cenę").map(s => ({
+          "@type": "Offer",
+          "name": s.name,
+          "price": s.price.replace(/[^\d]/g, ""),
+          "priceCurrency": "PLN",
+        })),
+      } : {}),
     },
-    "areaServed": { "@type": "City", "name": "Grodzisk Mazowiecki" },
-    ...(services.length > 0 && services[0].price !== "Zapytaj o cenę" ? {
-      "offers": services.filter(s => s.price !== "Zapytaj o cenę").map(s => ({
-        "@type": "Offer",
-        "name": s.name,
-        "price": s.price.replace(/[^\d]/g, ""),
-        "priceCurrency": "PLN",
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": data.faq.map(f => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a },
       })),
-    } : {}),
-  };
+    },
+  ];
 
   return (
     <div>
@@ -293,8 +361,79 @@ export default function ServiceDetail() {
         </div>
       </section>
 
+      {/* Process - if available */}
+      {data.process && (
+        <section className="py-16 md:py-24 bg-white">
+          <div className="container mx-auto px-4 md:px-8 max-w-4xl">
+            <AnimatedSection className="text-center mb-12">
+              <h2 className="font-heading text-3xl font-semibold text-stone-900">
+                Jak wygląda <span className="italic">zabieg?</span>
+              </h2>
+            </AnimatedSection>
+            <div className="space-y-6">
+              {data.process.map((p, i) => (
+                <AnimatedSection key={i} delay={i * 0.08}>
+                  <div className="flex gap-6 items-start">
+                    <div className="w-12 h-12 bg-stone-900 flex items-center justify-center flex-shrink-0">
+                      <span className="font-heading text-lg text-gold font-bold">{i + 1}</span>
+                    </div>
+                    <div className="flex-1 pt-1">
+                      <h3 className="font-heading text-lg font-medium text-stone-900 mb-1">{p.step}</h3>
+                      <p className="font-body text-sm text-stone-600 leading-relaxed">{p.desc}</p>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* For Whom - if available */}
+      {data.forWhom && (
+        <section className="py-16 md:py-24 bg-stone-50">
+          <div className="container mx-auto px-4 md:px-8 max-w-4xl">
+            <AnimatedSection className="text-center mb-12">
+              <h2 className="font-heading text-3xl font-semibold text-stone-900">
+                {data.forWhom.title}
+              </h2>
+            </AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <AnimatedSection>
+                <div className="bg-white border border-stone-200 p-8">
+                  <h3 className="font-heading text-lg font-medium text-stone-900 mb-4 flex items-center gap-2">
+                    <span className="text-green-600">✓</span> Zabieg jest dla Ciebie, jeśli:
+                  </h3>
+                  <ul className="space-y-3">
+                    {data.forWhom.suitable.map((s, i) => (
+                      <li key={i} className="font-body text-sm text-stone-600 flex items-start gap-2">
+                        <span className="text-gold mt-0.5">•</span> {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </AnimatedSection>
+              <AnimatedSection delay={0.15}>
+                <div className="bg-white border border-stone-200 p-8">
+                  <h3 className="font-heading text-lg font-medium text-stone-900 mb-4 flex items-center gap-2">
+                    <span className="text-red-500">✕</span> Przeciwwskazania:
+                  </h3>
+                  <ul className="space-y-3">
+                    {data.forWhom.contraindications.map((c, i) => (
+                      <li key={i} className="font-body text-sm text-stone-600 flex items-start gap-2">
+                        <span className="text-stone-400 mt-0.5">•</span> {c}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </AnimatedSection>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Price List */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className={`py-16 md:py-24 ${data.forWhom ? 'bg-white' : 'bg-white'}`}>
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
           <AnimatedSection>
             <h2 className="font-heading text-3xl font-semibold text-stone-900 mb-2 text-center">
