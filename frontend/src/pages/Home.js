@@ -5,6 +5,7 @@ import { ArrowRight, Star, Clock, MapPin, Sparkles, Scissors, Heart, Phone } fro
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import SEO from "@/components/SEO";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -26,18 +27,29 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
   );
 }
 
-function Hero() {
+function Hero({ content }) {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 600], [0, 150]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+
+  const heroImage = content?.hero_image || "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85";
+  const heroSubtitle = content?.hero_subtitle || "Salon kosmetyczny \u2022 Grodzisk Mazowiecki";
+  const heroTitle = content?.hero_title || "Piękno, na które";
+  const heroTitleAccent = content?.hero_title_accent || "zasługujesz";
+  const heroDesc = content?.hero_description || "Odkryj profesjonalną pielęgnację i luksusowe zabiegi w sercu Grodziska Mazowieckiego.";
 
   return (
     <section data-testid="hero-section" className="relative h-[100vh] min-h-[600px] overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85"
-          alt="Place of Beauty - salon kosmetyczny"
+          src={heroImage}
+          alt="Place of Beauty - salon kosmetyczny w Grodzisku Mazowieckim"
           className="w-full h-full object-cover scale-105"
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
+          width="1920"
+          height="1080"
         />
         <div className="absolute inset-0 hero-gradient" />
       </motion.div>
@@ -55,7 +67,7 @@ function Hero() {
               className="mb-4"
             >
               <span className="font-body text-xs uppercase tracking-[0.3em] text-white/70">
-                Salon kosmetyczny &bull; Grodzisk Mazowiecki
+                {heroSubtitle}
               </span>
             </motion.div>
 
@@ -65,7 +77,7 @@ function Hero() {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="font-heading text-4xl sm:text-5xl lg:text-6xl text-white font-semibold leading-tight mb-6"
             >
-              Piękno, na które <span className="italic text-gold-light">zasługujesz</span>
+              {heroTitle} <span className="italic text-gold-light">{heroTitleAccent}</span>
             </motion.h1>
 
             <motion.p
@@ -74,7 +86,7 @@ function Hero() {
               transition={{ duration: 0.8, delay: 0.7 }}
               className="font-body text-base md:text-lg text-white/80 mb-10 max-w-lg leading-relaxed"
             >
-              Odkryj profesjonalną pielęgnację i luksusowe zabiegi w sercu Grodziska Mazowieckiego.
+              {heroDesc}
             </motion.p>
 
             <motion.div
@@ -118,19 +130,20 @@ function Hero() {
 }
 
 const featureIcons = [Sparkles, Scissors, Heart];
-const features = [
+const defaultFeatures = [
   { title: "Profesjonalizm", desc: "Zespół doświadczonych specjalistów" },
   { title: "Szeroka oferta", desc: "Od manicure po depilację laserową" },
   { title: "Zadowolenie klientów", desc: "Ocena 4.9 na podstawie 272 opinii" },
 ];
 
-function FeaturesBar() {
+function FeaturesBar({ content }) {
+  const features = content?.features || defaultFeatures;
   return (
     <section data-testid="features-section" className="bg-stone-900 py-12 md:py-16">
       <div className="container mx-auto px-4 md:px-8 max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((f, i) => {
-            const Icon = featureIcons[i];
+            const Icon = featureIcons[i] || Sparkles;
             return (
               <AnimatedSection key={i} delay={i * 0.1}>
                 <div className="flex items-start gap-4" data-testid={`feature-${i}`}>
@@ -167,9 +180,19 @@ function ServicesPreview() {
     "Kosmetyka": "/gallery/632346295566227.jpg",
     "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
     "Stylizacja paznokci": "/gallery/840030858131102.jpg",
-    "Makijaż": "/gallery/899421005525420.jpg",
     "Modelowanie ciała": "/gallery/1137041761763342.jpg",
     "Piercing": "/gallery/722422606558595.jpg",
+  };
+
+  const categorySlugs = {
+    "Manicure": "manicure",
+    "Pedicure": "pedicure",
+    "Depilacja laserowa": "depilacja-laserowa",
+    "Kosmetyka": "kosmetyka",
+    "Zabiegi na twarz": "zabiegi-na-twarz",
+    "Stylizacja paznokci": "stylizacja-paznokci",
+    "Modelowanie ciała": "modelowanie-ciala",
+    "Piercing": "piercing",
   };
 
   return (
@@ -192,13 +215,15 @@ function ServicesPreview() {
             const count = services.filter((s) => s.category === cat).length;
             return (
               <AnimatedSection key={cat} delay={i * 0.08}>
-                <Link to="/uslugi" data-testid={`service-card-${i}`}>
+                <Link to={categorySlugs[cat] ? `/uslugi/${categorySlugs[cat]}` : "/uslugi"} data-testid={`service-card-${i}`}>
                   <Card className="service-card group relative overflow-hidden rounded-none border-0 bg-white h-72 cursor-pointer">
                     <div className="absolute inset-0 img-zoom">
                       <img
                         src={categoryImages[cat] || categoryImages["Manicure"]}
-                        alt={cat}
+                        alt={`Usługi ${cat} — Place of Beauty Grodzisk Mazowiecki`}
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-stone-900/40 group-hover:bg-stone-900/60 transition-all duration-500" />
                     </div>
@@ -293,26 +318,34 @@ function ReviewsPreview() {
   );
 }
 
-function CTASection() {
+function CTASection({ content }) {
+  const ctaImage = content?.cta_image || "/gallery/465318305602361.jpg";
+  const ctaSubtitle = content?.cta_subtitle || "Zarezerwuj wizytę";
+  const ctaTitle = content?.cta_title || "Zadbaj o siebie";
+  const ctaTitleAccent = content?.cta_title_accent || "już dziś";
+  const ctaDesc = content?.cta_description || "Umów się na wizytę online przez Booksy i doświadcz profesjonalnej pielęgnacji.";
+
   return (
     <section data-testid="cta-section" className="relative py-32 md:py-40 overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="/gallery/465318305602361.jpg"
-          alt="Salon kosmetyczny"
+          src={ctaImage}
+          alt="Zarezerwuj wizytę w Place of Beauty"
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-stone-900/70" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl text-center">
         <AnimatedSection>
-          <span className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-6 block">Zarezerwuj wizytę</span>
+          <span className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-6 block">{ctaSubtitle}</span>
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-white font-semibold mb-6 max-w-3xl mx-auto leading-tight">
-            Zadbaj o siebie <span className="italic">już dziś</span>
+            {ctaTitle} <span className="italic">{ctaTitleAccent}</span>
           </h2>
           <p className="font-body text-base text-white/70 mb-10 max-w-lg mx-auto">
-            Umów się na wizytę online przez Booksy i doświadcz profesjonalnej pielęgnacji.
+            {ctaDesc}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-booksy-btn">
@@ -381,13 +414,29 @@ function InfoBar() {
 }
 
 export default function Home() {
+  const [content, setContent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    axios.get(`${API}/homepage`).then((r) => setContent(r.data)).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <div style={{ height: "100vh", background: "#1c1917" }} />;
+  }
+
   return (
     <div data-testid="home-page">
-      <Hero />
-      <FeaturesBar />
+      <SEO
+        title="Salon Kosmetyczny"
+        description="Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure hybrydowe, pedicure, depilacja laserowa Primelase, zabiegi na twarz, makijaż ślubny. Ocena 4.9/5 na Booksy."
+        keywords="salon kosmetyczny Grodzisk Mazowiecki, manicure Grodzisk, pedicure Grodzisk, depilacja laserowa Grodzisk, paznokcie Grodzisk, Place of Beauty, kosmetyczka Grodzisk Mazowiecki"
+        path="/"
+      />
+      <Hero content={content} />
+      <FeaturesBar content={content} />
       <ServicesPreview />
       <ReviewsPreview />
-      <CTASection />
+      <CTASection content={content} />
       <InfoBar />
     </div>
   );

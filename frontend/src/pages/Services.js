@@ -6,7 +6,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import SEO from "@/components/SEO";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const BOOKSY_URL = "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki";
@@ -34,9 +36,19 @@ const categoryIcons = {
   "Kosmetyka": "/gallery/632346295566227.jpg",
   "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
   "Stylizacja paznokci": "/gallery/840030858131102.jpg",
-  "Makijaż": "/gallery/899421005525420.jpg",
   "Modelowanie ciała": "/gallery/1137041761763342.jpg",
   "Piercing": "/gallery/722422606558595.jpg",
+};
+
+const categorySlugs = {
+  "Manicure": "manicure",
+  "Pedicure": "pedicure",
+  "Depilacja laserowa": "depilacja-laserowa",
+  "Kosmetyka": "kosmetyka",
+  "Zabiegi na twarz": "zabiegi-na-twarz",
+  "Stylizacja paznokci": "stylizacja-paznokci",
+  "Modelowanie ciała": "modelowanie-ciala",
+  "Piercing": "piercing",
 };
 
 export default function Services() {
@@ -70,12 +82,21 @@ export default function Services() {
 
   return (
     <div data-testid="services-page">
+      <SEO
+        title="Usługi i Cennik"
+        description="Pełny cennik usług kosmetycznych Place of Beauty Grodzisk Mazowiecki: manicure hybrydowe 120 zł, pedicure 140 zł, depilacja laserowa Primelase od 100 zł, zabiegi na twarz, makijaż, henna brwi."
+        keywords="cennik salon kosmetyczny Grodzisk, cena manicure, cena pedicure, cennik depilacji laserowej, cena manicure hybrydowego, cena przedłużania paznokci, usługi kosmetyczne Grodzisk Mazowiecki"
+        path="/uslugi"
+      />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
             src="/gallery/632346295566227.jpg"
+            alt="Usługi salon kosmetyczny Place of Beauty"
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl">
@@ -92,6 +113,41 @@ export default function Services() {
               Pełna lista zabiegów i usług kosmetycznych z cenami.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Service Cards */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[
+              { name: "Manicure", slug: "manicure", img: "/gallery/1023044393163080.jpg" },
+              { name: "Pedicure", slug: "pedicure", img: "/gallery/834394008694787.jpg" },
+              { name: "Stylizacja paznokci", slug: "stylizacja-paznokci", img: "/gallery/840030858131102.jpg" },
+              { name: "Depilacja laserowa", slug: "depilacja-laserowa", img: "/gallery/1197425395724978.jpg" },
+              { name: "Zabiegi na twarz", slug: "zabiegi-na-twarz", img: "/gallery/1185245526942965.jpg" },
+              { name: "Kosmetyka", slug: "kosmetyka", img: "/gallery/632346295566227.jpg" },
+              { name: "Modelowanie ciała", slug: "modelowanie-ciala", img: "/gallery/1137041761763342.jpg" },
+              { name: "Piercing", slug: "piercing", img: "/gallery/722422606558595.jpg" },
+            ].map((s, i) => (
+              <AnimatedSection key={s.slug} delay={i * 0.05}>
+                <Link to={`/uslugi/${s.slug}`}>
+                  <Card className="service-card group relative overflow-hidden rounded-none border-0 h-44 sm:h-52 cursor-pointer">
+                    <div className="absolute inset-0 img-zoom">
+                      <img src={s.img} alt={s.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <div className="absolute inset-0 bg-stone-900/40 group-hover:bg-stone-900/60 transition-all duration-500" />
+                    </div>
+                    <div className="relative z-10 h-full flex flex-col justify-end p-4 sm:p-5">
+                      <h3 className="font-heading text-base sm:text-lg text-white font-medium leading-tight">{s.name}</h3>
+                      <span className="font-body text-xs text-gold mt-1 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                        Szczegóły <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </Card>
+                </Link>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -157,12 +213,17 @@ export default function Services() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <h2 className="font-heading text-2xl font-semibold text-stone-900" data-testid={`category-title-${ci}`}>
                       {category}
                     </h2>
                     <span className="font-body text-sm text-stone-400">{items.length} usług</span>
                   </div>
+                  {categorySlugs[category] && (
+                    <Link to={`/uslugi/${categorySlugs[category]}`} className="font-body text-xs uppercase tracking-wider text-gold hover:text-stone-900 transition-colors flex items-center gap-1">
+                      Szczegóły <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  )}
                 </div>
 
                 <div className="space-y-1">

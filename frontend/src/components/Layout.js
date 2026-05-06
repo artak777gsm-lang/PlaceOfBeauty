@@ -17,6 +17,17 @@ const navLinks = [
   { name: "Kontakt", path: "/kontakt" },
 ];
 
+const serviceLinks = [
+  { name: "Manicure", path: "/uslugi/manicure" },
+  { name: "Pedicure", path: "/uslugi/pedicure" },
+  { name: "Stylizacja paznokci", path: "/uslugi/stylizacja-paznokci" },
+  { name: "Depilacja laserowa", path: "/uslugi/depilacja-laserowa" },
+  { name: "Zabiegi na twarz", path: "/uslugi/zabiegi-na-twarz" },
+  { name: "Kosmetyka", path: "/uslugi/kosmetyka" },
+  { name: "Modelowanie ciała EMS", path: "/uslugi/modelowanie-ciala" },
+  { name: "Piercing", path: "/uslugi/piercing" },
+];
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -58,7 +69,7 @@ function Navbar() {
                 to={link.path}
                 data-testid={`nav-${link.path.replace("/", "") || "home"}`}
                 className={`gold-underline text-sm font-body font-medium tracking-wide uppercase transition-colors duration-300 ${
-                  location.pathname === link.path
+                  location.pathname === link.path || (link.path === "/uslugi" && location.pathname.startsWith("/uslugi"))
                     ? "text-gold"
                     : "text-stone-600 hover:text-stone-900"
                 }`}
@@ -95,8 +106,8 @@ function Navbar() {
                 <Menu className="w-6 h-6 text-stone-900" />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] bg-stone-50 p-0">
-              <div className="flex flex-col h-full pt-12 px-6">
+            <SheetContent side="right" className="w-[300px] bg-stone-50 p-0 overflow-y-auto">
+              <div className="flex flex-col h-full pt-12 px-6 pb-6">
                 <div className="mb-8">
                   <span className="font-heading text-2xl font-semibold text-stone-900">
                     Place of <span className="text-gold italic">Beauty</span>
@@ -167,8 +178,8 @@ function Footer() {
     <>
       <footer data-testid="footer" className="bg-stone-900 text-stone-50">
         <div className="container mx-auto px-4 md:px-8 max-w-7xl py-16 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            <div className="lg:col-span-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+            <div className="lg:col-span-2">
               <h3 className="font-heading text-3xl font-semibold mb-4">
                 Place of <span className="text-gold italic">Beauty</span>
               </h3>
@@ -213,6 +224,21 @@ function Footer() {
             </div>
 
             <div>
+              <h4 className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-6">Usługi</h4>
+              <nav className="flex flex-col gap-3">
+                {serviceLinks.map((s) => (
+                  <Link
+                    key={s.path}
+                    to={s.path}
+                    className="font-body text-sm text-stone-400 hover:text-stone-50 transition-colors duration-300"
+                  >
+                    {s.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            <div>
               <h4 className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-6">Kontakt</h4>
               <div className="space-y-4 font-body text-sm text-stone-400">
                 <div className="flex items-start gap-3">
@@ -223,19 +249,9 @@ function Footer() {
                   <Phone className="w-4 h-4 text-gold flex-shrink-0" />
                   <a href="tel:+48881777437" className="hover:text-stone-50 transition-colors">+48 881 777 437</a>
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-6">Godziny otwarcia</h4>
-              <div className="space-y-2 font-body text-sm text-stone-400">
-                <div className="flex justify-between">
-                  <span>Poniedziałek - Sobota</span>
-                  <span className="text-stone-50">9:00 - 20:00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Niedziela</span>
-                  <span className="text-stone-50">Zamknięte</span>
+                <div className="flex items-start gap-3">
+                  <Clock className="w-4 h-4 text-gold mt-1 flex-shrink-0" />
+                  <span>Pon-Sob: 9:00-20:00<br />Niedziela: zamknięte</span>
                 </div>
               </div>
               <a

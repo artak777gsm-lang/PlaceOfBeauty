@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
+import SEO from "@/components/SEO";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -39,13 +40,21 @@ export default function Gallery() {
 
   return (
     <div data-testid="gallery-page">
+      <SEO
+        title="Galeria prac"
+        description="Galeria prac Place of Beauty w Grodzisku Mazowieckim. Zobacz efekty naszych zabiegów: stylizacja paznokci, manicure hybrydowy, paznokcie żelowe, zabiegi kosmetyczne i wnętrze salonu."
+        keywords="galeria paznokci Grodzisk, zdjęcia manicure, stylizacja paznokci zdjęcia, salon kosmetyczny wnętrze, portfolio Place of Beauty"
+        path="/galeria"
+      />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
             src="/gallery/1023044393163080.jpg"
-            alt="Galeria"
+            alt="Galeria prac Place of Beauty"
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="relative z-10 container mx-auto px-4 md:px-8 max-w-7xl">

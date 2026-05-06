@@ -1,9 +1,13 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import secrets
+import shutil
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
@@ -19,6 +23,22 @@ db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+security = HTTPBasic()
+
+ADMIN_USER = os.environ.get('ADMIN_USER', 'admin')
+ADMIN_PASS = os.environ.get('ADMIN_PASS', 'placeofbeauty2026')
+
+# Upload directory for gallery images (persistent, outside of build folder)
+UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/var/www/placeof.beauty/uploads'))
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+UPLOAD_URL_PREFIX = os.environ.get('UPLOAD_URL_PREFIX', '/uploads')
+
+def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_user = secrets.compare_digest(credentials.username, ADMIN_USER)
+    correct_pass = secrets.compare_digest(credentials.password, ADMIN_PASS)
+    if not (correct_user and correct_pass):
+        raise HTTPException(status_code=401, detail="Nieprawidłowy login lub hasło", headers={"WWW-Authenticate": "Basic"})
+    return credentials.username
 
 # Models
 class Service(BaseModel):
@@ -46,6 +66,20 @@ class GalleryItem(BaseModel):
     url: str
     alt: str
     category: str
+
+class HomepageContent(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    hero_image: str
+    hero_subtitle: str
+    hero_title: str
+    hero_title_accent: str
+    hero_description: str
+    features: List[dict]
+    cta_image: str
+    cta_subtitle: str
+    cta_title: str
+    cta_title_accent: str
+    cta_description: str
 
 class SalonInfo(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -160,6 +194,24 @@ SALON_INFO = {
     "description": "Place of Beauty to salon kosmetyczny w Grodzisku Mazowieckim, oferujący szeroką gamę profesjonalnych zabiegów pielęgnacyjnych. Nasz zespół specjalistów zadba o Twoje piękno i dobre samopoczucie w przyjaznej, luksusowej atmosferze."
 }
 
+HOMEPAGE_DATA = {
+    "hero_image": "https://images.unsplash.com/photo-1659422980942-e17d377656d9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGJlYXV0aWZ1bCUyMHNraW4lMjBmYWNlJTIwbWFrZXVwJTIwY2xvc2UlMjB1cCUyMGx1eHVyeXxlbnwwfHx8fDE3NzQ0MTc5NzV8MA&ixlib=rb-4.1.0&q=85",
+    "hero_subtitle": "Salon kosmetyczny \u2022 Grodzisk Mazowiecki",
+    "hero_title": "Piękno, na które",
+    "hero_title_accent": "zasługujesz",
+    "hero_description": "Odkryj profesjonalną pielęgnację i luksusowe zabiegi w sercu Grodziska Mazowieckiego.",
+    "features": [
+        {"title": "Profesjonalizm", "desc": "Zespół doświadczonych specjalistów"},
+        {"title": "Szeroka oferta", "desc": "Od manicure po depilację laserową"},
+        {"title": "Zadowolenie klientów", "desc": "Ocena 4.9 na podstawie 272 opinii"},
+    ],
+    "cta_image": "/gallery/465318305602361.jpg",
+    "cta_subtitle": "Zarezerwuj wizytę",
+    "cta_title": "Zadbaj o siebie",
+    "cta_title_accent": "już dziś",
+    "cta_description": "Umów się na wizytę online przez Booksy i doświadcz profesjonalnej pielęgnacji.",
+}
+
 async def seed_data():
     svc_count = await db.services.count_documents({})
     if svc_count == 0:
@@ -190,11 +242,17 @@ async def seed_data():
         await db.salon_info.insert_one(SALON_INFO)
         logging.info("Seeded salon info")
 
+    hp_count = await db.homepage.count_documents({})
+    if hp_count == 0:
+        await db.homepage.insert_one(HOMEPAGE_DATA)
+        logging.info("Seeded homepage data")
+
 @app.on_event("startup")
 async def startup():
     await seed_data()
 
-# Routes
+# ==================== PUBLIC ROUTES ====================
+
 @api_router.get("/")
 async def root():
     return {"message": "Place of Beauty API"}
@@ -224,10 +282,119 @@ async def get_salon_info():
     info = await db.salon_info.find_one({}, {"_id": 0})
     return info
 
+@api_router.get("/homepage")
+async def get_homepage():
+    data = await db.homepage.find_one({}, {"_id": 0})
+    return data
+
 @api_router.get("/categories")
 async def get_categories():
     categories = await db.services.distinct("category")
     return categories
+
+# ==================== ADMIN ROUTES ====================
+
+# Auth check
+@api_router.get("/admin/me")
+async def admin_me(user: str = Depends(verify_admin)):
+    return {"user": user}
+
+# --- Services CRUD ---
+@api_router.post("/admin/services")
+async def create_service(service: Service, user: str = Depends(verify_admin)):
+    doc = service.model_dump()
+    await db.services.insert_one(doc)
+    return doc
+
+@api_router.put("/admin/services/{service_id}")
+async def update_service(service_id: str, service: Service, user: str = Depends(verify_admin)):
+    doc = service.model_dump()
+    doc["id"] = service_id
+    result = await db.services.replace_one({"id": service_id}, doc)
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Usługa nie znaleziona")
+    return doc
+
+@api_router.delete("/admin/services/{service_id}")
+async def delete_service(service_id: str, user: str = Depends(verify_admin)):
+    result = await db.services.delete_one({"id": service_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Usługa nie znaleziona")
+    return {"ok": True}
+
+# --- Reviews CRUD ---
+@api_router.post("/admin/reviews")
+async def create_review(review: Review, user: str = Depends(verify_admin)):
+    doc = review.model_dump()
+    await db.reviews.insert_one(doc)
+    return doc
+
+@api_router.put("/admin/reviews/{review_id}")
+async def update_review(review_id: str, review: Review, user: str = Depends(verify_admin)):
+    doc = review.model_dump()
+    doc["id"] = review_id
+    result = await db.reviews.replace_one({"id": review_id}, doc)
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Opinia nie znaleziona")
+    return doc
+
+@api_router.delete("/admin/reviews/{review_id}")
+async def delete_review(review_id: str, user: str = Depends(verify_admin)):
+    result = await db.reviews.delete_one({"id": review_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Opinia nie znaleziona")
+    return {"ok": True}
+
+# --- Gallery CRUD ---
+@api_router.post("/admin/gallery")
+async def create_gallery_item(item: GalleryItem, user: str = Depends(verify_admin)):
+    doc = item.model_dump()
+    await db.gallery.insert_one(doc)
+    return doc
+
+@api_router.put("/admin/gallery/{item_id}")
+async def update_gallery_item(item_id: str, item: GalleryItem, user: str = Depends(verify_admin)):
+    doc = item.model_dump()
+    doc["id"] = item_id
+    result = await db.gallery.replace_one({"id": item_id}, doc)
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Zdjęcie nie znalezione")
+    return doc
+
+@api_router.delete("/admin/gallery/{item_id}")
+async def delete_gallery_item(item_id: str, user: str = Depends(verify_admin)):
+    result = await db.gallery.delete_one({"id": item_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Zdjęcie nie znalezione")
+    return {"ok": True}
+
+# --- Gallery image upload ---
+@api_router.post("/admin/upload")
+async def upload_image(file: UploadFile = File(...), user: str = Depends(verify_admin)):
+    ext = Path(file.filename).suffix.lower()
+    if ext not in ('.jpg', '.jpeg', '.png', '.webp', '.gif'):
+        raise HTTPException(status_code=400, detail="Dozwolone formaty: jpg, png, webp, gif")
+    filename = f"{uuid.uuid4().hex}{ext}"
+    filepath = UPLOAD_DIR / filename
+    with open(filepath, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    return {"url": f"{UPLOAD_URL_PREFIX}/{filename}"}
+
+# --- Salon info update ---
+@api_router.put("/admin/salon-info")
+async def update_salon_info(info: SalonInfo, user: str = Depends(verify_admin)):
+    doc = info.model_dump()
+    await db.salon_info.replace_one({}, doc, upsert=True)
+    return doc
+
+# --- Homepage update ---
+@api_router.put("/admin/homepage")
+async def update_homepage(content: HomepageContent, user: str = Depends(verify_admin)):
+    doc = content.model_dump()
+    await db.homepage.replace_one({}, doc, upsert=True)
+    return doc
+
+# ==================== APP SETUP ====================
 
 app.include_router(api_router)
 
