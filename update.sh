@@ -8,7 +8,7 @@ set -e
 #=============================================================
 
 APP_DIR="/var/www/placeof.beauty"
-BRANCH="claude/analyze-website-wPKSe"
+BRANCH="main"
 
 GREEN='\033[0;32m'
 NC='\033[0m'

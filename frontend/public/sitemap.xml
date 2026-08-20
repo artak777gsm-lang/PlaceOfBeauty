@@ -31,9 +31,73 @@
   </url>
   <url>
     <loc>https://placeof.beauty/uslugi/depilacja-laserowa</loc>
-    <lastmod>2026-04-19</lastmod>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1197425395724978.jpg</image:loc>
+      <image:title>Depilacja laserowa Primelase — Grodzisk Mazowiecki</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://placeof.beauty/uslugi/depilacja-laserowa/cennik</loc>
+    <lastmod>2026-08-20</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1080256257441893.jpg</image:loc>
+      <image:title>Cennik depilacji laserowej Primelase</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://placeof.beauty/uslugi/depilacja-laserowa/pachy</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1186873956780122.jpg</image:loc>
+      <image:title>Depilacja laserowa pach</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://placeof.beauty/uslugi/depilacja-laserowa/nogi</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1137041761763342.jpg</image:loc>
+      <image:title>Depilacja laserowa nóg</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://placeof.beauty/uslugi/depilacja-laserowa/bikini</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1186874330113418.jpg</image:loc>
+      <image:title>Depilacja laserowa bikini</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://placeof.beauty/uslugi/depilacja-laserowa/wasik</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1185245526942965.jpg</image:loc>
+      <image:title>Depilacja laserowa wąsika i twarzy</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://placeof.beauty/uslugi/depilacja-laserowa/dla-mezczyzn</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://placeof.beauty/gallery/1132183195582532.jpg</image:loc>
+      <image:title>Depilacja laserowa dla mężczyzn</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://placeof.beauty/uslugi/stylizacja-paznokci</loc>

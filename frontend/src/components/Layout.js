@@ -21,7 +21,18 @@ const serviceLinks = [
   { name: "Manicure", path: "/uslugi/manicure" },
   { name: "Pedicure", path: "/uslugi/pedicure" },
   { name: "Stylizacja paznokci", path: "/uslugi/stylizacja-paznokci" },
-  { name: "Depilacja laserowa", path: "/uslugi/depilacja-laserowa" },
+  {
+    name: "Depilacja laserowa",
+    path: "/uslugi/depilacja-laserowa",
+    children: [
+      { name: "Pachy", path: "/uslugi/depilacja-laserowa/pachy" },
+      { name: "Nogi", path: "/uslugi/depilacja-laserowa/nogi" },
+      { name: "Bikini", path: "/uslugi/depilacja-laserowa/bikini" },
+      { name: "Wąsik i twarz", path: "/uslugi/depilacja-laserowa/wasik" },
+      { name: "Dla mężczyzn", path: "/uslugi/depilacja-laserowa/dla-mezczyzn" },
+      { name: "Cennik depilacji", path: "/uslugi/depilacja-laserowa/cennik" },
+    ],
+  },
   { name: "Zabiegi na twarz", path: "/uslugi/zabiegi-na-twarz" },
   { name: "Kosmetyka", path: "/uslugi/kosmetyka" },
   { name: "Modelowanie ciała EMS", path: "/uslugi/modelowanie-ciala" },
@@ -227,13 +238,27 @@ function Footer() {
               <h4 className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-6">Usługi</h4>
               <nav className="flex flex-col gap-3">
                 {serviceLinks.map((s) => (
-                  <Link
-                    key={s.path}
-                    to={s.path}
-                    className="font-body text-sm text-stone-400 hover:text-stone-50 transition-colors duration-300"
-                  >
-                    {s.name}
-                  </Link>
+                  <div key={s.path} className="flex flex-col gap-3">
+                    <Link
+                      to={s.path}
+                      className="font-body text-sm text-stone-400 hover:text-stone-50 transition-colors duration-300"
+                    >
+                      {s.name}
+                    </Link>
+                    {s.children && (
+                      <div className="flex flex-col gap-2 pl-3 border-l border-stone-800">
+                        {s.children.map((c) => (
+                          <Link
+                            key={c.path}
+                            to={c.path}
+                            className="font-body text-xs text-stone-500 hover:text-gold transition-colors duration-300"
+                          >
+                            {c.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </nav>
             </div>
