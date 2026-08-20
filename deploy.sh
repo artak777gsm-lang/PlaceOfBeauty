@@ -10,7 +10,7 @@ set -e
 DOMAIN="placeof.beauty"
 APP_DIR="/var/www/placeof.beauty"
 REPO_URL="https://github.com/artak777gsm-lang/PlaceOfBeauty.git"
-BRANCH="claude/analyze-website-wPKSe"
+BRANCH="main"
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
