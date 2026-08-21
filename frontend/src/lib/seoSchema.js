@@ -2,35 +2,22 @@ import { SITE_URL, SALON, PHONE, OKOLICE, BOOKSY_URL } from "@/data/depilacja";
 
 export const SALON_ID = `${SITE_URL}/#salon`;
 
-export function salonNode() {
+/**
+ * Referencja do salonu, NIE jego definicja.
+ *
+ * Pełny węzeł BeautySalon — wraz z adresem, geo i aggregateRating — jest
+ * zadeklarowany dokładnie raz, w public/index.html, i trafia na każdą stronę.
+ * Google scala węzły po "@id", więc powtórzenie tu aggregateRating dawało
+ * jednej encji dwie oceny zbiorcze i błąd Search Console "Multiple aggregate
+ * ratings assigned to review". Encję opisujemy w jednym miejscu, w pozostałych
+ * tylko się do niej odwołujemy.
+ */
+export function salonRef() {
   return {
     "@type": "BeautySalon",
     "@id": SALON_ID,
     name: SALON.name,
     url: SITE_URL,
-    telephone: PHONE,
-    priceRange: "15 zł - 750 zł",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: SALON.street,
-      addressLocality: SALON.city,
-      postalCode: SALON.postalCode,
-      addressRegion: SALON.region,
-      addressCountry: "PL",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: SALON.lat,
-      longitude: SALON.lng,
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: SALON.rating,
-      reviewCount: SALON.reviewCount,
-      bestRating: "5",
-      worstRating: "1",
-    },
-    sameAs: [BOOKSY_URL, "https://www.facebook.com/placeofbeauty"],
   };
 }
 
@@ -52,23 +39,13 @@ export function serviceJsonLd({ name, description, path, image, offers = [], ser
     ...(image ? { image: `${SITE_URL}${image}` } : {}),
     serviceType: serviceType || "Depilacja laserowa",
     category: "Depilacja laserowa",
-    provider: salonNode(),
+    provider: salonRef(),
     areaServed: areaServedNodes(),
     availableChannel: {
       "@type": "ServiceChannel",
       serviceUrl: BOOKSY_URL,
       servicePhone: PHONE,
-      serviceLocation: {
-        "@type": "Place",
-        name: SALON.name,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: SALON.street,
-          addressLocality: SALON.city,
-          postalCode: SALON.postalCode,
-          addressCountry: "PL",
-        },
-      },
+      serviceLocation: { "@id": SALON_ID },
     },
     ...(offers.length
       ? {
