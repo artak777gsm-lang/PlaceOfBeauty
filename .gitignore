@@ -81,3 +81,6 @@ android-sdk/ -e
 # Environment files
 *.env
 *.env.*
+# ...but the templates are meant to be committed
+!.env.example
+!**/.env.example
