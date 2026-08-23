@@ -42,10 +42,13 @@ apt upgrade -y -qq
 log "Установка nginx, certbot, python, git..."
 apt install -y -qq nginx certbot python3-certbot-nginx python3-pip python3-venv git curl gnupg
 
-#--- 4. Node.js 20 ---
-if ! command -v node &> /dev/null || [[ $(node -v | cut -d. -f1 | tr -d v) -lt 18 ]]; then
-  log "Установка Node.js 20..."
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
+#--- 4. Node.js 22 ---
+# Не ниже 22: puppeteer, которым собирается пререндер, требует >= 22.12.
+# Планка стоит на 22, а не на 18, иначе установленный Node 20 не поднимется
+# и `yarn install` упадёт на несовместимом engine.
+if ! command -v node &> /dev/null || [[ $(node -v | cut -d. -f1 | tr -d v) -lt 22 ]]; then
+  log "Установка Node.js 22..."
+  curl -fsSL https://deb.nodesource.com/setup_22.x | bash - > /dev/null 2>&1
   apt install -y -qq nodejs
 else
   log "Node.js уже установлен: $(node -v)"

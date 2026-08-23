@@ -120,6 +120,11 @@ grep -c aggregateRating build/uslugi/piercing/index.html
 ветку `main` (см. правило трёх точек выше). `update.sh` дотягивает `main`,
 пересобирает фронт и бэк, переписывает конфиг nginx и перезапускает сервис.
 
+**Node на сервере — не ниже 22.** `puppeteer` требует `>= 22.12`, и `yarn`
+падает на несовместимом engine ещё до сборки: код при этом уже подтянут, а
+пересборки нет, то есть сайт остаётся на прошлой сборке. Планка зашита в
+`deploy.sh`.
+
 `puppeteer` в devDependencies тянет свой Chromium (~180 МБ) при `yarn install`.
 На сервере с тесным диском ставится системный Chromium плюс
 `PUPPETEER_SKIP_DOWNLOAD=true` — скрипт сам найдёт бинарник.
