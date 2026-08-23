@@ -161,6 +161,10 @@ function resolveBrowser(puppeteer) {
     "/usr/bin/chromium-browser",
     "/usr/bin/google-chrome",
     "/usr/bin/google-chrome-stable",
+    // macOS, so a local `yarn build` can reuse an installed browser instead of
+    // making every developer pull puppeteer's own copy.
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
   ];
   return candidates.find((p) => p && fs.existsSync(p)) || null;
 }
