@@ -132,7 +132,11 @@ server {
 
     # Frontend SPA
     location / {
-        try_files $uri $uri/ /index.html;
+        # $uri/index.html, а не $uri/ — иначе nginx находит каталог, созданный
+        # пререндером, и отвечает 301 с дописанным слешем. Все URL в sitemap.xml
+        # и все canonical идут без слеша, так что редирект был бы на каждой
+        # проиндексированной странице.
+        try_files $uri $uri/index.html /index.html;
         add_header Cache-Control "no-cache, must-revalidate";
     }
 
