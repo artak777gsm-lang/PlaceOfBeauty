@@ -261,8 +261,12 @@ async function main() {
         await page.goto(origin + route, { waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
         await page.waitForFunction(
           () => {
+            // Wait for the <h1> every page renders, not merely for #root to
+            // have children: Home shows an empty full-height div while it
+            // fetches /api/homepage, and that would satisfy a children check —
+            // saving a blank screen as the most visited page on the site.
             const root = document.getElementById("root");
-            return !!root && root.children.length > 0 && !!document.title;
+            return !!root && !!root.querySelector("h1") && !!document.title;
           },
           { timeout: NAV_TIMEOUT },
         );
