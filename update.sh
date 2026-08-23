@@ -190,6 +190,11 @@ server {
 }
 NGINX_EOF
 
+# sites-enabled должен быть симлинком. Если там лежит обычный файл — копия,
+# сделанная когда-то вручную, — nginx читает её, а всё, что скрипт выше записал
+# в sites-available, не действует и расхождение ничем себя не выдаёт.
+ln -sf /etc/nginx/sites-available/placeof.beauty /etc/nginx/sites-enabled/placeof.beauty
+
 nginx -t && systemctl reload nginx
 
 # Migrate DB references from /gallery/UUID.jpg to /uploads/UUID.jpg for user uploads
