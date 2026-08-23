@@ -190,11 +190,11 @@ server {
 
     # Frontend — React SPA
     location / {
-        # $uri/index.html, а не $uri/ — иначе nginx находит каталог, созданный
-        # пререндером, и отвечает 301 с дописанным слешем. Все URL в sitemap.xml
-        # и все canonical идут без слеша, так что редирект был бы на каждой
-        # проиндексированной странице.
-        try_files $uri $uri/index.html /index.html;
+        # $uri/index.html проверяется ПЕРВЫМ. Если первым идёт $uri, nginx
+        # находит созданный пререндером каталог и сам отвечает 301 с дописанным
+        # слешем — а все URL в sitemap.xml и все canonical идут без слеша, то
+        # есть редирект получала бы каждая проиндексированная страница.
+        try_files $uri/index.html $uri /index.html;
     }
 
     # Backend API
