@@ -145,17 +145,26 @@ function createServer(shell) {
   return server;
 }
 
-/** First browser we can actually launch, or null. */
-function resolveBrowser(puppeteer) {
+/**
+ * First browser we can actually launch, or null.
+ *
+ * puppeteer.executablePath() hands back a promise, so it has to be awaited
+ * before it can be tested: an unawaited promise is truthy, fails existsSync and
+ * silently drops puppeteer's own download from the list. A machine with Chrome
+ * installed hides that behind the next candidate — a bare server ends up with
+ * no prerender at all while the build still reports success.
+ */
+async function resolveBrowser(puppeteer) {
+  let downloaded = null;
+  try {
+    downloaded = await puppeteer.executablePath();
+  } catch {
+    downloaded = null;
+  }
+
   const candidates = [
     process.env.PUPPETEER_EXECUTABLE_PATH,
-    (() => {
-      try {
-        return puppeteer.executablePath();
-      } catch {
-        return null;
-      }
-    })(),
+    downloaded,
     "/opt/pw-browsers/chromium",
     "/usr/bin/chromium",
     "/usr/bin/chromium-browser",
@@ -166,7 +175,7 @@ function resolveBrowser(puppeteer) {
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
   ];
-  return candidates.find((p) => p && fs.existsSync(p)) || null;
+  return candidates.find((p) => typeof p === "string" && fs.existsSync(p)) || null;
 }
 
 /**
@@ -210,7 +219,7 @@ async function main() {
     return;
   }
 
-  const executablePath = resolveBrowser(puppeteer);
+  const executablePath = await resolveBrowser(puppeteer);
   if (!executablePath) {
     log("ВНИМАНИЕ: Chromium не найден — сайт собран без пререндера");
     return;
