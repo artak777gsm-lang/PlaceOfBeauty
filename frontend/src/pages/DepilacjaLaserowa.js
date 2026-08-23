@@ -123,7 +123,7 @@ export default function DepilacjaLaserowa() {
       <SEO
         title="Depilacja laserowa Grodzisk Mazowiecki — Primelase"
         titleSuffix=""
-        description="Depilacja laserowa Primelase w Grodzisku Mazowieckim. Pachy 200 zł, wąsik 100 zł, bikini od 220 zł, całe nogi 550 zł, pakiet 750 zł. Seria 6–8 zabiegów = 80–95% mniej włosów. Bezpłatna konsultacja."
+        description="Depilacja laserowa Primelase w Grodzisku Mazowieckim, nazywana też epilacją laserową. Pachy 200 zł, wąsik 100 zł, bikini od 220 zł, całe nogi 550 zł, pakiet 750 zł. Bezpłatna konsultacja."
         keywords="depilacja laserowa Grodzisk Mazowiecki, depilacja laserowa Primelase, laserowe usuwanie owłosienia, epilacja laserowa Grodzisk, depilacja laserowa cena, depilacja laserowa cennik, trwałe usuwanie owłosienia, depilacja laserowa blisko mnie, depilacja laserowa bikini, depilacja laserowa pachy, depilacja laserowa nogi, depilacja laserowa wąsik, depilacja laserowa ile zabiegów, czy depilacja laserowa boli, depilacja laserowa opinie, salon depilacji laserowej Grodzisk Mazowiecki, depilacja laserowa Milanówek, depilacja laserowa Pruszków"
         path={HUB_PATH}
         image={`${SITE_URL}/gallery/1197425395724978.jpg`}
@@ -156,6 +156,8 @@ export default function DepilacjaLaserowa() {
                   dobranej długości fali przechodzi przez naskórek i zostaje pochłonięta przez melaninę zgromadzoną
                   w łodydze włosa. Energia zamienia się w ciepło, które dociera do macierzy mieszka włosowego
                   i trwale ją niszczy. Mieszek pozbawiony macierzy nie jest w stanie wyprodukować nowego włosa.
+                  Ponieważ zabieg sięga do mieszka, a nie tylko do włosa nad powierzchnią skóry, bywa nazywany
+                  zamiennie depilacją i epilacją laserową.
                 </p>
                 <p>
                   Kluczowe słowo to <strong className="text-stone-800">trwale</strong>. Golenie, wosk, pasta cukrowa
@@ -563,7 +565,8 @@ export default function DepilacjaLaserowa() {
             <p className="font-body text-base text-stone-600 leading-relaxed mb-8 text-center max-w-2xl mx-auto">
               Na depilację laserową przyjeżdżają do nas klienci z całego powiatu grodziskiego i zachodnich okolic
               Warszawy. Dojazd od strony Milanówka, Brwinowa i Pruszkowa zajmuje kilkanaście minut, a wolne terminy
-              widać na bieżąco w rezerwacji online.
+              widać na bieżąco w rezerwacji online. Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00,
+              a na epilację laserową można umówić się zarówno na pojedynczą strefę, jak i na cały pakiet.
             </p>
           </AnimatedSection>
           <AnimatedSection delay={0.1}>

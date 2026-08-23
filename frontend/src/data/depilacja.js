@@ -499,6 +499,10 @@ export const HUB_FAQ = [
     a: "Najczęściej rumień i lekki obrzęk wokół mieszków, ustępujące w kilka godzin. Rzadziej pojawia się przejściowa suchość, świąd lub drobne strupki. Poważne powikłania — oparzenia i przebarwienia — są następstwem zabiegu na opalonej skórze lub źle dobranych parametrów i praktycznie nie występują przy prawidłowej kwalifikacji.",
   },
   {
+    q: "Czym różni się depilacja laserowa od epilacji laserowej?",
+    a: "Różnica jest w nazwie, nie w zabiegu. Depilacja w ścisłym znaczeniu to usunięcie włosa nad powierzchnią skóry — golenie albo krem. Epilacja sięga głębiej, do cebulki, i tak właśnie działa laser: wiązka niszczy macierz mieszka włosowego, a martwy włos wypada w ciągu 1–3 tygodni. Dlatego ten sam zabieg bywa nazywany zamiennie depilacją laserową i epilacją laserową — u nas oznacza to ten sam cennik i tę samą serię 6–8 sesji.",
+  },
+  {
     q: "Czym depilacja laserowa różni się od woskowania?",
     a: "Woskowanie usuwa włos razem z cebulką, ale mieszek pozostaje żywy i po 2–4 tygodniach produkuje nowy włos — powtarzasz to całe życie. Laser niszczy macierz mieszka, więc efekt się kumuluje i po serii zabiegów problem znika. Laser jest też mniej bolesny i, w przeciwieństwie do wosku, likwiduje wrastające włoski zamiast je wywoływać.",
   },
