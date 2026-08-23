@@ -6,10 +6,62 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
+import { SALON_ID } from "@/lib/seoSchema";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const BOOKSY_URL = "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki";
+
+/**
+ * Cennik salonu — dopięty do węzła BeautySalon po "@id", wyłącznie na stronie
+ * głównej.
+ *
+ * Katalog stał wcześniej w public/index.html, więc trafiał na każdy adres
+ * serwisu: /uslugi/piercing też deklarował sześć ofert depilacji laserowej.
+ * Search Console pokazuje, co to kosztuje — strona główna wyprzedza
+ * /uslugi/depilacja-laserowa na jej własnej frazie (pozycja 12,3 wobec 28,9).
+ * Sam salon, wraz z adresem i aggregateRating, pozostaje zadeklarowany raz
+ * w index.html; tutaj tylko rozszerzamy tę encję o ofertę.
+ */
+const OFFER_CATALOG_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  "@id": SALON_ID,
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Usługi kosmetyczne",
+    itemListElement: [
+      {
+        "@type": "OfferCatalog",
+        name: "Manicure",
+        itemListElement: [
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Manicure hybrydowe" }, price: "120", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Manicure klasyczne z malowaniem" }, price: "80", priceCurrency: "PLN" },
+        ],
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Pedicure",
+        itemListElement: [
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pedicure klasyczne z lakierem" }, price: "140", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pedicure klasyczny + hybryda" }, price: "160", priceCurrency: "PLN" },
+        ],
+      },
+      {
+        "@type": "OfferCatalog",
+        name: "Depilacja laserowa Primelase",
+        itemListElement: [
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Depilacja laserowa — całe nogi", url: "https://placeof.beauty/uslugi/depilacja-laserowa/nogi" }, price: "550", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Depilacja laserowa — pachy", url: "https://placeof.beauty/uslugi/depilacja-laserowa/pachy" }, price: "200", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Depilacja laserowa — bikini płytkie", url: "https://placeof.beauty/uslugi/depilacja-laserowa/bikini" }, price: "220", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Depilacja laserowa — bikini głębokie", url: "https://placeof.beauty/uslugi/depilacja-laserowa/bikini" }, price: "300", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Depilacja laserowa — wąsik", url: "https://placeof.beauty/uslugi/depilacja-laserowa/wasik" }, price: "100", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Depilacja laserowa — pakiet (nogi + pachy + bikini)", url: "https://placeof.beauty/uslugi/depilacja-laserowa/cennik" }, price: "750", priceCurrency: "PLN" },
+        ],
+      },
+    ],
+  },
+};
 
 function AnimatedSection({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
@@ -431,6 +483,7 @@ export default function Home() {
         description="Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure hybrydowe, pedicure, depilacja laserowa Primelase, zabiegi na twarz, makijaż ślubny. Ocena 4.9/5 na Booksy."
         keywords="salon kosmetyczny Grodzisk Mazowiecki, manicure Grodzisk, pedicure Grodzisk, depilacja laserowa Grodzisk, paznokcie Grodzisk, Place of Beauty, kosmetyczka Grodzisk Mazowiecki"
         path="/"
+        jsonLd={OFFER_CATALOG_JSON_LD}
       />
       <Hero content={content} />
       <FeaturesBar content={content} />
