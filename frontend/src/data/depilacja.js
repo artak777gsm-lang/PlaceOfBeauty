@@ -91,7 +91,7 @@ export const CENNIK = [
     price: 300,
     duration: "30 min",
     zone: "bikini",
-    desc: "Pełna depilacja okolic intymnych.",
+    desc: "Pachwiny, wzgórek łonowy i szpara pośladkowa.",
   },
   {
     name: "Całe nogi",

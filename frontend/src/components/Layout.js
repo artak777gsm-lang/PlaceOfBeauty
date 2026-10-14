@@ -202,15 +202,17 @@ function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-testid="footer-facebook"
+                  aria-label="Place of Beauty na Facebooku"
                   className="w-10 h-10 border border-stone-700 flex items-center justify-center hover:border-gold hover:text-gold transition-colors duration-300"
                 >
                   <Facebook className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://www.instagram.com/"
+                  href="https://www.instagram.com/place_of_beauty_carika/"
                   target="_blank"
                   rel="noopener noreferrer"
                   data-testid="footer-instagram"
+                  aria-label="Place of Beauty na Instagramie"
                   className="w-10 h-10 border border-stone-700 flex items-center justify-center hover:border-gold hover:text-gold transition-colors duration-300"
                 >
                   <Instagram className="w-4 h-4" />
