@@ -132,7 +132,7 @@ export default function DepilacjaStrefa() {
           title={isCennik ? "Pełny cennik depilacji laserowej" : `Cennik — ${data.zone.toLowerCase()}`}
           sub={
             isCennik
-              ? "Ceny zgodne z rezerwacją online na Booksy. Strefy spoza cennika wyceniamy indywidualnie na bezpłatnej konsultacji."
+              ? "Ceny zgodne z rezerwacją online na Booksy. Przed pierwszym zabiegiem zapraszamy na bezpłatną konsultację z próbą laserową."
               : "Cena obejmuje konsultację, przygotowanie skóry, zabieg i pielęgnację po zabiegu."
           }
           showLinks={isCennik}

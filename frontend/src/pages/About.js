@@ -32,7 +32,7 @@ const values = [
   { icon: Award, title: "Profesjonalizm", desc: "Najwyższa jakość zabiegów z użyciem profesjonalnych produktów i nowoczesnego sprzętu." },
   { icon: Users, title: "Indywidualne podejście", desc: "Każdy klient jest wyjątkowy — dopasowujemy zabiegi do indywidualnych potrzeb." },
   { icon: Heart, title: "Pasja", desc: "Kosmetyka to nasza pasja. Dbamy o każdy detal, by zapewnić najlepsze efekty." },
-  { icon: Clock, title: "Elastyczność", desc: "Pracujemy od poniedziałku do soboty, by dopasować się do Twojego grafiku." },
+  { icon: Clock, title: "Elastyczność", desc: "Pracujemy według zapisu — jeśli nie widzisz pasującego terminu na Booksy, zadzwoń, a postaramy się go znaleźć." },
 ];
 
 export default function About() {
@@ -40,7 +40,7 @@ export default function About() {
     <div data-testid="about-page">
       <SEO
         title="O nas"
-        description="Place of Beauty — profesjonalny salon kosmetyczny w sercu Grodziska Mazowieckiego. Indywidualne podejście, pasja i najwyższa jakość. Ocena 4.9/5 na podstawie 272 opinii."
+        description="Place of Beauty — profesjonalny salon kosmetyczny w sercu Grodziska Mazowieckiego. Indywidualne podejście, pasja i najwyższa jakość. Ocena 4.9/5 na podstawie 306 opinii."
         keywords="o nas Place of Beauty, salon kosmetyczny Grodzisk opinie, najlepszy salon kosmetyczny, Carika specjalistka, kosmetyczka Grodzisk Mazowiecki"
         path="/o-nas"
       />
@@ -102,13 +102,13 @@ export default function About() {
               </h2>
               <div className="space-y-4 font-body text-sm text-stone-600 leading-relaxed">
                 <p>
-                  Place of Beauty to salon kosmetyczny w Grodzisku Mazowieckim, który powstał z miłości do piękna i profesjonalnej pielęgnacji. Oferujemy szeroką gamę zabiegów — od stylizacji paznokci, przez depilację laserową Primelase, po zabiegi pielęgnacyjne na twarz.
+                  Place of Beauty to salon kosmetyczny w Grodzisku Mazowieckim, który powstał z miłości do piękna i profesjonalnej pielęgnacji. Oferujemy szeroką gamę zabiegów — od stylizacji paznokci, przez depilację laserową Primelase, po hennę i regulację brwi, piercing oraz modelowanie ciała EMS.
                 </p>
                 <p>
                   Nasz salon to miejsce, gdzie nowoczesne technologie spotykają się z ciepłą, przyjazną atmosferą. Każdy klient jest dla nas wyjątkowy, dlatego indywidualnie dobieramy zabiegi i produkty do potrzeb skóry.
                 </p>
                 <p>
-                  Z dumą możemy pochwalić się oceną 4.9 na podstawie 272 opinii naszych zadowolonych klientów. To dla nas najlepsza motywacja do dalszego rozwoju i doskonalenia naszych usług.
+                  Z dumą możemy pochwalić się oceną 4.9 na podstawie 306 opinii naszych zadowolonych klientów. To dla nas najlepsza motywacja do dalszego rozwoju i doskonalenia naszych usług.
                 </p>
               </div>
             </AnimatedSection>
@@ -218,10 +218,10 @@ export default function About() {
             {[
               { q: "Gdzie znajduje się salon Place of Beauty?", a: "Nasz salon mieści się przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim (05-825). Oferujemy parking dla klientów." },
               { q: "Jak umówić wizytę?", a: "Wizytę można umówić online przez Booksy (dostępne 24/7) lub telefonicznie pod numerem +48 881 777 437." },
-              { q: "Jakie usługi oferuje salon?", a: "Oferujemy manicure hybrydowe i klasyczne, pedicure, stylizację paznokci żelowych, depilację laserową Primelase, zabiegi na twarz, makijaż okazjonalny i ślubny, henna brwi i rzęs, piercing oraz modelowanie ciała EMS." },
-              { q: "Ile kosztuje manicure hybrydowy?", a: "Manicure hybrydowy kosztuje 120 zł i trwa około 1 godziny. Manicure klasyczny bez malowania — 70 zł, z malowaniem — 80 zł." },
+              { q: "Jakie usługi oferuje salon?", a: "Oferujemy manicure hybrydowe i klasyczne, pedicure, stylizację paznokci żelowych, laminację paznokci, depilację laserową Primelase, hennę i regulację brwi, hennę rzęs, piercing oraz modelowanie ciała EMS." },
+              { q: "Ile kosztuje manicure hybrydowy?", a: "Manicure hybrydowy kosztuje 140 zł (na dłuższych paznokciach — 150 zł) i trwa około 1 godziny. Manicure klasyczny bez malowania — 80 zł, z malowaniem — 90 zł." },
               { q: "Ile kosztuje depilacja laserowa?", a: "Ceny depilacji laserowej Primelase: pachy — 200 zł, wąsik — 100 zł, bikini płytkie — 220 zł, bikini głębokie — 300 zł, całe nogi — 550 zł, pakiet (nogi + pachy + bikini) — 750 zł." },
-              { q: "W jakich godzinach otwarty jest salon?", a: "Salon jest otwarty od poniedziałku do soboty w godzinach 9:00–20:00. W niedzielę zamknięte." },
+              { q: "W jakich godzinach otwarty jest salon?", a: "Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30. Pracujemy według zapisu — jeśli na Booksy nie widzisz pasującego terminu, zadzwoń pod numer +48 881 777 437." },
               { q: "Czy w salonie można płacić kartą?", a: "Tak, akceptujemy płatności kartą oraz gotówką. Dostępny jest również parking dla klientów." },
             ].map((item, i) => (
               <AnimatedSection key={i} delay={i * 0.05}>

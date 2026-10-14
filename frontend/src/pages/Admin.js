@@ -35,8 +35,14 @@ function Admin() {
       await axios.get(`${API}/api/admin/me`, { headers: { Authorization: `Basic ${token}` } });
       setAuth(token);
       setLoginError("");
-    } catch {
-      setLoginError("Nieprawidłowy login lub hasło");
+    } catch (err) {
+      // 503 = panel wyłączony po stronie serwera (brak ADMIN_PASS), a nie
+      // złe hasło — pokazujemy powód, żeby nie szukać literówki w haśle.
+      setLoginError(
+        err?.response?.status === 503
+          ? err.response.data?.detail || "Panel administracyjny jest wyłączony"
+          : "Nieprawidłowy login lub hasło",
+      );
     }
   };
 

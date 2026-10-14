@@ -120,14 +120,19 @@ pip install \
 
 deactivate
 
-# .env для бэкенда
+# .env для бэкенда. Пароль админки при повторной установке сохраняется,
+# иначе генерируется; пустым он не уходит — без него бэкенд закрывает /admin.
+ADMIN_PASS_VALUE=$(grep -s '^ADMIN_PASS=' .env | cut -d= -f2-)
+[ -n "$ADMIN_PASS_VALUE" ] || ADMIN_PASS_VALUE=$(openssl rand -base64 18 | tr -d '/+=' | cut -c1-20)
+[ -n "$ADMIN_PASS_VALUE" ] || { echo "Не удалось сгенерировать ADMIN_PASS" >&2; exit 1; }
 cat > .env << EOF
 MONGO_URL=mongodb://localhost:27017
 DB_NAME=placeofbeauty
 CORS_ORIGINS=https://${DOMAIN},https://www.${DOMAIN}
+ADMIN_PASS=${ADMIN_PASS_VALUE}
 EOF
 
-log "Бэкенд готов"
+log "Бэкенд готов (пароль админки — ADMIN_PASS в backend/.env)"
 
 #--- 8. Frontend ---
 log "Сборка фронтенда (это может занять 2-3 минуты)..."
@@ -187,6 +192,12 @@ server {
     gzip on;
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
     gzip_min_length 256;
+
+    # Zabiegów na twarz salon nie wykonuje — dawna strona prowadzi do cennika,
+    # zamiast obiecywać usługę, której nie ma.
+    location ~ ^/uslugi/zabiegi-na-twarz/?$ {
+        return 301 /uslugi;
+    }
 
     # Frontend — React SPA
     location / {

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
 import { SALON_ID } from "@/lib/seoSchema";
+import { pluralPl } from "@/lib/utils";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -35,16 +36,16 @@ const OFFER_CATALOG_JSON_LD = {
         "@type": "OfferCatalog",
         name: "Manicure",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Manicure hybrydowe" }, price: "120", priceCurrency: "PLN" },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Manicure klasyczne z malowaniem" }, price: "80", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Manicure hybrydowe" }, price: "140", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Manicure klasyczne z malowaniem" }, price: "90", priceCurrency: "PLN" },
         ],
       },
       {
         "@type": "OfferCatalog",
         name: "Pedicure",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pedicure klasyczne z lakierem" }, price: "140", priceCurrency: "PLN" },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pedicure klasyczny + hybryda" }, price: "160", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pedicure klasyczne z lakierem" }, price: "150", priceCurrency: "PLN" },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Pedicure klasyczny + hybryda" }, price: "170", priceCurrency: "PLN" },
         ],
       },
       {
@@ -185,7 +186,7 @@ const featureIcons = [Sparkles, Scissors, Heart];
 const defaultFeatures = [
   { title: "Profesjonalizm", desc: "Zespół doświadczonych specjalistów" },
   { title: "Szeroka oferta", desc: "Od manicure po depilację laserową" },
-  { title: "Zadowolenie klientów", desc: "Ocena 4.9 na podstawie 272 opinii" },
+  { title: "Zadowolenie klientów", desc: "Ocena 4.9 na podstawie 306 opinii" },
 ];
 
 function FeaturesBar({ content }) {
@@ -216,12 +217,22 @@ function FeaturesBar({ content }) {
   );
 }
 
+const HOME_CATEGORIES = ["Manicure", "Pedicure", "Stylizacja paznokci", "Depilacja laserowa", "Piercing", "Kosmetyka"];
+
 function ServicesPreview() {
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API}/categories`).then((r) => setCategories(r.data.slice(0, 6))).catch(() => {});
+    // Sześć kart w siatce 3×2. Kolejność ustalona, a nie alfabetyczna z API —
+    // inaczej ucina się to, co akurat wypada na końcu alfabetu.
+    axios
+      .get(`${API}/categories`)
+      .then((r) => {
+        const available = new Set(r.data);
+        setCategories(HOME_CATEGORIES.filter((c) => available.has(c)));
+      })
+      .catch(() => {});
     axios.get(`${API}/services`).then((r) => setServices(r.data)).catch(() => {});
   }, []);
 
@@ -230,10 +241,15 @@ function ServicesPreview() {
     "Pedicure": "/gallery/834394008694787.jpg",
     "Depilacja laserowa": "/gallery/1197425395724978.jpg",
     "Kosmetyka": "/gallery/632346295566227.jpg",
-    "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
     "Stylizacja paznokci": "/gallery/840030858131102.jpg",
     "Modelowanie ciała": "/gallery/1137041761763342.jpg",
     "Piercing": "/gallery/722422606558595.jpg",
+  };
+
+  // Podpis karty to tekst linku z głównej do strony usługi — przy pirsingu
+  // niesie też drugą frazę, pod którą szukają klienci.
+  const categoryLabels = {
+    "Piercing": "Piercing i przekłuwanie uszu",
   };
 
   const categorySlugs = {
@@ -241,7 +257,6 @@ function ServicesPreview() {
     "Pedicure": "pedicure",
     "Depilacja laserowa": "depilacja-laserowa",
     "Kosmetyka": "kosmetyka",
-    "Zabiegi na twarz": "zabiegi-na-twarz",
     "Stylizacja paznokci": "stylizacja-paznokci",
     "Modelowanie ciała": "modelowanie-ciala",
     "Piercing": "piercing",
@@ -280,8 +295,8 @@ function ServicesPreview() {
                       <div className="absolute inset-0 bg-stone-900/40 group-hover:bg-stone-900/60 transition-all duration-500" />
                     </div>
                     <div className="relative z-10 h-full flex flex-col justify-end p-6">
-                      <span className="font-body text-xs uppercase tracking-[0.15em] text-gold mb-1">{count} usług</span>
-                      <h3 className="font-heading text-xl text-white font-medium">{cat}</h3>
+                      <span className="font-body text-xs uppercase tracking-[0.15em] text-gold mb-1">{count} {pluralPl(count, "usługa", "usługi", "usług")}</span>
+                      <h3 className="font-heading text-xl text-white font-medium">{categoryLabels[cat] || cat}</h3>
                     </div>
                   </Card>
                 </Link>
@@ -324,7 +339,7 @@ function ReviewsPreview() {
                   <Star key={i} className="w-5 h-5 fill-gold text-gold" />
                 ))}
               </div>
-              <span className="font-body text-sm text-stone-500">4.9 / 5 &bull; 272 opinie</span>
+              <span className="font-body text-sm text-stone-500">4.9 / 5 &bull; 306 opinii</span>
             </div>
           </div>
         </AnimatedSection>
@@ -442,7 +457,7 @@ function InfoBar() {
               </div>
               <div>
                 <h4 className="font-body text-xs uppercase tracking-[0.15em] text-stone-400 mb-1">Godziny otwarcia</h4>
-                <p className="font-body text-sm text-stone-900">Pon - Sob: 9:00 - 20:00</p>
+                <p className="font-body text-sm text-stone-900">Pon.–pt.: 9:00–16:00 (czw. do 15:30)<br />Pracujemy według zapisu</p>
               </div>
             </div>
           </AnimatedSection>
@@ -480,7 +495,7 @@ export default function Home() {
     <div data-testid="home-page">
       <SEO
         title="Salon Kosmetyczny"
-        description="Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure hybrydowe, pedicure, depilacja laserowa Primelase, zabiegi na twarz, makijaż ślubny. Ocena 4.9/5 na Booksy."
+        description="Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim. Manicure hybrydowe, pedicure, depilacja laserowa Primelase, piercing, henna brwi i rzęs. Ocena 4.9/5 na Booksy."
         keywords="salon kosmetyczny Grodzisk Mazowiecki, manicure Grodzisk, pedicure Grodzisk, depilacja laserowa Grodzisk, paznokcie Grodzisk, Place of Beauty, kosmetyczka Grodzisk Mazowiecki"
         path="/"
         jsonLd={OFFER_CATALOG_JSON_LD}

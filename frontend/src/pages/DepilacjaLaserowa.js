@@ -49,7 +49,7 @@ const BREADCRUMBS = [
 ];
 
 const HERO_FACTS = [
-  { label: "Ceny", value: "100–750 zł" },
+  { label: "Ceny", value: "70–750 zł" },
   { label: "Seria", value: "6–8 zabiegów" },
   { label: "Odstępy", value: "co 4–6 tygodni" },
   { label: "Redukcja owłosienia", value: "80–95%" },
@@ -57,12 +57,12 @@ const HERO_FACTS = [
 ];
 
 const CARD_META = {
-  pachy: { cardTitle: "Depilacja laserowa pach", cardDesc: "Najkrótszy zabieg i najszybciej widoczny efekt. Koniec z podrażnieniami po dezodorancie.", cardPrice: "200 zł · 15 min" },
-  nogi: { cardTitle: "Depilacja laserowa nóg", cardDesc: "Całe nogi — łydki i uda. Największa oszczędność czasu i koniec wrastających włosków.", cardPrice: "550 zł · 50 min" },
+  pachy: { cardTitle: "Depilacja laserowa pach", cardDesc: "Zabieg trwa 15 minut, a efekt widać szybko. Koniec z podrażnieniami po dezodorancie.", cardPrice: "200 zł · 15 min" },
+  nogi: { cardTitle: "Depilacja laserowa nóg", cardDesc: "Całe nogi, łydki lub uda osobno. Największa oszczędność czasu i koniec wrastających włosków.", cardPrice: "od 340 zł · 30 min" },
   bikini: { cardTitle: "Depilacja laserowa bikini", cardDesc: "Bikini płytkie i głębokie. Dyskretnie, higienicznie, bez zapalenia mieszków.", cardPrice: "od 220 zł · 20 min" },
   wasik: { cardTitle: "Depilacja laserowa wąsika", cardDesc: "Twarz, wąsik i broda — także przy owłosieniu na tle hormonalnym.", cardPrice: "100 zł · 10 min" },
-  "dla-mezczyzn": { cardTitle: "Depilacja dla mężczyzn", cardDesc: "Plecy, kark, klatka piersiowa, pachy i nogi. Grubszy włos = lepsza reakcja na laser.", cardPrice: "wycena na konsultacji" },
-  cennik: { cardTitle: "Cennik i koszt serii", cardDesc: "Pełny cennik, koszt całej serii i porównanie z woskowaniem przez lata.", cardPrice: "100–750 zł" },
+  "dla-mezczyzn": { cardTitle: "Depilacja dla mężczyzn", cardDesc: "Plecy, kark, klatka piersiowa, pachy i nogi. Grubszy włos = lepsza reakcja na laser.", cardPrice: "plecy 300 zł · klatka 280 zł" },
+  cennik: { cardTitle: "Cennik i koszt serii", cardDesc: "Pełny cennik, koszt całej serii i porównanie z woskowaniem przez lata.", cardPrice: "70–750 zł" },
 };
 
 const POROWNANIE_SECTION = {
@@ -565,8 +565,8 @@ export default function DepilacjaLaserowa() {
             <p className="font-body text-base text-stone-600 leading-relaxed mb-8 text-center max-w-2xl mx-auto">
               Na depilację laserową przyjeżdżają do nas klienci z całego powiatu grodziskiego i zachodnich okolic
               Warszawy. Dojazd od strony Milanówka, Brwinowa i Pruszkowa zajmuje kilkanaście minut, a wolne terminy
-              widać na bieżąco w rezerwacji online. Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00,
-              a na epilację laserową można umówić się zarówno na pojedynczą strefę, jak i na cały pakiet.
+              widać na bieżąco w rezerwacji online. Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00 (w czwartki do 15:30) i pracuje
+              według zapisu, a na epilację laserową można umówić się zarówno na pojedynczą strefę, jak i na cały pakiet.
             </p>
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
@@ -633,7 +633,7 @@ export default function DepilacjaLaserowa() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-stone-200 border border-stone-200">
               {[
                 { name: "Depilacja wąsika nitką", path: "/uslugi/kosmetyka", desc: "Szybka alternatywa doraźna — 15 zł" },
-                { name: "Zabiegi na twarz", path: "/uslugi/zabiegi-na-twarz", desc: "Dermaplaning i oczyszczanie" },
+                { name: "Piercing i przekłuwanie uszu", path: "/uslugi/piercing", desc: "Uszy od 120 zł, nos 200 zł" },
                 { name: "Modelowanie ciała EMS", path: "/uslugi/modelowanie-ciala", desc: "Technologia HI-EMT — 100 zł" },
                 { name: "Pełny cennik salonu", path: "/uslugi", desc: "Wszystkie usługi i ceny" },
               ].map((l) => (

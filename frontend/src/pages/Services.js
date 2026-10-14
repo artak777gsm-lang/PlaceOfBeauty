@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
+import { pluralPl } from "@/lib/utils";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -34,7 +35,6 @@ const categoryIcons = {
   "Pedicure": "/gallery/834394008694787.jpg",
   "Depilacja laserowa": "/gallery/1197425395724978.jpg",
   "Kosmetyka": "/gallery/632346295566227.jpg",
-  "Zabiegi na twarz": "/gallery/1185245526942965.jpg",
   "Stylizacja paznokci": "/gallery/840030858131102.jpg",
   "Modelowanie ciała": "/gallery/1137041761763342.jpg",
   "Piercing": "/gallery/722422606558595.jpg",
@@ -45,7 +45,6 @@ const categorySlugs = {
   "Pedicure": "pedicure",
   "Depilacja laserowa": "depilacja-laserowa",
   "Kosmetyka": "kosmetyka",
-  "Zabiegi na twarz": "zabiegi-na-twarz",
   "Stylizacja paznokci": "stylizacja-paznokci",
   "Modelowanie ciała": "modelowanie-ciala",
   "Piercing": "piercing",
@@ -84,7 +83,7 @@ export default function Services() {
     <div data-testid="services-page">
       <SEO
         title="Usługi i Cennik"
-        description="Pełny cennik usług kosmetycznych Place of Beauty Grodzisk Mazowiecki: manicure hybrydowe 120 zł, pedicure 140 zł, depilacja laserowa Primelase od 100 zł, zabiegi na twarz, makijaż, henna brwi."
+        description="Cennik Place of Beauty w Grodzisku Mazowieckim: manicure hybrydowe 140 zł, pedicure od 150 zł, depilacja laserowa od 70 zł, piercing od 120 zł, henna brwi."
         keywords="cennik salon kosmetyczny Grodzisk, cena manicure, cena pedicure, cennik depilacji laserowej, cena manicure hybrydowego, cena przedłużania paznokci, usługi kosmetyczne Grodzisk Mazowiecki"
         path="/uslugi"
       />
@@ -125,7 +124,6 @@ export default function Services() {
               { name: "Pedicure", slug: "pedicure", img: "/gallery/834394008694787.jpg" },
               { name: "Stylizacja paznokci", slug: "stylizacja-paznokci", img: "/gallery/840030858131102.jpg" },
               { name: "Depilacja laserowa", slug: "depilacja-laserowa", img: "/gallery/1197425395724978.jpg" },
-              { name: "Zabiegi na twarz", slug: "zabiegi-na-twarz", img: "/gallery/1185245526942965.jpg" },
               { name: "Kosmetyka", slug: "kosmetyka", img: "/gallery/632346295566227.jpg" },
               { name: "Modelowanie ciała", slug: "modelowanie-ciala", img: "/gallery/1137041761763342.jpg" },
               { name: "Piercing", slug: "piercing", img: "/gallery/722422606558595.jpg" },
@@ -134,7 +132,7 @@ export default function Services() {
                 <Link to={`/uslugi/${s.slug}`}>
                   <Card className="service-card group relative overflow-hidden rounded-none border-0 h-44 sm:h-52 cursor-pointer">
                     <div className="absolute inset-0 img-zoom">
-                      <img src={s.img} alt={s.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <img src={s.img} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                       <div className="absolute inset-0 bg-stone-900/40 group-hover:bg-stone-900/60 transition-all duration-500" />
                     </div>
                     <div className="relative z-10 h-full flex flex-col justify-end p-4 sm:p-5">
@@ -217,11 +215,11 @@ export default function Services() {
                     <h2 className="font-heading text-2xl font-semibold text-stone-900" data-testid={`category-title-${ci}`}>
                       {category}
                     </h2>
-                    <span className="font-body text-sm text-stone-400">{items.length} usług</span>
+                    <span className="font-body text-sm text-stone-400">{items.length} {pluralPl(items.length, "usługa", "usługi", "usług")}</span>
                   </div>
                   {categorySlugs[category] && (
                     <Link to={`/uslugi/${categorySlugs[category]}`} className="font-body text-xs uppercase tracking-wider text-gold hover:text-stone-900 transition-colors flex items-center gap-1">
-                      Szczegóły <ArrowRight className="w-3.5 h-3.5" />
+                      Szczegóły<span className="sr-only">: {category}</span> <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   )}
                 </div>

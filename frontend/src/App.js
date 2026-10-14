@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
@@ -32,6 +32,8 @@ function App() {
                   <Route path="/uslugi" element={<Services />} />
                   <Route path="/uslugi/depilacja-laserowa" element={<DepilacjaLaserowa />} />
                   <Route path="/uslugi/depilacja-laserowa/:strefa" element={<DepilacjaStrefa />} />
+                  {/* Zabiegów na twarz salon nie wykonuje — tak jak nginx (301), klient też prowadzi do cennika. */}
+                  <Route path="/uslugi/zabiegi-na-twarz" element={<Navigate to="/uslugi" replace />} />
                   <Route path="/uslugi/:slug" element={<ServiceDetail />} />
                   <Route path="/o-nas" element={<About />} />
                   <Route path="/galeria" element={<Gallery />} />

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Phone, Clock, Facebook, ArrowRight, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,24 +25,30 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
 }
 
 const hours = [
-  { day: "Poniedziałek", time: "9:00 - 20:00", open: true },
-  { day: "Wtorek", time: "9:00 - 20:00", open: true },
-  { day: "Środa", time: "9:00 - 20:00", open: true },
-  { day: "Czwartek", time: "9:00 - 20:00", open: true },
-  { day: "Piątek", time: "9:00 - 20:00", open: true },
-  { day: "Sobota", time: "9:00 - 20:00", open: true },
+  { day: "Poniedziałek", time: "9:00–16:00", open: true },
+  { day: "Wtorek", time: "9:00–16:00", open: true },
+  { day: "Środa", time: "9:00–16:00", open: true },
+  { day: "Czwartek", time: "9:00–15:30", open: true },
+  { day: "Piątek", time: "9:00–16:00", open: true },
+  { day: "Sobota", time: "Zamknięte", open: false },
   { day: "Niedziela", time: "Zamknięte", open: false },
 ];
 
 export default function Contact() {
-  const today = new Date().getDay();
-  const dayIndex = today === 0 ? 6 : today - 1;
+  // Liczone po zamontowaniu i pomijane w pre-renderze (headless Chrome ma
+  // navigator.webdriver): inaczej HTML zamrażałby "(Dziś)" przy dniu budowy.
+  const [dayIndex, setDayIndex] = useState(null);
+  useEffect(() => {
+    if (navigator.webdriver) return;
+    const today = new Date().getDay();
+    setDayIndex(today === 0 ? 6 : today - 1);
+  }, []);
 
   return (
     <div data-testid="contact-page">
       <SEO
         title="Kontakt"
-        description="Skontaktuj się z Place of Beauty. Adres: Garbarska 17/2, 05-825 Grodzisk Mazowiecki. Telefon: +48 881 777 437. Godziny otwarcia: Pon-Sob 9:00-20:00. Parking, płatność kartą."
+        description="Place of Beauty, Garbarska 17/2, Grodzisk Mazowiecki. Tel. +48 881 777 437. Pon.–pt. 9:00–16:00 (czw. do 15:30), według zapisu. Parking, płatność kartą."
         keywords="Place of Beauty kontakt, adres salon Grodzisk Mazowiecki, telefon salon kosmetyczny, godziny otwarcia, Garbarska 17 Grodzisk, dojazd do salonu"
         path="/kontakt"
       />
@@ -171,6 +177,10 @@ export default function Contact() {
                         </div>
                       ))}
                     </div>
+                    <p className="font-body text-xs text-stone-500 mt-4">
+                      Pracujemy według zapisu — jeśli na Booksy nie widzisz pasującego terminu, zadzwoń:{" "}
+                      <a href="tel:+48881777437" className="text-gold hover:underline">881 777 437</a>.
+                    </p>
                   </div>
                 </AnimatedSection>
 

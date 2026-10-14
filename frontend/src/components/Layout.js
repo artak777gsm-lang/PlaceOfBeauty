@@ -33,7 +33,6 @@ const serviceLinks = [
       { name: "Cennik depilacji", path: "/uslugi/depilacja-laserowa/cennik" },
     ],
   },
-  { name: "Zabiegi na twarz", path: "/uslugi/zabiegi-na-twarz" },
   { name: "Kosmetyka", path: "/uslugi/kosmetyka" },
   { name: "Modelowanie ciała EMS", path: "/uslugi/modelowanie-ciala" },
   { name: "Piercing", path: "/uslugi/piercing" },
@@ -276,7 +275,7 @@ function Footer() {
                 </div>
                 <div className="flex items-start gap-3">
                   <Clock className="w-4 h-4 text-gold mt-1 flex-shrink-0" />
-                  <span>Pon-Sob: 9:00-20:00<br />Niedziela: zamknięte</span>
+                  <span>Pon.–pt.: 9:00–16:00 (czw. do 15:30)<br />Sob.–niedz.: zamknięte<br />Pracujemy według zapisu</span>
                 </div>
               </div>
               <a

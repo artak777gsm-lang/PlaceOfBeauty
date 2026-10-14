@@ -40,6 +40,12 @@ git fetch origin "$BRANCH"
 git checkout "$BRANCH"
 git pull origin "$BRANCH"
 
+# Без ADMIN_PASS бэкенд держит админку закрытой (пароля по умолчанию в коде
+# нет — репозиторий публичный). Само значение скрипт не трогает и не печатает.
+if ! grep -q '^ADMIN_PASS=.' "$APP_DIR/backend/.env" 2>/dev/null; then
+  echo -e "\033[0;33m[!]\033[0m В backend/.env нет ADMIN_PASS — панель /admin будет закрыта, пока его не задать."
+fi
+
 # Update backend deps
 log "Обновление бэкенда..."
 cd "$APP_DIR/backend"
@@ -128,6 +134,12 @@ server {
     }
     location = /manifest.json {
         add_header Content-Type application/manifest+json;
+    }
+
+    # Zabiegów na twarz salon nie wykonuje — dawna strona prowadzi do cennika,
+    # zamiast obiecywać usługę, której nie ma.
+    location ~ ^/uslugi/zabiegi-na-twarz/?$ {
+        return 301 /uslugi;
     }
 
     # Frontend SPA

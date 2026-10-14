@@ -26,7 +26,10 @@ api_router = APIRouter(prefix="/api")
 security = HTTPBasic()
 
 ADMIN_USER = os.environ.get('ADMIN_USER', 'admin')
-ADMIN_PASS = os.environ.get('ADMIN_PASS', 'placeofbeauty2026')
+# Bez wartości domyślnej: repozytorium jest publiczne, więc każde hasło
+# wpisane tutaj zna każdy. Brak ADMIN_PASS w .env wyłącza panel zamiast go
+# otwierać.
+ADMIN_PASS = os.environ.get('ADMIN_PASS', '')
 
 # Upload directory for gallery images (persistent, outside of build folder)
 UPLOAD_DIR = Path(os.environ.get('UPLOAD_DIR', '/var/www/placeof.beauty/uploads'))
@@ -34,6 +37,8 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_URL_PREFIX = os.environ.get('UPLOAD_URL_PREFIX', '/uploads')
 
 def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
+    if not ADMIN_PASS:
+        raise HTTPException(status_code=503, detail="Panel administracyjny jest wyłączony: brak ADMIN_PASS w backend/.env")
     correct_user = secrets.compare_digest(credentials.username, ADMIN_USER)
     correct_pass = secrets.compare_digest(credentials.password, ADMIN_PASS)
     if not (correct_user and correct_pass):
@@ -96,36 +101,44 @@ class SalonInfo(BaseModel):
     description: str
 
 # Seed data
+# Ceny i czasy zgodne z rezerwacją online na Booksy (stan na 14.10.2026).
+# Zabiegów na twarz i makijażu salon nie wykonuje — nie ma ich w seedzie.
 SERVICES_DATA = [
-    {"category": "Manicure", "name": "Manicure hybrydowe", "price": "120 zł", "duration": "1 godz.", "description": "Profesjonalny manicure z lakierem hybrydowym"},
-    {"category": "Manicure", "name": "Manicure klasyczne bez malowania", "price": "70 zł", "duration": "30 min", "description": "Klasyczna pielęgnacja paznokci"},
-    {"category": "Manicure", "name": "Manicure klasyczne z malowaniem", "price": "80 zł", "duration": "30 min", "description": "Manicure z tradycyjnym lakierem"},
-    {"category": "Manicure", "name": "Manicure męski", "price": "70 zł", "duration": "30 min", "description": "Profesjonalna pielęgnacja dłoni dla mężczyzn"},
-    {"category": "Pedicure", "name": "Pedicure klasyczne z lakierem", "price": "140 zł", "duration": "1 godz.", "description": "Klasyczny pedicure z malowaniem"},
-    {"category": "Pedicure", "name": "Pedicure klasyczny + hybryda", "price": "160 zł", "duration": "1 godz. 10 min", "description": "Pedicure z lakierem hybrydowym"},
-    {"category": "Pedicure", "name": "Pedicure kwasowe + hybryda", "price": "180 zł", "duration": "1 godz. 10 min", "description": "Zabieg kwasowy Mavex z hybryda"},
+    {"category": "Manicure", "name": "Manicure hybrydowe", "price": "140 zł", "duration": "1 godz.", "description": "Profesjonalny manicure z lakierem hybrydowym"},
+    {"category": "Manicure", "name": "Manicure hybrydowe na dłuższych paznokciach", "price": "150 zł", "duration": "1 godz.", "description": "Manicure hybrydowe na dłuższych paznokciach"},
+    {"category": "Manicure", "name": "Manicure klasyczne bez malowania", "price": "80 zł", "duration": "30 min", "description": "Klasyczna pielęgnacja paznokci z bazą"},
+    {"category": "Manicure", "name": "Manicure klasyczne z malowaniem", "price": "90 zł", "duration": "30 min", "description": "Manicure z tradycyjnym lakierem"},
+    {"category": "Manicure", "name": "Manicure męski", "price": "80 zł", "duration": "30 min", "description": "Profesjonalna pielęgnacja dłoni dla mężczyzn"},
+    {"category": "Manicure", "name": "Laminacja paznokci Yokaba", "price": "120 zł", "duration": "30 min", "description": "Laminacja naturalnej płytki paznokcia systemem Yokaba"},
+    {"category": "Manicure", "name": "Zdjęcie hybrydy", "price": "20 zł", "duration": "15 min", "description": "Usunięcie lakieru hybrydowego"},
+    {"category": "Manicure", "name": "Zdjęcie hybrydy z manicure klasycznym", "price": "80 zł", "duration": "40 min", "description": "Usunięcie hybrydy i manicure klasyczne"},
+    {"category": "Pedicure", "name": "Pedicure klasyczne z lakierem", "price": "150 zł", "duration": "1 godz.", "description": "Klasyczny pedicure z malowaniem"},
+    {"category": "Pedicure", "name": "Pedicure klasyczny + hybryda", "price": "170 zł", "duration": "1 godz. 10 min", "description": "Pedicure z lakierem hybrydowym"},
+    {"category": "Pedicure", "name": "Pedicure kwasowe + hybryda", "price": "180 zł", "duration": "1 godz. 10 min", "description": "Zabieg kwasowy Mavex z hybrydą"},
     {"category": "Pedicure", "name": "Leczniczy pedicure", "price": "od 150 zł", "duration": "1 godz.", "description": "Zabieg podologiczny dostosowany indywidualnie do stanu stóp"},
-    {"category": "Stylizacja paznokci", "name": "Przedłużanie żelowe", "price": "od 180 zł", "duration": "1 godz. 30 min", "description": "Przedłużenie paznokci metodą żelową"},
-    {"category": "Stylizacja paznokci", "name": "Uzupełnienie żelowe", "price": "150 zł", "duration": "1 godz. 15 min", "description": "Uzupełnienie paznokci metodą żelową"},
+    {"category": "Pedicure", "name": "Hybryda u stóp", "price": "140 zł", "duration": "45 min", "description": "Lakier hybrydowy na paznokciach stóp"},
+    {"category": "Stylizacja paznokci", "name": "Przedłużanie żelowe", "price": "od 200 zł", "duration": "1 godz. 30 min", "description": "Przedłużenie paznokci metodą żelową"},
+    {"category": "Stylizacja paznokci", "name": "Uzupełnienie żelowe", "price": "160 zł", "duration": "1 godz. 15 min", "description": "Uzupełnienie paznokci metodą żelową"},
+    {"category": "Stylizacja paznokci", "name": "Naprawa 1 paznokcia żelowego", "price": "20 zł", "duration": "15 min", "description": "Naprawa uszkodzonego paznokcia żelowego"},
+    {"category": "Stylizacja paznokci", "name": "Naprawa 2 paznokci żelowych", "price": "30 zł", "duration": "15 min", "description": "Naprawa uszkodzonych paznokci żelowych"},
+    {"category": "Stylizacja paznokci", "name": "Naprawa 3 paznokci żelowych", "price": "50 zł", "duration": "15 min", "description": "Naprawa uszkodzonych paznokci żelowych"},
+    {"category": "Stylizacja paznokci", "name": "Zdjęcie żelowych paznokci", "price": "25 zł", "duration": "15 min", "description": "Usunięcie paznokci żelowych"},
+    {"category": "Stylizacja paznokci", "name": "Zdjęcie żelowych paznokci z manicure klasycznym", "price": "90 zł", "duration": "45 min", "description": "Usunięcie żelu i manicure klasyczne"},
+    {"category": "Stylizacja paznokci", "name": "Zdjęcie akrylowych paznokci", "price": "50 zł", "duration": "15 min", "description": "Usunięcie paznokci akrylowych"},
     {"category": "Depilacja laserowa", "name": "Pachy", "price": "200 zł", "duration": "15 min", "description": "Depilacja laserowa Primelase"},
     {"category": "Depilacja laserowa", "name": "Całe nogi", "price": "550 zł", "duration": "50 min", "description": "Łydki i uda — depilacja laserowa Primelase"},
     {"category": "Depilacja laserowa", "name": "Bikini płytkie", "price": "220 zł", "duration": "20 min", "description": "Depilacja laserowa Primelase"},
     {"category": "Depilacja laserowa", "name": "Bikini głębokie", "price": "300 zł", "duration": "30 min", "description": "Depilacja laserowa Primelase"},
     {"category": "Depilacja laserowa", "name": "Wąsik", "price": "100 zł", "duration": "10 min", "description": "Depilacja laserowa Primelase"},
-    {"category": "Depilacja laserowa", "name": "Nogi + pachy + bikini", "price": "750 zł", "duration": "1 godz. 45 min", "description": "Pakiet — depilacja laserowa Primelase"},
+    {"category": "Depilacja laserowa", "name": "Nogi + pachy + bikini", "price": "750 zł", "duration": "1 godz. 15 min", "description": "Pakiet — depilacja laserowa Primelase"},
     {"category": "Kosmetyka", "name": "Henna brwi", "price": "30 zł", "duration": "15 min", "description": "Koloryzacja brwi henną"},
     {"category": "Kosmetyka", "name": "Henna + regulacja", "price": "40 zł", "duration": "20 min", "description": "Henna z regulacją kształtu brwi"},
     {"category": "Kosmetyka", "name": "Henna rzęs", "price": "30 zł", "duration": "15 min", "description": "Koloryzacja rzęs henną"},
     {"category": "Kosmetyka", "name": "Regulacja brwi", "price": "20 zł", "duration": "10 min", "description": "Profesjonalna regulacja brwi"},
     {"category": "Kosmetyka", "name": "Depilacja wąsika nitką", "price": "15 zł", "duration": "5 min", "description": "Szybka i precyzyjna depilacja nitkowa"},
-    {"category": "Zabiegi na twarz", "name": "Dermaplaning", "price": "Zapytaj o cenę", "duration": "45 min", "description": "Zabieg złuszczający poprawiający wygląd skóry"},
-    {"category": "Zabiegi na twarz", "name": "Oczyszczanie twarzy", "price": "Zapytaj o cenę", "duration": "1 godz.", "description": "Głębokie oczyszczanie twarzy"},
-    {"category": "Zabiegi na twarz", "name": "Zabieg przeciwtrądzikowy", "price": "Zapytaj o cenę", "duration": "1 godz.", "description": "Specjalistyczny zabieg na trądzik"},
-    {"category": "Makijaż", "name": "Makijaż okazjonalny", "price": "Zapytaj o cenę", "duration": "1 godz.", "description": "Profesjonalny makijaż na każdą okazję"},
-    {"category": "Makijaż", "name": "Makijaż ślubny", "price": "Zapytaj o cenę", "duration": "1 godz. 30 min", "description": "Luksusowy makijaż na ślub"},
     {"category": "Modelowanie ciała", "name": "Elektrostymulacja mięśni EMS", "price": "100 zł", "duration": "30 min", "description": "Technologia HI-EMT — budowanie mięśni i redukcja tkanki tłuszczowej"},
-    {"category": "Piercing", "name": "Przekłuwanie uszu", "price": "od 100 zł", "duration": "10 min", "description": "Profesjonalny piercing uszu"},
-    {"category": "Piercing", "name": "Przekłuwanie nosa", "price": "180 zł", "duration": "10 min", "description": "Profesjonalny piercing nosa"},
+    {"category": "Piercing", "name": "Przekłuwanie uszu", "price": "od 120 zł", "duration": "10 min", "description": "Profesjonalny piercing uszu"},
+    {"category": "Piercing", "name": "Przekłuwanie nosa", "price": "200 zł", "duration": "10 min", "description": "Profesjonalny piercing nosa"},
 ]
 
 REVIEWS_DATA = [
@@ -178,16 +191,16 @@ SALON_INFO = {
     "phone": "+48 881 777 437",
     "email": "",
     "hours": {
-        "Poniedziałek": "9:00 - 20:00",
-        "Wtorek": "9:00 - 20:00",
-        "Środa": "9:00 - 20:00",
-        "Czwartek": "9:00 - 20:00",
-        "Piątek": "9:00 - 20:00",
-        "Sobota": "9:00 - 20:00",
+        "Poniedziałek": "9:00–16:00",
+        "Wtorek": "9:00–16:00",
+        "Środa": "9:00–16:00",
+        "Czwartek": "9:00–15:30",
+        "Piątek": "9:00–16:00",
+        "Sobota": "Zamknięte",
         "Niedziela": "Zamknięte"
     },
     "rating": 4.9,
-    "reviews_count": 272,
+    "reviews_count": 306,
     "amenities": ["Parking", "Akceptacja kart płatniczych", "Zwierzęta dozwolone", "Przyjazne dla dzieci"],
     "booksy_url": "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki",
     "facebook_url": "https://www.facebook.com/placeofbeauty",
@@ -203,7 +216,7 @@ HOMEPAGE_DATA = {
     "features": [
         {"title": "Profesjonalizm", "desc": "Zespół doświadczonych specjalistów"},
         {"title": "Szeroka oferta", "desc": "Od manicure po depilację laserową"},
-        {"title": "Zadowolenie klientów", "desc": "Ocena 4.9 na podstawie 272 opinii"},
+        {"title": "Zadowolenie klientów", "desc": "Ocena 4.9 na podstawie 306 opinii"},
     ],
     "cta_image": "/gallery/465318305602361.jpg",
     "cta_subtitle": "Zarezerwuj wizytę",

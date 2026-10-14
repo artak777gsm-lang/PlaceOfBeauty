@@ -36,7 +36,7 @@ export default function Reviews() {
     <div data-testid="reviews-page">
       <SEO
         title="Opinie klientów"
-        description="Opinie klientów Place of Beauty z platformy Booksy. Ocena 4.9/5 na podstawie 272 opinii. Przeczytaj, co mówią nasi zadowoleni klienci o salonie kosmetycznym w Grodzisku Mazowieckim."
+        description="Opinie klientów Place of Beauty z platformy Booksy. Ocena 4.9/5 na podstawie 306 opinii. Przeczytaj, co mówią nasi zadowoleni klienci o salonie kosmetycznym w Grodzisku Mazowieckim."
         keywords="opinie salon kosmetyczny Grodzisk, Place of Beauty opinie, recenzje salonu, ocena salonu kosmetycznego, opinie Booksy Place of Beauty"
         path="/opinie"
       />
@@ -83,8 +83,8 @@ export default function Reviews() {
                 <span className="font-body text-sm text-stone-500">na 5.0</span>
               </div>
               <div className="text-center">
-                <span className="font-heading text-4xl font-bold text-stone-900">272</span>
-                <p className="font-body text-sm text-stone-500 mt-1">opinie na Booksy</p>
+                <span className="font-heading text-4xl font-bold text-stone-900">306</span>
+                <p className="font-body text-sm text-stone-500 mt-1">opinii na Booksy</p>
               </div>
               <div className="text-center">
                 <span className="font-heading text-4xl font-bold text-gold">98%</span>

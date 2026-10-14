@@ -5,6 +5,9 @@ import { ArrowRight, Clock, Phone, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEO from "@/components/SEO";
+import { breadcrumbJsonLd } from "@/components/depilacja/Blocks";
+import { SITE_URL } from "@/data/depilacja";
+import { salonRef, areaServedNodes } from "@/lib/seoSchema";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -23,12 +26,34 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
   );
 }
 
+/**
+ * Wiersz cennika z API → Offer. Cena przychodzi tekstem: "120 zł" to cena
+ * dokładna, "od 100 zł" — minimalna, więc obok price idzie
+ * priceSpecification.minPrice. Samo minPrice bez price Google liczy jako
+ * błąd oferty ("brak price"), stąd oba pola. "Zapytaj o cenę" i inne opisy
+ * bez kwoty nie dają oferty.
+ */
+function offerFromRow(row, url) {
+  const m = /^\s*(od\s+)?(\d+)\s*zł/i.exec(row.price || "");
+  if (!m) return null;
+  const offer = {
+    "@type": "Offer",
+    name: row.name,
+    price: m[2],
+    priceCurrency: "PLN",
+    availability: "https://schema.org/InStock",
+    url,
+  };
+  if (m[1]) offer.priceSpecification = { "@type": "PriceSpecification", minPrice: m[2], priceCurrency: "PLN" };
+  return offer;
+}
+
 const SERVICE_DATA = {
   manicure: {
     category: "Manicure",
     title: "Manicure hybrydowe i klasyczne",
     seoTitle: "Manicure hybrydowe i klasyczne Grodzisk Mazowiecki",
-    seoDesc: "Profesjonalny manicure hybrydowe w Grodzisku Mazowieckim od 70 zł. Manicure klasyczne, hybrydowe, męskie. Salon Place of Beauty — ocena 4.9/5 na Booksy. Trwałość do 3 tygodni. Umów wizytę online!",
+    seoDesc: "Manicure w Grodzisku Mazowieckim od 80 zł: hybrydowe 140 zł, klasyczne, męski i laminacja Yokaba. Place of Beauty — ocena 4.9/5 na Booksy. Umów wizytę online!",
     seoKeywords: "manicure Grodzisk Mazowiecki, manicure hybrydowe, manicure hybrydowy cena, manicure klasyczne, manicure męski, paznokcie Grodzisk, hybryda paznokcie, manicure blisko mnie, salon paznokci Grodzisk, manicure hybrydowy Grodzisk cena, stylizacja paznokci, lakier hybrydowy",
     image: "/gallery/1023044393163080.jpg",
     description: "Manicure hybrydowe to najpopularniejszy zabieg w naszym salonie — i nie bez powodu. Lakier hybrydowy łączy trwałość żelu z łatwością aplikacji klasycznego lakieru, dając efekt idealnych paznokci na 2-3 tygodnie bez odpryskiwań. W Place of Beauty w Grodzisku Mazowieckim oferujemy profesjonalny manicure hybrydowe, klasyczne z tradycyjnym lakierem, klasyczne bez malowania oraz manicure męski. Każdy zabieg zaczynamy od dokładnej pielęgnacji skórek i nadania kształtu paznokciom, a kończymy perfekcyjną stylizacją. Używamy wyłącznie produktów premium od renomowanych producentów, które zapewniają piękny kolor, blask i długotrwałość.",
@@ -48,13 +73,13 @@ const SERVICE_DATA = {
       { step: "Wykończenie", desc: "Top coat zapewniający blask i ochronę. Nawilżenie skórek olejkiem." },
     ],
     faq: [
-      { q: "Ile kosztuje manicure hybrydowy w Grodzisku Mazowieckim?", a: "Manicure hybrydowe w Place of Beauty kosztuje 120 zł i trwa około 1 godziny. W cenę wliczona jest pielęgnacja skórek, nadanie kształtu i stylizacja kolorem." },
+      { q: "Ile kosztuje manicure hybrydowy w Grodzisku Mazowieckim?", a: "Manicure hybrydowe w Place of Beauty kosztuje 140 zł (na dłuższych paznokciach — 150 zł) i trwa około 1 godziny. W cenę wliczona jest pielęgnacja skórek, nadanie kształtu i stylizacja kolorem." },
       { q: "Jak długo utrzymuje się manicure hybrydowy?", a: "Przy prawidłowej pielęgnacji manicure hybrydowe utrzymuje się 2-3 tygodnie bez odpryskiwań. Zalecamy używanie olejku do skórek dla przedłużenia efektu." },
       { q: "Czym różni się manicure hybrydowy od klasycznego?", a: "Manicure hybrydowe utwardzany jest lampą LED i trzyma się 2-3 tygodnie, podczas gdy klasyczny lakier utrzymuje się kilka dni. Hybryda jest odporniejsza na zarysowania i zachowuje blask przez cały okres noszenia." },
       { q: "Czy manicure hybrydowy niszczy paznokcie?", a: "Nie, przy profesjonalnym wykonaniu i zdejmowaniu manicure hybrydowe nie niszczy naturalnej płytki paznokcia. Ważne jest, aby nie zrywać hybrydy samodzielnie — zawsze zdejmuj ją w salonie." },
-      { q: "Czy oferujecie manicure dla mężczyzn?", a: "Tak, oferujemy profesjonalny manicure męski za 70 zł. Zabieg obejmuje pielęgnację skórek, nadanie kształtu i polerowanie płytki — bez malowania." },
+      { q: "Czy oferujecie manicure dla mężczyzn?", a: "Tak, oferujemy profesjonalny manicure męski za 80 zł. Zabieg obejmuje pielęgnację skórek, nadanie kształtu i polerowanie płytki — bez malowania." },
       { q: "Ile trwa zabieg manicure?", a: "Manicure hybrydowe trwa około 1 godziny, manicure klasyczne z malowaniem — 30 minut, bez malowania — 30 minut." },
-      { q: "Jak przygotować się do zabiegu?", a: "Nie musisz się specjalnie przygotowywać. Jeśli masz starą hybrydę, zdejmiemy ją na miejscu (wliczone w cenę). Zalecamy nie obcinać skórek samodzielnie przed wizytą." },
+      { q: "Jak przygotować się do zabiegu?", a: "Nie musisz się specjalnie przygotowywać. Hybrydę wykonaną w innym salonie zdejmiemy na miejscu za dodatkową opłatą (20 zł) — zaznacz to przy rezerwacji. Zalecamy nie obcinać skórek samodzielnie przed wizytą." },
       { q: "Jak dbać o paznokcie po manicure hybrydowym?", a: "Stosuj olejek do skórek codziennie, noś rękawiczki podczas sprzątania, unikaj mechanicznego uszkadzania paznokci i nie zrywaj hybrydy samodzielnie." },
       { q: "Czy mogę wybrać wzory i zdobienia?", a: "Oczywiście! Oferujemy szeroki wybór zdobień: od prostych wzorów po artystyczne stylizacje. Możesz przynieść inspirację ze zdjęcia lub zdać się na nasze doradztwo." },
       { q: "Jak umówić się na manicure?", a: "Najwygodniej przez Booksy — rezerwacja online dostępna 24/7. Możesz też zadzwonić pod numer +48 881 777 437." },
@@ -64,7 +89,7 @@ const SERVICE_DATA = {
     category: "Pedicure",
     title: "Pedicure klasyczne i hybrydowe",
     seoTitle: "Pedicure klasyczne i hybrydowe",
-    seoDesc: "Profesjonalny pedicure w Grodzisku Mazowieckim od 140 zł. Pedicure klasyczne, hybrydowe, kwasowe Mavex, lecznicze. Place of Beauty — umów wizytę online!",
+    seoDesc: "Pedicure w Grodzisku Mazowieckim od 150 zł: klasyczne, hybrydowe, kwasowe Mavex i lecznicze. Sama hybryda u stóp — 140 zł. Place of Beauty — umów wizytę online!",
     seoKeywords: "pedicure Grodzisk Mazowiecki, pedicure hybrydowe, pedicure kwasowe, pedicure leczniczy, pedicure cena, stopy pielęgnacja",
     image: "/gallery/834394008694787.jpg",
     description: "Zadbane stopy to komfort i piękno przez cały rok. Oferujemy pedicure klasyczne, hybrydowe, kwasowe Mavex oraz lecznicze. Każdy zabieg dobieramy indywidualnie do stanu stóp, zapewniając najlepsze efekty pielęgnacyjne.",
@@ -75,7 +100,7 @@ const SERVICE_DATA = {
       "Relaksująca atmosfera zabiegu",
     ],
     faq: [
-      { q: "Ile kosztuje pedicure?", a: "Pedicure klasyczne z lakierem — 140 zł, z hybrydą — 160 zł, kwasowe z hybrydą — 180 zł." },
+      { q: "Ile kosztuje pedicure?", a: "Pedicure klasyczne z lakierem — 150 zł, z hybrydą — 170 zł, kwasowe Mavex z hybrydą — 180 zł, sama hybryda u stóp — 140 zł. Pedicure leczniczy — od 150 zł, ostateczną cenę ustalamy po konsultacji." },
       { q: "Czym jest pedicure kwasowe?", a: "Pedicure kwasowe Mavex to zaawansowany zabieg, który głęboko regeneruje skórę stóp za pomocą kwasów." },
       { q: "Jak często robić pedicure?", a: "Zalecamy pedicure co 3-4 tygodnie, aby stopy były zawsze zadbane." },
     ],
@@ -83,40 +108,11 @@ const SERVICE_DATA = {
   // Uwaga: strefa "depilacja-laserowa" ma własny, rozbudowany klaster stron
   // (src/pages/DepilacjaLaserowa.js + src/pages/DepilacjaStrefa.js, dane w src/data/depilacja.js).
   // Trasa /uslugi/depilacja-laserowa jest obsługiwana tam, dlatego nie duplikujemy jej tutaj.
-  "zabiegi-na-twarz": {
-    category: "Zabiegi na twarz",
-    title: "Zabiegi na twarz",
-    seoTitle: "Oczyszczanie twarzy i dermaplaning",
-    seoDesc: "Oczyszczanie twarzy w Grodzisku Mazowieckim — manualne usuwanie zaskórników, peeling i maska w cenie. Także dermaplaning i zabieg przeciwtrądzikowy. Salon Place of Beauty — umów wizytę!",
-    seoKeywords: "oczyszczanie twarzy Grodzisk Mazowiecki, oczyszczanie twarzy zabiegi, głębokie oczyszczanie twarzy, zabiegi na twarz Grodzisk Mazowiecki, dermaplaning, zabieg przeciwtrądzikowy, kosmetyczka Grodzisk, pielęgnacja twarzy",
-    image: "/gallery/1185245526942965.jpg",
-    description: "Głębokie oczyszczanie twarzy to zabieg manualny, który usuwa zaskórniki, nadmiar sebum i martwy naskórek z porów niedostępnych dla domowej pielęgnacji — obejmuje demakijaż i analizę skóry, peeling enzymatyczny lub kawitacyjny otwierający pory, manualne oczyszczanie oraz maskę kojącą na zakończenie. Obok niego oferujemy dermaplaning — złuszczanie martwego naskórka i meszku ostrzem, z natychmiastowym efektem gładkiej skóry — oraz specjalistyczny zabieg przeciwtrądzikowy. Każdy zabieg poprzedza konsultacja, aby dobrać pielęgnację do typu skóry.",
-    benefits: [
-      "Głębokie oczyszczanie porów bez urazu skóry",
-      "Redukcja zaskórników i błyszczenia się cery",
-      "Dermaplaning — natychmiastowy efekt gładkiej skóry",
-      "Profesjonalne produkty kosmetyczne",
-      "Indywidualny dobór zabiegu do typu skóry",
-    ],
-    process: [
-      { step: "Demakijaż i analiza skóry", desc: "Dokładne oczyszczenie wstępne i ocena stanu cery, na podstawie której dobieramy intensywność zabiegu." },
-      { step: "Peeling", desc: "Peeling enzymatyczny lub kawitacyjny rozluźnia czopy sebum w porach i przygotowuje skórę do oczyszczania." },
-      { step: "Manualne oczyszczanie", desc: "Usunięcie zaskórników i zanieczyszczeń z porów metodą manualną, z zachowaniem komfortu skóry." },
-      { step: "Maska i pielęgnacja końcowa", desc: "Maska kojąco-ściągająca uspokaja skórę, a krem z filtrem kończy zabieg i chroni przed podrażnieniem." },
-    ],
-    faq: [
-      { q: "Na czym polega oczyszczanie twarzy?", a: "To zabieg manualny w kilku krokach: demakijaż i analiza skóry, peeling otwierający pory, ręczne usunięcie zaskórników, a na koniec maska kojąca. Trwa około godziny i usuwa to, czego nie da się wypracować domową pielęgnacją." },
-      { q: "Ile kosztuje oczyszczanie twarzy w Grodzisku Mazowieckim?", a: "Cena zależy od stanu cery i doboru peelingu, dlatego ustalamy ją na miejscu — napisz lub zadzwoń, a podamy dokładną kwotę przed umówieniem wizyty." },
-      { q: "Jak często robić oczyszczanie twarzy?", a: "Zalecamy oczyszczanie co 4-6 tygodni, w zależności od typu skóry — cera tłusta i mieszana zwykle korzysta z krótszych odstępów." },
-      { q: "Czym różni się oczyszczanie twarzy od dermaplaningu?", a: "Oczyszczanie usuwa zaskórniki i nadmiar sebum z wnętrza porów. Dermaplaning złuszcza martwy naskórek i meszek z powierzchni skóry ostrzem. To zabiegi uzupełniające się, nie zamienne — przy konsultacji doradzimy, co ma sens w Twoim przypadku." },
-      { q: "Czy zabiegi na twarz są odpowiednie dla skóry wrażliwej?", a: "Tak, dobieramy intensywność peelingu i technikę indywidualnie — mamy warianty łagodniejsze dla skóry wrażliwej i problematycznej." },
-    ],
-  },
   "stylizacja-paznokci": {
     category: "Stylizacja paznokci",
     title: "Stylizacja paznokci żelowych",
     seoTitle: "Przedłużanie i stylizacja paznokci żelowych",
-    seoDesc: "Przedłużanie paznokci żelowych w Grodzisku Mazowieckim od 180 zł. Stylizacja, uzupełnienie żelowe. Salon Place of Beauty — piękne paznokcie na każdą okazję!",
+    seoDesc: "Przedłużanie paznokci żelowych w Grodzisku Mazowieckim od 200 zł. Stylizacja, uzupełnienie żelowe. Salon Place of Beauty — piękne paznokcie na każdą okazję!",
     seoKeywords: "paznokcie żelowe Grodzisk Mazowiecki, przedłużanie paznokci, uzupełnienie żelowe, stylizacja paznokci, paznokcie żelowe cena, tipsy Grodzisk",
     image: "/gallery/840030858131102.jpg",
     description: "Paznokcie żelowe to idealne rozwiązanie dla osób pragnących długich, pięknych paznokci. Oferujemy przedłużanie metodą żelową oraz regularne uzupełnienia. Tworzymy stylizacje na każdą okazję — od eleganckich po artystyczne.",
@@ -127,7 +123,7 @@ const SERVICE_DATA = {
       "Wzmocnienie naturalnych paznokci",
     ],
     faq: [
-      { q: "Ile kosztuje przedłużanie paznokci żelowych?", a: "Przedłużanie żelowe od 180 zł, uzupełnienie — 150 zł." },
+      { q: "Ile kosztuje przedłużanie paznokci żelowych?", a: "Przedłużanie żelowe od 200 zł, uzupełnienie — 160 zł. Naprawa jednego paznokcia żelowego — 20 zł, dwóch — 30 zł, trzech — 50 zł." },
       { q: "Jak długo trwa zabieg?", a: "Przedłużanie zajmuje ok. 1,5 godziny, uzupełnienie — ok. 1 godz. 15 min." },
       { q: "Jak często robić uzupełnienie?", a: "Uzupełnienie paznokci żelowych zalecamy co 3-4 tygodnie." },
     ],
@@ -145,7 +141,7 @@ const SERVICE_DATA = {
       "Henna brwi — koloryzacja włosków i skóry, efekt do 4 tygodni",
       "Henna rzęs — podkreślone spojrzenie bez tuszu",
       "Depilacja nitką — delikatna metoda",
-      "Każdy zabieg trwa od 10 do 20 minut",
+      "Każdy zabieg trwa od 5 do 20 minut",
     ],
     process: [
       { step: "Dobór kształtu", desc: "Oceniamy naturalną linię brwi i rysy twarzy, aby regulacja i henna wyglądały spójnie, a nie sztucznie." },
@@ -164,22 +160,30 @@ const SERVICE_DATA = {
   },
   piercing: {
     category: "Piercing",
-    title: "Profesjonalny piercing",
-    seoTitle: "Przekłuwanie uszu i nosa — piercing",
-    seoDesc: "Profesjonalny piercing uszu i nosa w Grodzisku Mazowieckim. Przekłuwanie uszu od 100 zł, nosa 180 zł. Bezpieczne, sterylne warunki. Salon Place of Beauty!",
-    seoKeywords: "piercing Grodzisk Mazowiecki, przekłuwanie uszu, przekłuwanie nosa, piercing uszy cena, piercing nos, kolczyk ucho Grodzisk",
+    title: "Piercing i przekłuwanie uszu w Grodzisku Mazowieckim",
+    seoTitle: "Piercing Grodzisk Mazowiecki — przekłuwanie uszu i nosa",
+    seoDesc: "Przekłuwanie uszu od 120 zł i nosa 200 zł w Grodzisku Mazowieckim. Jednorazowe, sterylne narzędzia, wizyta ok. 10 min. Place of Beauty, Garbarska 17/2.",
+    seoKeywords: "piercing Grodzisk Mazowiecki, przekłuwanie uszu Grodzisk Mazowiecki, przekłuwanie uszu, przekłuwanie nosa, piercing uszu cena, piercing nosa, kolczyk w uchu Grodzisk",
     image: "/gallery/722422606558595.jpg",
-    description: "Profesjonalny piercing uszu i nosa w bezpiecznych, sterylnych warunkach. Używamy wyłącznie jednorazowych narzędzi i biżuterii najwyższej jakości. Zabieg jest szybki i niemal bezbolesny.",
+    description: "Przekłuwanie uszu i nosa wykonujemy w salonie Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim. Pracujemy wyłącznie jednorazowymi, sterylnymi narzędziami i używamy biżuterii wysokiej jakości. Samo przekłucie trwa kilka sekund, a cała wizyta — około 10 minut. Przekłuwanie uszu kosztuje od 120 zł, a dokładna cena zależy od miejsca przekłucia; przekłuwanie nosa kosztuje 200 zł. Po zabiegu otrzymujesz szczegółową instrukcję pielęgnacji.",
     benefits: [
-      "Sterylne jednorazowe narzędzia",
-      "Biżuteria najwyższej jakości",
-      "Bezbolesna procedura",
+      "Sterylne, jednorazowe narzędzia",
+      "Biżuteria wysokiej jakości",
+      "Szybka wizyta — ok. 10 minut",
       "Instrukcja pielęgnacji po zabiegu",
     ],
+    process: [
+      { step: "Ustalenie miejsca przekłucia", desc: "Na początku wizyty ustalamy miejsce przekłucia i rodzaj kolczyka. Od miejsca przekłucia zależy cena przekłuwania uszu." },
+      { step: "Dezynfekcja", desc: "Miejsce przekłucia dokładnie dezynfekujemy. Pracujemy wyłącznie jednorazowymi, sterylnymi narzędziami." },
+      { step: "Przekłucie", desc: "Samo przekłucie trwa kilka sekund i jest niemal bezbolesne." },
+      { step: "Instrukcja pielęgnacji", desc: "Na koniec otrzymujesz szczegółową instrukcję, jak dbać o przekłucie do czasu zagojenia." },
+    ],
     faq: [
-      { q: "Ile kosztuje piercing uszu?", a: "Przekłuwanie uszu od 100 zł w zależności od lokalizacji. Przekłuwanie nosa — 180 zł." },
-      { q: "Czy piercing jest bolesny?", a: "Zabieg jest bardzo szybki i niemal bezbolesny. Trwa zaledwie kilka sekund." },
-      { q: "Jak pielęgnować piercing po zabiegu?", a: "Po zabiegu otrzymasz szczegółową instrukcję pielęgnacji. Należy dezynfekować miejsce przekłucia 2 razy dziennie przez 4-6 tygodni." },
+      { q: "Ile kosztuje przekłuwanie uszu w Grodzisku Mazowieckim?", a: "Przekłuwanie uszu w Place of Beauty kosztuje od 120 zł — dokładna cena zależy od miejsca przekłucia. Przekłuwanie nosa kosztuje 200 zł." },
+      { q: "Ile trwa przekłuwanie uszu?", a: "Cała wizyta trwa około 10 minut, a samo przekłucie — kilka sekund." },
+      { q: "Czy piercing jest bolesny?", a: "Samo przekłucie trwa zaledwie kilka sekund i jest niemal bezbolesne." },
+      { q: "Jak pielęgnować piercing po zabiegu?", a: "Po zabiegu otrzymasz szczegółową instrukcję pielęgnacji. Należy dezynfekować miejsce przekłucia 2 razy dziennie przez 4–6 tygodni. Do czasu zagojenia nie zdejmuj biżuterii i nie dotykaj przekłucia nieumytymi rękami." },
+      { q: "Jak umówić się na piercing w Grodzisku Mazowieckim?", a: "Wolne terminy zobaczysz w rezerwacji online na Booksy. Jeśli nie widzisz pasującego terminu, zadzwoń pod numer 881 777 437 — pracujemy według zapisu." },
     ],
   },
   "modelowanie-ciala": {
@@ -208,12 +212,39 @@ export default function ServiceDetail() {
   const { slug } = useParams();
   const data = SERVICE_DATA[slug];
   const [services, setServices] = useState([]);
+  // "loading" | "ready" | "empty" | "error". Pusta kategoria wisiała
+  // wcześniej na "Ładowanie cennika..." u każdego odwiedzającego i
+  // w snapshotach pre-renderu.
+  const [priceState, setPriceState] = useState("loading");
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (data) {
-      axios.get(`${API}/services/${encodeURIComponent(data.category)}`).then(r => setServices(r.data)).catch(() => {});
-    }
+    if (!data) return undefined;
+    // Komponent nie jest montowany od nowa przy przejściu między usługami,
+    // więc spóźniona odpowiedź poprzedniej kategorii nie może nadpisać
+    // cennika bieżącej strony.
+    let cancelled = false;
+    setServices([]);
+    setPriceState("loading");
+    axios
+      .get(`${API}/services/${encodeURIComponent(data.category)}`)
+      .then((r) => {
+        if (cancelled) return;
+        // Odpowiedź, która nie jest tablicą (np. HTML zamiast JSON), to błąd,
+        // a nie pusty cennik — inaczej strona twierdziłaby, że ceny nie ma.
+        if (!Array.isArray(r.data)) {
+          setPriceState("error");
+          return;
+        }
+        setServices(r.data);
+        setPriceState(r.data.length ? "ready" : "empty");
+      })
+      .catch(() => {
+        if (!cancelled) setPriceState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [slug, data]);
 
   if (!data) {
@@ -225,40 +256,45 @@ export default function ServiceDetail() {
     );
   }
 
+  const path = `/uslugi/${slug}`;
+  const pageUrl = `${SITE_URL}${path}`;
+  const offers = services.map((row) => offerFromRow(row, pageUrl)).filter(Boolean);
+
+  // Salon opisujemy raz, w public/index.html — tutaj tylko referencja po @id
+  // (salonRef). Pełny węzeł BeautySalon z adresem bez @id robił z każdej
+  // strony usługi drugi, osobny salon.
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "Service",
-      "name": data.title,
-      "description": data.seoDesc,
-      "provider": {
-        "@type": "BeautySalon",
-        "name": "Place of Beauty",
-        "address": { "@type": "PostalAddress", "streetAddress": "Garbarska 17/2", "addressLocality": "Grodzisk Mazowiecki", "postalCode": "05-825", "addressCountry": "PL" },
-        "telephone": "+48881777437",
-        "url": "https://placeof.beauty",
-      },
-      "areaServed": [
-        { "@type": "City", "name": "Grodzisk Mazowiecki" },
-        { "@type": "City", "name": "Milanówek" },
-        { "@type": "City", "name": "Pruszków" },
-      ],
-      ...(services.length > 0 && services[0].price !== "Zapytaj o cenę" ? {
-        "offers": services.filter(s => s.price !== "Zapytaj o cenę").map(s => ({
-          "@type": "Offer",
-          "name": s.name,
-          "price": s.price.replace(/[^\d]/g, ""),
-          "priceCurrency": "PLN",
-        })),
-      } : {}),
+      "@id": `${pageUrl}#service`,
+      name: data.title,
+      description: data.seoDesc,
+      url: pageUrl,
+      image: `${SITE_URL}${data.image}`,
+      serviceType: data.category,
+      provider: salonRef(),
+      areaServed: areaServedNodes(),
+      ...(offers.length ? { offers } : {}),
+    },
+    {
+      ...breadcrumbJsonLd(
+        [
+          { name: "Strona główna", path: "/" },
+          { name: "Usługi", path: "/uslugi" },
+          { name: data.category },
+        ],
+        SITE_URL,
+      ),
+      "@id": `${pageUrl}#breadcrumb`,
     },
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": data.faq.map(f => ({
+      mainEntity: data.faq.map((f) => ({
         "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": { "@type": "Answer", "text": f.a },
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
       })),
     },
   ];
@@ -267,9 +303,12 @@ export default function ServiceDetail() {
     <div>
       <SEO
         title={data.seoTitle}
+        // Domyślny sufiks dopisuje "Grodzisk Mazowiecki"; gdy miasto jest już w
+        // tytule, wychodziło dwa razy i tytuł urywał się w wynikach.
+        titleSuffix={/Grodzisk/.test(data.seoTitle) ? " | Place of Beauty" : undefined}
         description={data.seoDesc}
         keywords={data.seoKeywords}
-        path={`/uslugi/${slug}`}
+        path={path}
         image={`https://placeof.beauty${data.image}`}
         jsonLd={jsonLd}
       />
@@ -428,8 +467,20 @@ export default function ServiceDetail() {
             ))}
           </div>
 
-          {services.length === 0 && (
+          {priceState === "loading" && (
             <p className="text-center font-body text-stone-400 py-8">Ładowanie cennika...</p>
+          )}
+          {priceState === "empty" && (
+            <p className="text-center font-body text-stone-500 py-8">
+              Cenę i termin ustalimy telefonicznie — zadzwoń pod{" "}
+              <a href="tel:+48881777437" className="text-gold hover:underline">881 777 437</a>.
+            </p>
+          )}
+          {priceState === "error" && (
+            <p className="text-center font-body text-stone-500 py-8">
+              Nie udało się wczytać cennika. Aktualne ceny podamy telefonicznie:{" "}
+              <a href="tel:+48881777437" className="text-gold hover:underline">881 777 437</a>.
+            </p>
           )}
         </div>
       </section>

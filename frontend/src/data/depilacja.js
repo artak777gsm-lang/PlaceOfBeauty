@@ -20,7 +20,7 @@ export const SALON = {
   lat: "52.1065",
   lng: "20.6314",
   rating: "4.9",
-  reviewCount: "272",
+  reviewCount: "306",
 };
 
 export const HUB_PATH = "/uslugi/depilacja-laserowa";
@@ -29,6 +29,9 @@ export const HUB_PATH = "/uslugi/depilacja-laserowa";
 /* CENNIK — źródło prawdy dla wszystkich podstron                       */
 /* ------------------------------------------------------------------ */
 
+// Ceny i czasy zgodne z rezerwacją online na Booksy (stan na 14.10.2026).
+// zone wskazuje podstronę, na której pozycja się pokazuje; null — tylko pełny
+// cennik i hub.
 export const CENNIK = [
   {
     name: "Wąsik",
@@ -39,12 +42,40 @@ export const CENNIK = [
     desc: "Laserowe usuwanie wąsika — najczęściej wybierana strefa na twarzy.",
   },
   {
+    name: "Obszar między brwiami",
+    area: "Twarz",
+    price: 70,
+    duration: "5 min",
+    zone: "wasik",
+  },
+  {
+    name: "Baczki",
+    area: "Twarz",
+    price: 120,
+    duration: "15 min",
+    zone: "wasik",
+  },
+  {
+    name: "Broda",
+    area: "Twarz",
+    price: 150,
+    duration: "10 min",
+    zone: "wasik",
+  },
+  {
+    name: "Szyja i policzki",
+    area: "Twarz",
+    price: 180,
+    duration: "15 min",
+    zone: "wasik",
+  },
+  {
     name: "Pachy",
     area: "Doły pachowe",
     price: 200,
     duration: "15 min",
     zone: "pachy",
-    desc: "Najszybszy zabieg i najszybciej widoczne efekty.",
+    desc: "Krótki zabieg i szybko widoczne efekty.",
   },
   {
     name: "Bikini płytkie",
@@ -60,7 +91,7 @@ export const CENNIK = [
     price: 300,
     duration: "30 min",
     zone: "bikini",
-    desc: "Pełna depilacja okolic intymnych wraz z okolicą międzypośladkową.",
+    desc: "Pełna depilacja okolic intymnych.",
   },
   {
     name: "Całe nogi",
@@ -71,13 +102,132 @@ export const CENNIK = [
     desc: "Największa powierzchnia — największa oszczędność czasu na co dzień.",
   },
   {
+    name: "Łydki",
+    area: "Nogi",
+    price: 340,
+    duration: "30 min",
+    zone: "nogi",
+  },
+  {
+    name: "Uda",
+    area: "Nogi",
+    price: 360,
+    duration: "30 min",
+    zone: "nogi",
+  },
+  {
+    name: "Ramiona",
+    area: "Ręce",
+    price: 200,
+    duration: "30 min",
+    zone: null,
+  },
+  {
+    name: "Przedramiona",
+    area: "Ręce",
+    price: 200,
+    duration: "30 min",
+    zone: null,
+  },
+  {
+    name: "Dłonie",
+    area: "Ręce",
+    price: 180,
+    duration: "15 min",
+    zone: null,
+  },
+  {
+    name: "Brzuch",
+    area: "Tułów",
+    price: 300,
+    duration: "30 min",
+    zone: null,
+  },
+  {
+    name: "Linia brzucha",
+    area: "Tułów",
+    price: 200,
+    duration: "10 min",
+    zone: null,
+  },
+  {
+    name: "Okolice brodawek",
+    area: "Tułów",
+    price: 220,
+    duration: "10 min",
+    zone: null,
+  },
+  {
+    name: "Pośladki",
+    area: "Pośladki",
+    price: 250,
+    duration: "30 min",
+    zone: null,
+  },
+  {
+    name: "Szpara pośladkowa",
+    area: "Pośladki",
+    price: 170,
+    duration: "15 min",
+    zone: null,
+  },
+  {
+    name: "Bikini męskie",
+    area: "Strefa męska",
+    price: 400,
+    duration: "30 min",
+    zone: "dla-mezczyzn",
+  },
+  {
+    name: "Plecy męskie",
+    area: "Strefa męska",
+    price: 300,
+    duration: "40 min",
+    zone: "dla-mezczyzn",
+  },
+  {
+    name: "Klatka piersiowa",
+    area: "Strefa męska",
+    price: 280,
+    duration: "30 min",
+    zone: "dla-mezczyzn",
+  },
+  {
+    name: "Kark",
+    area: "Strefa męska",
+    price: 180,
+    duration: "20 min",
+    zone: "dla-mezczyzn",
+  },
+  {
     name: "Nogi + pachy + bikini",
     area: "Pakiet",
     price: 750,
-    duration: "1 godz. 45 min",
+    duration: "1 godz. 15 min",
     zone: "cennik",
     badge: "Oszczędzasz 220 zł",
     desc: "Najpopularniejszy pakiet — trzy strefy podczas jednej wizyty.",
+  },
+  {
+    name: "Łydki + pachy + bikini",
+    area: "Pakiet",
+    price: 650,
+    duration: "1 godz. 15 min",
+    zone: "cennik",
+  },
+  {
+    name: "Pachy + bikini",
+    area: "Pakiet",
+    price: 400,
+    duration: "45 min",
+    zone: "cennik",
+  },
+  {
+    name: "Ramiona + przedramiona",
+    area: "Pakiet",
+    price: 350,
+    duration: "1 godz.",
+    zone: "cennik",
   },
 ];
 
@@ -524,7 +674,7 @@ export const HUB_FAQ = [
   },
   {
     q: "Ile trwa jeden zabieg?",
-    a: "Od 10 minut przy wąsiku, przez 15 minut na pachach i 20–30 minut na bikini, po 50 minut przy całych nogach. Pakiet trzech stref to około 1 godziny 45 minut. Dużą część czasu zajmuje przygotowanie skóry i pielęgnacja po zabiegu — sama praca lasera jest krótsza.",
+    a: "Od 10 minut przy wąsiku, przez 15 minut na pachach i 20–30 minut na bikini, po 50 minut przy całych nogach. Pakiet trzech stref to około 1 godziny 15 minut. Dużą część czasu zajmuje przygotowanie skóry i pielęgnacja po zabiegu — sama praca lasera jest krótsza.",
   },
   {
     q: "Czy mogę wykonać kilka stref podczas jednej wizyty?",
@@ -548,7 +698,7 @@ export const HUB_FAQ = [
   },
   {
     q: "Jak umówić się na depilację laserową?",
-    a: "Najwygodniej przez Booksy — rezerwacja online działa 24/7 i od razu widzisz wolne terminy. Możesz też zadzwonić pod numer +48 881 777 437. Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00.",
+    a: "Najwygodniej przez Booksy — rezerwacja online działa 24/7 i od razu widzisz wolne terminy. Możesz też zadzwonić pod numer +48 881 777 437. Salon jest czynny od poniedziałku do piątku (9:00–16:00, w czwartki do 15:30), pracujemy według zapisu.",
   },
 ];
 
@@ -589,7 +739,7 @@ export const STREFY = {
       {
         h2: "Dlaczego warto zacząć właśnie od pach",
         bullets: [
-          { title: "Najkrótszy zabieg w cenniku", desc: "15 minut razem z przygotowaniem skóry i pielęgnacją po zabiegu." },
+          { title: "Zabieg trwa 15 minut", desc: "Razem z przygotowaniem skóry i pielęgnacją po zabiegu." },
           { title: "Najszybciej widoczny efekt", desc: "Gruby, ciemny włos pochłania energię najlepiej — po pierwszej serii pachy bywają najczystszą strefą całego ciała." },
           { title: "Koniec z podrażnieniami po dezodorancie", desc: "Golenie mikrouszkadza naskórek, a antyperspirant wchodzi w te mikroskaleczenia. Bez golenia problem znika." },
           { title: "Rozjaśnienie skóry pach", desc: "Zniknięcie prześwitującego włosa likwiduje efekt „szarej pachy”, którego nie da się zmyć ani wybielić." },
@@ -933,11 +1083,11 @@ Object.assign(STREFY, {
       {
         h2: "Jakie strefy twarzy depilujemy",
         bullets: [
-          { title: "Wąsik — 100 zł", desc: "Okolica nad górną wargą. Najczęściej wybierana strefa twarzy i najszybszy zabieg w całym cenniku." },
-          { title: "Broda i linia żuchwy", desc: "Owłosienie pojawiające się na tle hormonalnym. Wycena indywidualna podczas konsultacji." },
-          { title: "Policzki i baki", desc: "Wymagają szczególnej ostrożności ze względu na ryzyko efektu paradoksalnego przy cienkim meszku — kwalifikujemy indywidualnie." },
-          { title: "Szyja i kark", desc: "Często łączone ze strefą brody, zwłaszcza u mężczyzn." },
-          { title: "Środek brwi", desc: "Precyzyjne usunięcie owłosienia między brwiami, alternatywa dla regulacji co dwa tygodnie." },
+          { title: "Wąsik — 100 zł", desc: "Okolica nad górną wargą. Najczęściej wybierana strefa twarzy, zabieg trwa 10 minut." },
+          { title: "Broda — 150 zł", desc: "Owłosienie pojawiające się na tle hormonalnym. Zabieg trwa 10 minut." },
+          { title: "Szyja i policzki — 180 zł, baczki — 120 zł", desc: "Wymagają szczególnej ostrożności ze względu na ryzyko efektu paradoksalnego przy cienkim meszku — kwalifikujemy indywidualnie." },
+          { title: "Kark — 180 zł", desc: "Często łączony ze strefą brody, zwłaszcza u mężczyzn." },
+          { title: "Środek brwi — 70 zł", desc: "Precyzyjne usunięcie owłosienia między brwiami, alternatywa dla regulacji co dwa tygodnie. Zabieg trwa 5 minut." },
         ],
       },
       {
@@ -982,7 +1132,7 @@ Object.assign(STREFY, {
       },
       {
         q: "Czy laser usunie jasny meszek z twarzy?",
-        a: "Zwykle nie. Meszek zawiera bardzo mało melaniny, więc laser nie ma czego namierzyć, a próba jego usunięcia niesie ryzyko efektu paradoksalnego. Do meszku lepszym rozwiązaniem jest dermaplaning, który mamy w ofercie zabiegów na twarz.",
+        a: "Zwykle nie. Meszek zawiera bardzo mało melaniny, więc laser nie ma czego namierzyć, a próba jego usunięcia niesie ryzyko efektu paradoksalnego. Przy meszku nad górną wargą lepiej sprawdza się depilacja nitką — wykonujemy ją w salonie (15 zł, ok. 5 minut).",
       },
       {
         q: "Czy po zabiegu na twarzy mogę nałożyć makijaż?",
@@ -1026,7 +1176,7 @@ Object.assign(STREFY, {
       { label: "Pachy", value: "200 zł / 15 min" },
       { label: "Wąsik i kontur brody", value: "od 100 zł" },
       { label: "Całe nogi", value: "550 zł / 50 min" },
-      { label: "Plecy, kark, klatka", value: "wycena na konsultacji" },
+      { label: "Plecy / klatka / kark", value: "300 / 280 / 180 zł" },
       { label: "Seria", value: "8–10 zabiegów" },
     ],
     intro: [
@@ -1080,7 +1230,7 @@ Object.assign(STREFY, {
       },
       {
         q: "Ile kosztuje depilacja laserowa dla mężczyzn?",
-        a: "Ceny stref występujących w cenniku są takie same jak dla kobiet: pachy 200 zł, wąsik 100 zł, całe nogi 550 zł, bikini od 220 zł. Strefy typowo męskie — plecy, kark, klatka piersiowa, brzuch — wyceniamy indywidualnie na bezpłatnej konsultacji, ponieważ powierzchnia i gęstość owłosienia różnią się bardzo mocno między osobami.",
+        a: "Pachy, wąsik i nogi kosztują tyle samo co u kobiet: pachy 200 zł, wąsik 100 zł, całe nogi 550 zł. Strefy typowo męskie mają własne ceny: plecy 300 zł, klatka piersiowa 280 zł, kark 180 zł, broda 150 zł, bikini męskie 400 zł. Przed pierwszym zabiegiem zapraszamy na bezpłatną konsultację z próbą laserową.",
       },
       {
         q: "Ile zabiegów potrzebuje mężczyzna?",
@@ -1136,8 +1286,8 @@ Object.assign(STREFY, {
     lead:
       "Pełny, aktualny cennik depilacji laserowej Primelase wraz z kosztem całej serii — bez gwiazdek i dopłat ujawnianych dopiero na miejscu.",
     facts: [
-      { label: "Zakres cen", value: "100–750 zł" },
-      { label: "Najtańsza strefa", value: "Wąsik — 100 zł" },
+      { label: "Zakres cen", value: "70–750 zł" },
+      { label: "Najtańsza strefa", value: "Środek brwi — 70 zł" },
       { label: "Pakiet 3 stref", value: "750 zł" },
       { label: "Oszczędność w pakiecie", value: "220 zł" },
       { label: "Konsultacja", value: "Bezpłatna" },
@@ -1168,7 +1318,7 @@ Object.assign(STREFY, {
         h2: "Pakiet nogi + pachy + bikini — 750 zł",
         paragraphs: [
           "Trzy najczęściej wybierane strefy w jednej wizycie. Osobno kosztowałyby 970 zł (550 zł + 200 zł + 220 zł), w pakiecie płacisz 750 zł — czyli 220 zł mniej za każdą wizytę.",
-          "Przy pełnej serii 6–8 zabiegów daje to od 1320 do 1760 zł oszczędności. Cały pakiet zamyka się w 1 godzinie 45 minut, więc jedna wizyta zamiast trzech osobnych terminów.",
+          "Przy pełnej serii 6–8 zabiegów daje to od 1320 do 1760 zł oszczędności. Cały pakiet zamyka się w 1 godzinie 15 minut, więc jedna wizyta zamiast trzech osobnych terminów.",
         ],
       },
       {
@@ -1189,9 +1339,9 @@ Object.assign(STREFY, {
         h2: "Co wpływa na koszt, a co nie",
         bullets: [
           { title: "Nie płacisz za gęstość owłosienia", desc: "Cena strefy jest stała niezależnie od tego, ile masz włosów i ile impulsów wykona laser." },
-          { title: "Nie ma dopłaty za płeć", desc: "Strefy z cennika kosztują tyle samo dla kobiet i mężczyzn." },
+          { title: "Te same strefy, te same ceny", desc: "Pachy, wąsik czy nogi kosztują tyle samo dla kobiet i mężczyzn. Osobne pozycje mają tylko strefy typowo męskie — bikini męskie (400 zł) i plecy (300 zł)." },
           { title: "Konsultacja jest bezpłatna", desc: "Ocena fototypu, kwalifikacja i plan serii nie są dodatkowo płatne." },
-          { title: "Strefy spoza cennika wyceniamy indywidualnie", desc: "Plecy, klatka piersiowa, brzuch, ramiona czy pośladki — wycena zależy od powierzchni i zapada na konsultacji, przed jakimkolwiek zabiegiem." },
+          { title: "Każda strefa ma stałą cenę", desc: "Plecy, klatka piersiowa, brzuch, ramiona czy pośladki — wszystkie mają stałe ceny, takie same jak w rezerwacji online na Booksy. Cenę znasz przed zabiegiem, nigdy po." },
           { title: "Łączenie stref się opłaca", desc: "Kilka stref podczas jednej wizyty to jeden dojazd i jeden termin — a w przypadku pakietu także niższa cena." },
         ],
       },
@@ -1207,7 +1357,7 @@ Object.assign(STREFY, {
       },
       {
         q: "Czy są pakiety i rabaty?",
-        a: "Tak. Pakiet nogi + pachy + bikini kosztuje 750 zł zamiast 970 zł, czyli 220 zł taniej przy każdej wizycie. Aktualne promocje sezonowe znajdziesz w rezerwacji online na Booksy.",
+        a: "Tak. Pakiet nogi + pachy + bikini kosztuje 750 zł zamiast 970 zł, czyli 220 zł taniej przy każdej wizycie. Są też pakiety łydki + pachy + bikini (650 zł), pachy + bikini (400 zł) oraz ramiona + przedramiona (350 zł). Aktualne promocje sezonowe znajdziesz w rezerwacji online na Booksy.",
       },
       {
         q: "Czy cena zależy od gęstości owłosienia?",
@@ -1222,8 +1372,8 @@ Object.assign(STREFY, {
         a: "Woskowanie nóg w salonie to szacunkowo 1200–2400 zł rocznie i wydatek, który wraca co roku. Pełna seria laserowa na nogach to 3300–4400 zł w pierwszym roku plus około 550 zł rocznie za zabieg podtrzymujący. Próg opłacalności wypada zwykle między drugim a czwartym rokiem — tym szybciej, im częściej korzystasz z woskowania. Po dziesięciu latach różnica to zwykle kilka tysięcy złotych na korzyść lasera, a do tego dochodzi efekt, którego wosk nie daje w ogóle.",
       },
       {
-        q: "Ile kosztuje depilacja stref, których nie ma w cenniku?",
-        a: "Plecy, klatkę piersiową, brzuch, ramiona, pośladki i inne partie wyceniamy indywidualnie na bezpłatnej konsultacji — cena zależy od powierzchni i gęstości owłosienia. Wycenę poznajesz przed zabiegiem, nigdy po.",
+        q: "Ile kosztuje depilacja pleców, brzucha czy ramion?",
+        a: "Plecy męskie — 300 zł, klatka piersiowa — 280 zł, brzuch — 300 zł, linia brzucha — 200 zł, ramiona — 200 zł, przedramiona — 200 zł, pośladki — 250 zł, kark — 180 zł, dłonie — 180 zł. Pełna lista stref z cenami jest w cenniku powyżej i w rezerwacji online na Booksy.",
       },
       {
         q: "Czy w cenie zabiegu jest coś dodatkowo wliczone?",
@@ -1231,7 +1381,7 @@ Object.assign(STREFY, {
       },
       {
         q: "Czy ceny w cenniku są aktualne?",
-        a: "Tak — cennik na stronie utrzymujemy zgodny z tym w rezerwacji online na Booksy. Jeśli zauważysz rozbieżność, obowiązuje cena widoczna w Booksy w momencie rezerwacji.",
+        a: "Tak — cennik na stronie utrzymujemy zgodny z tym w rezerwacji online na Booksy. Jeśli zauważysz rozbieżność, obowiązuje cena widoczna na Booksy w momencie rezerwacji.",
       },
       {
         q: "Czy mogę podarować depilację laserową w prezencie?",

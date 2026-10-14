@@ -9,8 +9,9 @@
  * swaps them in once the bundle runs. This walks the sitemap with headless
  * Chromium and writes each settled DOM to build/<route>/index.html.
  *
- * nginx already serves those: `try_files $uri $uri/ /index.html` finds the
- * directory before falling back to the shell, so no config change is needed.
+ * nginx serves them via `try_files $uri/index.html $uri /index.html` — the
+ * index file is checked before the directory, otherwise nginx answers the
+ * prerendered directory with a 301 to a trailing-slash URL.
  * The bundle still boots on top of the markup, so pages stay interactive.
  *
  * This step never fails the build. With no usable Chromium the site ships
@@ -82,8 +83,15 @@ function readRoutes() {
 /**
  * Serves the build directory, plus two things the real host does for us:
  * every navigation gets the untouched shell (never a page written earlier in
- * this run), and /api/ is proxied to the backend so the page is same-origin
- * and CORS never enters the picture.
+ * this run), and /api/ is proxied to the backend.
+ *
+ * The proxy has to answer CORS itself. Production builds bake in an absolute
+ * REACT_APP_BACKEND_URL, so the page at http://127.0.0.1:<port> believes it is
+ * calling https://placeof.beauty/api — a cross-origin request. The backend only
+ * allows its real domains, the browser drops the response, and every component
+ * that swallows the axios error renders its loading state into the snapshot:
+ * "Ładowanie cennika..." on each ServiceDetail page and an empty service grid
+ * plus the Unsplash fallback on the homepage, all with a successful build.
  */
 function createServer(shell) {
   const handle = (req, res) => {
@@ -94,22 +102,36 @@ function createServer(shell) {
     const pathname = decodeURIComponent(rawPath);
 
     if (rawPath.startsWith("/api/")) {
+      const cors = {
+        "access-control-allow-origin": "*",
+        "access-control-allow-headers": req.headers["access-control-request-headers"] || "*",
+        "access-control-allow-methods": "GET, OPTIONS",
+      };
+      if (req.method === "OPTIONS") {
+        res.writeHead(204, cors).end();
+        return;
+      }
       const target = new URL(API_ORIGIN);
+      const { origin: _origin, ...forwarded } = req.headers;
       const proxied = http.request(
         {
           host: target.hostname,
           port: target.port,
           path: rawPath + url.search,
           method: req.method,
-          headers: { ...req.headers, host: target.host },
+          headers: { ...forwarded, host: target.host },
         },
         (upstream) => {
-          res.writeHead(upstream.statusCode || 502, upstream.headers);
+          const headers = { ...upstream.headers };
+          for (const name of Object.keys(headers)) {
+            if (name.startsWith("access-control-")) delete headers[name];
+          }
+          res.writeHead(upstream.statusCode || 502, { ...headers, ...cors });
           upstream.pipe(res);
         },
       );
       proxied.on("error", () => {
-        res.writeHead(503, { "Content-Type": "application/json" });
+        res.writeHead(503, { "Content-Type": "application/json", ...cors });
         res.end("[]");
       });
       req.pipe(proxied);
@@ -239,6 +261,7 @@ async function main() {
 
   let browser;
   let done = 0;
+  let degraded = 0;
   try {
     browser = await puppeteer.launch({
       executablePath,
@@ -265,6 +288,35 @@ async function main() {
         if (url.hostname !== "127.0.0.1") return req.abort();
         return req.continue();
       });
+      // A failed /api call does not fail the page: components swallow the
+      // error and render their loading or fallback state, which then gets
+      // snapshotted. Collect those so the log says which page shipped hollow.
+      const apiFailures = [];
+      const apiPath = (u) => {
+        try {
+          const { pathname } = new URL(u);
+          return pathname.startsWith("/api/") ? decodeURIComponent(pathname) : null;
+        } catch {
+          return null;
+        }
+      };
+      // A request still in flight when the snapshot is taken fails nothing and
+      // answers nothing — waitForNetworkIdle just times out quietly — so it is
+      // tracked separately and reported as unanswered.
+      const apiPending = new Set();
+      page.on("request", (req) => {
+        if (apiPath(req.url())) apiPending.add(req);
+      });
+      page.on("requestfinished", (req) => apiPending.delete(req));
+      page.on("requestfailed", (req) => {
+        apiPending.delete(req);
+        const p = apiPath(req.url());
+        if (p) apiFailures.push(`${p}: ${req.failure()?.errorText || "failed"}`);
+      });
+      page.on("response", (resp) => {
+        const p = apiPath(resp.url());
+        if (p && resp.status() >= 400) apiFailures.push(`${p}: HTTP ${resp.status()}`);
+      });
 
       try {
         await page.goto(origin + route, { waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
@@ -282,6 +334,7 @@ async function main() {
         await page.waitForNetworkIdle({ idleTime: 500, timeout: 8000 }).catch(() => {});
         await settle(page);
 
+        for (const req of apiPending) apiFailures.push(`${apiPath(req.url())}: нет ответа к моменту снимка`);
         const rendered = await page.evaluate(() => "<!doctype html>\n" + document.documentElement.outerHTML);
         const html = rendered.replace(/<head(\s[^>]*)?>/i, (tag) => `${tag}\n    ${MARKER}`);
         const title = await page.title();
@@ -290,6 +343,10 @@ async function main() {
         fs.writeFileSync(outFile, html);
         done += 1;
         log(`${route} → ${path.relative(BUILD_DIR, outFile)}  «${title.slice(0, 70)}»`);
+        if (apiFailures.length) {
+          degraded += 1;
+          log(`ВНИМАНИЕ: ${route} сохранён без данных API — ${apiFailures.join("; ")}`);
+        }
       } catch (err) {
         log(`ВНИМАНИЕ: ${route} не отрендерился (${err.message.split("\n")[0]}) — остаётся SPA-заглушка`);
       } finally {
@@ -303,7 +360,7 @@ async function main() {
     server.close();
   }
 
-  log(`готово: ${done} из ${routes.length}`);
+  log(`готово: ${done} из ${routes.length}` + (degraded ? `, без данных API: ${degraded}` : ""));
 }
 
 main().catch((err) => {
