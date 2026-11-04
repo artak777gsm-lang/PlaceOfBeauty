@@ -101,7 +101,7 @@ class SalonInfo(BaseModel):
     description: str
 
 # Seed data
-# Ceny i czasy zgodne z rezerwacją online na Booksy (stan na 14.10.2026).
+# Ceny i czasy zgodne z rezerwacją online na Booksy (stan na 4.11.2026).
 # Zabiegów na twarz i makijażu salon nie wykonuje — nie ma ich w seedzie.
 SERVICES_DATA = [
     {"category": "Manicure", "name": "Manicure hybrydowe", "price": "140 zł", "duration": "1 godz.", "description": "Profesjonalny manicure z lakierem hybrydowym"},
@@ -132,13 +132,28 @@ SERVICES_DATA = [
     {"category": "Depilacja laserowa", "name": "Wąsik", "price": "100 zł", "duration": "10 min", "description": "Depilacja laserowa Primelase"},
     {"category": "Depilacja laserowa", "name": "Nogi + pachy + bikini", "price": "750 zł", "duration": "1 godz. 15 min", "description": "Pakiet — depilacja laserowa Primelase"},
     {"category": "Kosmetyka", "name": "Henna brwi", "price": "30 zł", "duration": "15 min", "description": "Koloryzacja brwi henną"},
-    {"category": "Kosmetyka", "name": "Henna + regulacja", "price": "40 zł", "duration": "20 min", "description": "Henna z regulacją kształtu brwi"},
+    {"category": "Kosmetyka", "name": "Henna + regulacja", "price": "50 zł", "duration": "20 min", "description": "Henna brwi połączona z regulacją kształtu"},
     {"category": "Kosmetyka", "name": "Henna rzęs", "price": "30 zł", "duration": "15 min", "description": "Koloryzacja rzęs henną"},
     {"category": "Kosmetyka", "name": "Regulacja brwi", "price": "20 zł", "duration": "10 min", "description": "Profesjonalna regulacja brwi"},
     {"category": "Kosmetyka", "name": "Depilacja wąsika nitką", "price": "15 zł", "duration": "5 min", "description": "Szybka i precyzyjna depilacja nitkowa"},
     {"category": "Modelowanie ciała", "name": "Elektrostymulacja mięśni EMS", "price": "100 zł", "duration": "30 min", "description": "Technologia HI-EMT — budowanie mięśni i redukcja tkanki tłuszczowej"},
-    {"category": "Piercing", "name": "Przekłuwanie uszu", "price": "od 120 zł", "duration": "10 min", "description": "Profesjonalny piercing uszu"},
-    {"category": "Piercing", "name": "Przekłuwanie nosa", "price": "200 zł", "duration": "10 min", "description": "Profesjonalny piercing nosa"},
+    # Piercing — 15 usług z Booksy, wszystkie metodą igłową.
+    {"category": "Piercing", "name": "Lobe — przekłucie płatka ucha", "price": "100 zł", "duration": "20 min", "description": "Klasyczne przekłucie płatka ucha metodą igłową, z doborem biżuterii"},
+    {"category": "Piercing", "name": "2 × lobe — przekłucie obu płatków", "price": "180 zł", "duration": "30 min", "description": "Przekłucie płatków obu uszu metodą igłową"},
+    {"category": "Piercing", "name": "Upper lobe — górna część płatka", "price": "150 zł", "duration": "30 min", "description": "Przekłucie górnej części płatka ucha sterylną igłą"},
+    {"category": "Piercing", "name": "Helix — zewnętrzna chrząstka ucha", "price": "150 zł", "duration": "20 min", "description": "Przekłucie zewnętrznej chrząstki ucha sterylną igłą"},
+    {"category": "Piercing", "name": "Forward helix — przednia chrząstka ucha", "price": "150 zł", "duration": "20 min", "description": "Przekłucie przedniej części chrząstki ucha metodą igłową"},
+    {"category": "Piercing", "name": "Flat — płaska część chrząstki", "price": "150 zł", "duration": "30 min", "description": "Przekłucie płaskiej części chrząstki ucha sterylną igłą"},
+    {"category": "Piercing", "name": "Conch — środek małżowiny", "price": "150 zł", "duration": "20 min", "description": "Przekłucie środkowej części małżowiny ucha metodą igłową"},
+    {"category": "Piercing", "name": "Daith — wewnętrzny fałd chrząstki", "price": "150 zł", "duration": "20 min", "description": "Przekłucie wewnętrznego fałdu chrząstki ucha sterylną igłą"},
+    {"category": "Piercing", "name": "Rook — wewnętrzny fałd chrząstki", "price": "150 zł", "duration": "20 min", "description": "Przekłucie wewnętrznego fałdu chrząstki ucha metodą igłową"},
+    {"category": "Piercing", "name": "Tragus", "price": "150 zł", "duration": "20 min", "description": "Przekłucie chrząstki przy wejściu do kanału słuchowego"},
+    {"category": "Piercing", "name": "Anti-tragus", "price": "150 zł", "duration": "20 min", "description": "Przekłucie chrząstki nad płatkiem ucha — zależnie od budowy ucha"},
+    {"category": "Piercing", "name": "Snug — wewnętrzny wał chrząstki", "price": "150 zł", "duration": "20 min", "description": "Przekłucie wewnętrznego wału chrząstki ucha sterylną igłą"},
+    {"category": "Piercing", "name": "Industrial", "price": "150 zł", "duration": "30 min", "description": "Dwa przekłucia górnej chrząstki ucha połączone jednym kolczykiem"},
+    {"category": "Piercing", "name": "Orbital", "price": "150 zł", "duration": "30 min", "description": "Dwa przekłucia połączone jednym kółkiem"},
+    {"category": "Piercing", "name": "Nostril — przekłucie nosa", "price": "150 zł", "duration": "30 min", "description": "Przekłucie skrzydełka nosa metodą igłową"},
+    {"category": "Piercing", "name": "Navel — przekłucie pępka", "price": "150 zł", "duration": "30 min", "description": "Przekłucie pępka metodą igłową"},
 ]
 
 REVIEWS_DATA = [
@@ -200,7 +215,7 @@ SALON_INFO = {
         "Niedziela": "Zamknięte"
     },
     "rating": 4.9,
-    "reviews_count": 306,
+    "reviews_count": 313,
     "amenities": ["Parking", "Akceptacja kart płatniczych", "Zwierzęta dozwolone", "Przyjazne dla dzieci"],
     "booksy_url": "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki",
     "facebook_url": "https://www.facebook.com/placeofbeauty",
@@ -216,7 +231,7 @@ HOMEPAGE_DATA = {
     "features": [
         {"title": "Profesjonalizm", "desc": "Zespół doświadczonych specjalistów"},
         {"title": "Szeroka oferta", "desc": "Od manicure po depilację laserową"},
-        {"title": "Zadowolenie klientów", "desc": "Ocena 4.9 na podstawie 306 opinii"},
+        {"title": "Zadowolenie klientów", "desc": "Ocena 4.9 na podstawie 313 opinii"},
     ],
     "cta_image": "/gallery/465318305602361.jpg",
     "cta_subtitle": "Zarezerwuj wizytę",

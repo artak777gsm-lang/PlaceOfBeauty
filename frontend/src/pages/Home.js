@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
 import { SALON_ID } from "@/lib/seoSchema";
+import { SALON, FACTS_CHECKED } from "@/data/depilacja";
 import { pluralPl } from "@/lib/utils";
 import axios from "axios";
 
@@ -186,8 +187,96 @@ const featureIcons = [Sparkles, Scissors, Heart];
 const defaultFeatures = [
   { title: "Profesjonalizm", desc: "Zespół doświadczonych specjalistów" },
   { title: "Szeroka oferta", desc: "Od manicure po depilację laserową" },
-  { title: "Zadowolenie klientów", desc: "Ocena 4.9 na podstawie 306 opinii" },
+  { title: "Zadowolenie klientów", desc: `Ocena ${SALON.rating} na podstawie ${SALON.reviewCount} opinii` },
 ];
+
+/**
+ * Ceny "od" dla każdej usługi — na stronie głównej nie było wcześniej ani
+ * jednej kwoty, a pytanie "ile kosztuje… w Grodzisku" to najczęstsze, z jakim
+ * przychodzą wyszukiwarki i asystenci AI. Te same liczby stoją na stronach
+ * usług i na Booksy; zmieniając cenę, zmień ją także tutaj (lista miejsc
+ * w CLAUDE.md, "Факты о салоне").
+ */
+const PRICE_SUMMARY = [
+  { name: "Manicure hybrydowe", note: "klasyczne 80–90 zł, laminacja Yokaba 120 zł", price: "140 zł", path: "/uslugi/manicure" },
+  { name: "Pedicure", note: "z hybrydą 170 zł, kwasowe Mavex 180 zł", price: "od 150 zł", path: "/uslugi/pedicure" },
+  { name: "Przedłużanie paznokci żelem", note: "uzupełnienie 160 zł", price: "od 200 zł", path: "/uslugi/stylizacja-paznokci" },
+  { name: "Depilacja laserowa Primelase", note: "pachy 200 zł, całe nogi 550 zł, konsultacja bezpłatna", price: "od 70 zł", path: "/uslugi/depilacja-laserowa" },
+  { name: "Regulacja i henna brwi, henna rzęs", note: "henna brwi z regulacją 50 zł", price: "od 20 zł", path: "/uslugi/kosmetyka" },
+  { name: "Przekłuwanie uszu, nosa i pępka", note: "płatek 100 zł, chrząstka, nos i pępek 150 zł", price: "od 100 zł", path: "/uslugi/piercing" },
+  { name: "Modelowanie ciała EMS", note: "zabieg 30 minut", price: "100 zł", path: "/uslugi/modelowanie-ciala" },
+];
+
+/**
+ * Kim jesteśmy i ile to kosztuje — w jednym miejscu, zwykłym tekstem i tabelą.
+ * Hero ma tylko hasło z panelu admina; ten blok jest stały, żeby opis salonu,
+ * który cytują silniki odpowiedzi, nie zależał od treści w bazie.
+ */
+function SalonSummary() {
+  return (
+    <section data-testid="salon-summary" className="py-20 md:py-28 bg-white">
+      <div className="container mx-auto px-4 md:px-8 max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
+          <AnimatedSection className="lg:col-span-2">
+            <span className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-4 block">O salonie w skrócie</span>
+            <h2 className="font-heading text-3xl sm:text-4xl font-semibold text-stone-900 mb-6 leading-tight">
+              Salon kosmetyczny w <span className="italic">Grodzisku Mazowieckim</span>
+            </h2>
+            <p className="font-body text-base text-stone-600 leading-relaxed mb-5">
+              Place of Beauty to salon kosmetyczny przy ul. Garbarskiej 17/2 (róg Bałtyckiej) w Grodzisku
+              Mazowieckim. Wykonujemy manicure i pedicure, przedłużanie paznokci żelem, depilację laserową
+              laserem diodowym Primelase, regulację i hennę brwi, hennę rzęs, przekłuwanie uszu, nosa i pępka
+              oraz modelowanie ciała EMS.
+            </p>
+            <p className="font-body text-base text-stone-600 leading-relaxed mb-5">
+              Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30.
+              Pracujemy według zapisu: wizytę umówisz online na Booksy albo pod numerem{" "}
+              <a href="tel:+48881777437" className="text-stone-900 hover:text-gold transition-colors">+48 881 777 437</a>.
+            </p>
+            <p className="font-body text-sm text-stone-500">
+              Ocena salonu na Booksy: {SALON.rating}/5 z {SALON.reviewCount} opinii (stan na{" "}
+              <time dateTime={FACTS_CHECKED.iso}>{FACTS_CHECKED.label}</time>).
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.1} className="lg:col-span-3">
+            <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-stone-900 mb-6">
+              Ile kosztują zabiegi w <span className="italic">Place of Beauty?</span>
+            </h2>
+            <div className="overflow-x-auto border border-stone-200">
+              <table className="w-full text-left">
+                <thead className="bg-stone-900">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-body text-xs uppercase tracking-wider text-stone-300 font-medium">Usługa</th>
+                    <th scope="col" className="px-4 py-3 font-body text-xs uppercase tracking-wider text-stone-300 font-medium text-right whitespace-nowrap">Cena</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PRICE_SUMMARY.map((row) => (
+                    <tr key={row.path} className="border-t border-stone-200 odd:bg-white even:bg-stone-50">
+                      <td className="px-4 py-3">
+                        <Link to={row.path} className="font-body text-sm font-medium text-stone-900 hover:text-gold transition-colors">
+                          {row.name}
+                        </Link>
+                        <span className="block font-body text-xs text-stone-500 mt-0.5">{row.note}</span>
+                      </td>
+                      <td className="px-4 py-3 font-body text-sm text-stone-900 text-right whitespace-nowrap">{row.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="font-body text-xs text-stone-500 mt-3">
+              Ceny zgodne z rezerwacją online na Booksy — stan na{" "}
+              <time dateTime={FACTS_CHECKED.iso}>{FACTS_CHECKED.label}</time>.{" "}
+              <Link to="/uslugi" className="text-gold hover:text-stone-900 transition-colors">Pełny cennik salonu</Link>
+            </p>
+          </AnimatedSection>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function FeaturesBar({ content }) {
   const features = content?.features || defaultFeatures;
@@ -339,7 +428,7 @@ function ReviewsPreview() {
                   <Star key={i} className="w-5 h-5 fill-gold text-gold" />
                 ))}
               </div>
-              <span className="font-body text-sm text-stone-500">4.9 / 5 &bull; 306 opinii</span>
+              <span className="font-body text-sm text-stone-500">{SALON.rating} / 5 &bull; {SALON.reviewCount} opinii na Booksy</span>
             </div>
           </div>
         </AnimatedSection>
@@ -501,6 +590,7 @@ export default function Home() {
         jsonLd={OFFER_CATALOG_JSON_LD}
       />
       <Hero content={content} />
+      <SalonSummary />
       <FeaturesBar content={content} />
       <ServicesPreview />
       <ReviewsPreview />

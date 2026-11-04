@@ -14,6 +14,15 @@
  * prerendered directory with a 301 to a trailing-slash URL.
  * The bundle still boots on top of the markup, so pages stay interactive.
  *
+ * nginx answers anything else with 404 and build/404.html (try_files … =404),
+ * so every sitemap route MUST end up with a file here — when a page fails to
+ * render, or there is no Chromium at all, it gets a copy of the plain shell
+ * instead. /admin is served from build/app-shell.html, the untouched shell.
+ *
+ * The same run writes build/llms.txt and build/llms-full.txt (llmstxt.org):
+ * the page list and the full text of every page, taken from the rendered DOM,
+ * so the prices an AI assistant reads there are always the ones on the site.
+ *
  * This step never fails the build. With no usable Chromium the site ships
  * exactly as it does today, just without the static markup.
  */
@@ -25,6 +34,12 @@ const path = require("path");
 const BUILD_DIR = path.resolve(__dirname, "..", "build");
 const SHELL = path.join(BUILD_DIR, "index.html");
 const SITEMAP = path.join(BUILD_DIR, "sitemap.xml");
+const APP_SHELL = path.join(BUILD_DIR, "app-shell.html");
+const NOT_FOUND = path.join(BUILD_DIR, "404.html");
+const LLMS_INTRO = path.resolve(__dirname, "llms-intro.md");
+// Any path the router does not know renders the NotFound page.
+const NOT_FOUND_PROBE = "/__nie-znaleziono";
+const SITE = "https://placeof.beauty";
 
 // Services.js pulls the price list from the API. On an update the backend is
 // still serving the previous release while we build, so the cennik makes it
@@ -227,23 +242,167 @@ async function settle(page) {
   });
 }
 
+/** Output file for a route: "/" is the shell itself, the rest get a directory. */
+function routeFile(route) {
+  return route === "/" ? SHELL : path.join(BUILD_DIR, route, "index.html");
+}
+
+/**
+ * Plain-shell copies for every route that did not get a prerendered page, and
+ * for 404.html. Without them nginx (=404) would turn a failed render into a
+ * missing page; with them the route still works as the SPA it used to be.
+ */
+function writeFallbacks(shell, routes, rendered) {
+  let copies = 0;
+  for (const route of routes) {
+    if (route === "/" || rendered.has(route)) continue;
+    const file = routeFile(route);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, shell);
+    copies += 1;
+  }
+  if (!rendered.has(NOT_FOUND_PROBE)) fs.writeFileSync(NOT_FOUND, shell);
+  if (copies) log(`ВНИМАНИЕ: ${copies} маршрутов без пререндера — положена SPA-заглушка`);
+}
+
+/**
+ * Rendered <main> → Markdown. Runs in the page. Headings, paragraphs, lists,
+ * tables, FAQ <details> and definition lists; navigation, buttons, images and
+ * scripts are dropped. Closed <details> are read too (textContent, not
+ * innerText), otherwise every FAQ answer would be missing.
+ */
+function pageToMarkdown() {
+  const SKIP = new Set(["SCRIPT", "STYLE", "SVG", "IMG", "BUTTON", "NAV", "IFRAME", "NOSCRIPT", "PICTURE", "VIDEO"]);
+  const INLINE = new Set(["A", "SPAN", "STRONG", "EM", "B", "I", "TIME", "SMALL", "SUP", "SUB", "ABBR", "CODE", "LABEL", "MARK", "U", "S"]);
+  const BLOCKS = "p,h1,h2,h3,h4,h5,h6,li,table,details,div,section,article,ul,ol,dl,blockquote,figure";
+  const norm = (t) => t.replace(/\s+/g, " ").trim();
+  const inline = (node) => {
+    let out = "";
+    for (const c of node.childNodes) {
+      if (c.nodeType === 3) out += c.data;
+      else if (c.nodeType === 1 && !SKIP.has(c.tagName) && c.getAttribute("aria-hidden") !== "true") {
+        const t = inline(c);
+        out += INLINE.has(c.tagName) ? t : ` ${t} `;
+      }
+    }
+    return out;
+  };
+  const lines = [];
+  const push = (t) => {
+    const x = norm(t);
+    // Bare step numbers ("1", "2") from the numbered badges carry no meaning.
+    if (x && !/^\d{1,2}$/.test(x) && lines[lines.length - 1] !== x) lines.push(x);
+  };
+  const walk = (node) => {
+    for (const el of node.children) {
+      const tag = el.tagName;
+      if (SKIP.has(tag) || el.getAttribute("aria-hidden") === "true") continue;
+      if (/^H[1-6]$/.test(tag)) push(`${"#".repeat(Number(tag[1]))} ${norm(inline(el))}`);
+      else if (tag === "LI") push(`- ${norm(inline(el))}`);
+      else if (tag === "DT") push(`**${norm(inline(el))}**`);
+      else if (tag === "TABLE") {
+        const rows = [...el.querySelectorAll("tr")].map((tr) =>
+          [...tr.children].map((cell) => norm(inline(cell)).replace(/\|/g, "/")),
+        );
+        rows.forEach((cells, i) => {
+          push(`| ${cells.join(" | ")} |`);
+          if (i === 0) push(`|${cells.map(() => " --- ").join("|")}|`);
+        });
+      } else if (tag === "DETAILS") {
+        const summary = el.querySelector("summary");
+        if (summary) push(`**${norm(inline(summary))}**`);
+        for (const c of el.children) if (c !== summary) push(inline(c));
+      } else if (!el.querySelector(BLOCKS)) push(inline(el));
+      else walk(el);
+    }
+  };
+  const main = document.querySelector("main") || document.getElementById("root");
+  if (main) walk(main);
+  return lines.join("\n\n");
+}
+
+/** Facts for the llms.txt header, read from the BeautySalon node in the shell. */
+function salonFacts(shell) {
+  for (const m of shell.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    let data;
+    try {
+      data = JSON.parse(m[1]);
+    } catch {
+      continue;
+    }
+    const nodes = data["@graph"] || [data];
+    const salon = nodes.find((n) => n["@type"] === "BeautySalon");
+    if (salon) return salon;
+  }
+  return null;
+}
+
+const DAYS_PL = {
+  Monday: "poniedziałek",
+  Tuesday: "wtorek",
+  Wednesday: "środa",
+  Thursday: "czwartek",
+  Friday: "piątek",
+  Saturday: "sobota",
+  Sunday: "niedziela",
+};
+
+function llmsHeader(shell) {
+  const s = salonFacts(shell);
+  const intro = fs.existsSync(LLMS_INTRO) ? fs.readFileSync(LLMS_INTRO, "utf8").trim() : "";
+  const out = [`# ${s ? s.name : "Place of Beauty"}`, ""];
+  if (s) {
+    out.push(`> ${s.description}`, "");
+    if (intro) out.push(intro, "");
+    const a = s.address || {};
+    const hours = (s.openingHoursSpecification || []).map((h) => {
+      const days = [].concat(h.dayOfWeek).map((d) => DAYS_PL[String(d).split("/").pop()] || d);
+      return `${days.join(", ")} ${h.opens}–${h.closes}`;
+    });
+    const r = s.aggregateRating;
+    const booking = s.potentialAction && s.potentialAction.target && s.potentialAction.target.urlTemplate;
+    out.push(
+      "## Kluczowe informacje",
+      "",
+      `- Adres: ul. ${a.streetAddress}, ${a.postalCode} ${a.addressLocality}, woj. ${a.addressRegion}, Polska`,
+      `- Telefon: ${String(s.telephone).replace(/^\+48(\d{3})(\d{3})(\d{3})$/, "+48 $1 $2 $3")}`,
+      `- Godziny otwarcia: ${hours.join("; ")}; pozostałe dni zamknięte`,
+      ...(booking ? [`- Rezerwacja online (Booksy): ${booking}`] : []),
+      ...(r ? [`- Ocena na Booksy: ${r.ratingValue}/5 z ${r.reviewCount} opinii`] : []),
+      ...(s.sameAs || []).filter((u) => !u.includes("booksy")).map((u) => `- Profil: ${u}`),
+      "",
+    );
+  } else if (intro) out.push(intro, "");
+  return out;
+}
+
+/** build/llms.txt (index) and build/llms-full.txt (every page's text). */
+function writeLlms(shell, pages) {
+  if (!pages.length) return;
+  const header = llmsHeader(shell);
+  const index = [
+    ...header,
+    "## Strony",
+    "",
+    ...pages.map((p) => `- [${p.title}](${p.url}): ${p.description}`),
+    "",
+    "## Optional",
+    "",
+    `- [Pełna treść serwisu](${SITE}/llms-full.txt): tekst wszystkich stron w jednym pliku, generowany przy każdej publikacji.`,
+    "",
+  ];
+  fs.writeFileSync(path.join(BUILD_DIR, "llms.txt"), index.join("\n"));
+  const full = [
+    ...header,
+    ...pages.flatMap((p) => ["---", "", `Adres strony: ${p.url}`, "", p.markdown, ""]),
+  ];
+  fs.writeFileSync(path.join(BUILD_DIR, "llms-full.txt"), full.join("\n"));
+  log(`llms.txt и llms-full.txt: ${pages.length} страниц, ${Math.round(Buffer.byteLength(full.join("\n")) / 1024)} КБ`);
+}
+
 async function main() {
   if (!fs.existsSync(SHELL) || !fs.existsSync(SITEMAP)) {
     log("build/index.html или build/sitemap.xml не найдены — пропускаю");
-    return;
-  }
-
-  let puppeteer;
-  try {
-    puppeteer = require("puppeteer");
-  } catch {
-    log("ВНИМАНИЕ: puppeteer не установлен — сайт собран без пререндера");
-    return;
-  }
-
-  const executablePath = await resolveBrowser(puppeteer);
-  if (!executablePath) {
-    log("ВНИМАНИЕ: Chromium не найден — сайт собран без пререндера");
     return;
   }
 
@@ -254,6 +413,25 @@ async function main() {
   }
 
   const routes = readRoutes();
+  // /admin gets the bare shell, never the prerendered homepage.
+  fs.writeFileSync(APP_SHELL, shell);
+
+  let puppeteer;
+  try {
+    puppeteer = require("puppeteer");
+  } catch {
+    log("ВНИМАНИЕ: puppeteer не установлен — сайт собран без пререндера");
+    writeFallbacks(shell, routes, new Set());
+    return;
+  }
+
+  const executablePath = await resolveBrowser(puppeteer);
+  if (!executablePath) {
+    log("ВНИМАНИЕ: Chromium не найден — сайт собран без пререндера");
+    writeFallbacks(shell, routes, new Set());
+    return;
+  }
+
   const server = createServer(shell);
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const origin = `http://127.0.0.1:${server.address().port}`;
@@ -262,13 +440,15 @@ async function main() {
   let browser;
   let done = 0;
   let degraded = 0;
+  const renderedRoutes = new Set();
+  const pages = [];
   try {
     browser = await puppeteer.launch({
       executablePath,
       args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
     });
 
-    for (const route of routes) {
+    for (const route of [...routes, NOT_FOUND_PROBE]) {
       const page = await browser.newPage();
       await page.setViewport({ width: 1280, height: 900 });
       await page.setRequestInterception(true);
@@ -338,10 +518,24 @@ async function main() {
         const rendered = await page.evaluate(() => "<!doctype html>\n" + document.documentElement.outerHTML);
         const html = rendered.replace(/<head(\s[^>]*)?>/i, (tag) => `${tag}\n    ${MARKER}`);
         const title = await page.title();
-        const outFile = route === "/" ? SHELL : path.join(BUILD_DIR, route, "index.html");
+        const outFile = route === NOT_FOUND_PROBE ? NOT_FOUND : routeFile(route);
+        if (route !== NOT_FOUND_PROBE) {
+          const meta = await page.evaluate(() => ({
+            description: document.querySelector('meta[name="description"]')?.content || "",
+            canonical: document.querySelector('link[rel="canonical"]')?.href || "",
+          }));
+          pages.push({
+            route,
+            title,
+            url: meta.canonical || `${SITE}${route === "/" ? "/" : route}`,
+            description: meta.description,
+            markdown: await page.evaluate(pageToMarkdown),
+          });
+        }
         fs.mkdirSync(path.dirname(outFile), { recursive: true });
         fs.writeFileSync(outFile, html);
-        done += 1;
+        renderedRoutes.add(route);
+        if (route !== NOT_FOUND_PROBE) done += 1;
         log(`${route} → ${path.relative(BUILD_DIR, outFile)}  «${title.slice(0, 70)}»`);
         if (apiFailures.length) {
           degraded += 1;
@@ -358,7 +552,12 @@ async function main() {
   } finally {
     if (browser) await browser.close();
     server.close();
+    writeFallbacks(shell, routes, renderedRoutes);
   }
+
+  // Sitemap order, homepage first — that is how an assistant should read the site.
+  pages.sort((a, b) => (a.route === "/" ? -1 : b.route === "/" ? 1 : routes.indexOf(a.route) - routes.indexOf(b.route)));
+  writeLlms(shell, pages);
 
   log(`готово: ${done} из ${routes.length}` + (degraded ? `, без данных API: ${degraded}` : ""));
 }

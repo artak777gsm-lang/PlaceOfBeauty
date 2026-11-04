@@ -11,8 +11,8 @@
         <meta name="googlebot" content="index, follow" />
         <meta name="geo.region" content="PL-MZ" />
         <meta name="geo.placename" content="Grodzisk Mazowiecki" />
-        <meta name="geo.position" content="52.1065;20.6314" />
-        <meta name="ICBM" content="52.1065, 20.6314" />
+        <meta name="geo.position" content="52.10447;20.6183" />
+        <meta name="ICBM" content="52.10447, 20.6183" />
         <link data-rh="true" rel="canonical" href="https://placeof.beauty/" />
 
         <!-- Open Graph -->
@@ -36,6 +36,10 @@
         <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
+        <!-- Zwięzły opis salonu i stron dla asystentów AI (llmstxt.org),
+             generowany przy każdej publikacji przez scripts/prerender.js. -->
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+
         <!-- Fonts — non-blocking load with preconnect + swap -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,101 +49,134 @@
 
         <title>Place of Beauty — Salon Kosmetyczny Grodzisk Mazowiecki | Manicure, Pedicure, Depilacja Laserowa</title>
 
-        <!-- Structured Data: LocalBusiness / BeautySalon -->
+        <!-- Structured Data: jeden graf — salon, logo i serwis.
+             BeautySalon jest zarazem Organization (LocalBusiness ⊂ Organization),
+             więc nie deklarujemy osobnej organizacji: Google widział wcześniej
+             dwa różne "Place of Beauty". Strony odwołują się do węzłów po @id
+             (src/lib/seoSchema.js: salonRef, webPageJsonLd) i NIE powtarzają
+             aggregateRating — jedna ocena zbiorcza na całą encję.
+             Liczby (ocena, liczba opinii) — z Booksy, stan na 4.11.2026. -->
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
-            "@type": "BeautySalon",
-            "@id": "https://placeof.beauty/#salon",
-            "name": "Place of Beauty",
-            "alternateName": "Place of Beauty Carika",
-            "description": "Profesjonalny salon kosmetyczny w Grodzisku Mazowieckim oferujący manicure hybrydowe, pedicure, stylizację paznokci żelowych, depilację laserową Primelase, hennę i regulację brwi, piercing i modelowanie ciała EMS.",
-            "url": "https://placeof.beauty",
-            "telephone": "+48881777437",
-            "currenciesAccepted": "PLN",
-            "paymentAccepted": "Cash, Credit Card",
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Garbarska 17/2",
-                "addressLocality": "Grodzisk Mazowiecki",
-                "postalCode": "05-825",
-                "addressRegion": "mazowieckie",
-                "addressCountry": "PL"
-            },
-            "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": "52.1065",
-                "longitude": "20.6314"
-            },
-            "areaServed": [
-                { "@type": "City", "name": "Grodzisk Mazowiecki" },
-                { "@type": "City", "name": "Milanówek" },
-                { "@type": "City", "name": "Pruszków" },
-                { "@type": "City", "name": "Podkowa Leśna" },
-                { "@type": "City", "name": "Brwinów" }
-            ],
-            "openingHoursSpecification": [
+            "@graph": [
                 {
-                    "@type": "OpeningHoursSpecification",
-                    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Friday"],
-                    "opens": "09:00",
-                    "closes": "16:00"
+                    "@type": "BeautySalon",
+                    "@id": "https://placeof.beauty/#salon",
+                    "name": "Place of Beauty",
+                    "alternateName": "Place of Beauty Carika",
+                    "description": "Salon kosmetyczny w Grodzisku Mazowieckim (ul. Garbarska 17/2): manicure hybrydowe i klasyczne, pedicure, przedłużanie paznokci żelem, depilacja laserowa laserem diodowym Primelase, regulacja i henna brwi, henna rzęs, przekłuwanie uszu, nosa i pępka oraz modelowanie ciała EMS. Wizyty według zapisu na Booksy.",
+                    "url": "https://placeof.beauty/",
+                    "telephone": "+48881777437",
+                    "currenciesAccepted": "PLN",
+                    "paymentAccepted": "Gotówka, karta płatnicza",
+                    "priceRange": "15–750 zł",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "Garbarska 17/2",
+                        "addressLocality": "Grodzisk Mazowiecki",
+                        "postalCode": "05-825",
+                        "addressRegion": "mazowieckie",
+                        "addressCountry": "PL"
+                    },
+                    "geo": {
+                        "@type": "GeoCoordinates",
+                        "latitude": 52.10447,
+                        "longitude": 20.6183
+                    },
+                    "hasMap": "https://www.google.com/maps/search/?api=1&query=Place+of+Beauty+Carika%2C+Garbarska+17%2F2%2C+05-825+Grodzisk+Mazowiecki",
+                    "areaServed": [
+                        { "@type": "City", "name": "Grodzisk Mazowiecki" },
+                        { "@type": "City", "name": "Milanówek" },
+                        { "@type": "City", "name": "Pruszków" },
+                        { "@type": "City", "name": "Podkowa Leśna" },
+                        { "@type": "City", "name": "Brwinów" }
+                    ],
+                    "openingHoursSpecification": [
+                        {
+                            "@type": "OpeningHoursSpecification",
+                            "dayOfWeek": ["https://schema.org/Monday", "https://schema.org/Tuesday", "https://schema.org/Wednesday", "https://schema.org/Friday"],
+                            "opens": "09:00",
+                            "closes": "16:00"
+                        },
+                        {
+                            "@type": "OpeningHoursSpecification",
+                            "dayOfWeek": "https://schema.org/Thursday",
+                            "opens": "09:00",
+                            "closes": "15:30"
+                        }
+                    ],
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": "4.9",
+                        "reviewCount": "313",
+                        "bestRating": "5",
+                        "worstRating": "1"
+                    },
+                    "amenityFeature": [
+                        { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true },
+                        { "@type": "LocationFeatureSpecification", "name": "Płatność kartą", "value": true },
+                        { "@type": "LocationFeatureSpecification", "name": "Przyjazne dla dzieci", "value": true },
+                        { "@type": "LocationFeatureSpecification", "name": "Zwierzęta dozwolone", "value": true }
+                    ],
+                    "logo": { "@id": "https://placeof.beauty/#logo" },
+                    "image": [
+                        "https://placeof.beauty/og-image.jpg",
+                        "https://placeof.beauty/gallery/1023899656410887.jpg",
+                        "https://placeof.beauty/gallery/1197425395724978.jpg"
+                    ],
+                    "contactPoint": {
+                        "@type": "ContactPoint",
+                        "telephone": "+48881777437",
+                        "contactType": "customer service",
+                        "areaServed": "PL",
+                        "availableLanguage": ["pl"]
+                    },
+                    "potentialAction": {
+                        "@type": "ReserveAction",
+                        "target": {
+                            "@type": "EntryPoint",
+                            "urlTemplate": "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki",
+                            "inLanguage": "pl-PL",
+                            "actionPlatform": ["https://schema.org/DesktopWebPlatform", "https://schema.org/MobileWebPlatform"]
+                        },
+                        "result": { "@type": "Reservation", "name": "Rezerwacja wizyty w Place of Beauty" }
+                    },
+                    "knowsAbout": [
+                        "Manicure hybrydowy",
+                        "Pedicure",
+                        "Przedłużanie paznokci żelem",
+                        "Depilacja laserowa",
+                        "Laser diodowy Primelase",
+                        "Regulacja i henna brwi",
+                        "Przekłuwanie uszu metodą igłową",
+                        "Elektrostymulacja mięśni EMS"
+                    ],
+                    "sameAs": [
+                        "https://www.facebook.com/placeofbeauty",
+                        "https://www.instagram.com/place_of_beauty_carika/",
+                        "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki"
+                    ]
                 },
                 {
-                    "@type": "OpeningHoursSpecification",
-                    "dayOfWeek": "Thursday",
-                    "opens": "09:00",
-                    "closes": "15:30"
+                    "@type": "ImageObject",
+                    "@id": "https://placeof.beauty/#logo",
+                    "url": "https://placeof.beauty/logo-512.png",
+                    "contentUrl": "https://placeof.beauty/logo-512.png",
+                    "width": 512,
+                    "height": 512,
+                    "caption": "Place of Beauty"
+                },
+                {
+                    "@type": "WebSite",
+                    "@id": "https://placeof.beauty/#website",
+                    "url": "https://placeof.beauty/",
+                    "name": "Place of Beauty",
+                    "alternateName": "Place of Beauty Grodzisk Mazowiecki",
+                    "inLanguage": "pl-PL",
+                    "publisher": { "@id": "https://placeof.beauty/#salon" }
                 }
-            ],
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "4.9",
-                "reviewCount": "306",
-                "bestRating": "5",
-                "worstRating": "1"
-            },
-            "priceRange": "15 zł - 750 zł",
-            "image": [
-                "https://placeof.beauty/gallery/465318305602361.jpg",
-                "https://placeof.beauty/gallery/1023899656410887.jpg",
-                "https://placeof.beauty/gallery/1080256257441893.jpg"
-            ],
-            "logo": "https://placeof.beauty/favicon.svg",
-            "sameAs": [
-                "https://www.facebook.com/placeofbeauty",
-                "https://www.instagram.com/place_of_beauty_carika/",
-                "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki"
             ]
-        }
-        </script>
-
-        <!-- Structured Data: Organization -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Place of Beauty",
-            "url": "https://placeof.beauty",
-            "logo": "https://placeof.beauty/favicon.svg",
-            "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+48881777437",
-                "contactType": "customer service",
-                "areaServed": "PL",
-                "availableLanguage": ["Polish"]
-            }
-        }
-        </script>
-
-        <!-- Structured Data: WebSite with SearchAction -->
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Place of Beauty",
-            "url": "https://placeof.beauty",
-            "inLanguage": "pl-PL"
         }
         </script>
     </head>

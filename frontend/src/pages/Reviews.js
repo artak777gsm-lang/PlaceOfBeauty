@@ -4,6 +4,7 @@ import { Star, Quote, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import SEO from "@/components/SEO";
+import { SALON, FACTS_CHECKED } from "@/data/depilacja";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -36,7 +37,7 @@ export default function Reviews() {
     <div data-testid="reviews-page">
       <SEO
         title="Opinie klientów"
-        description="Opinie klientów Place of Beauty z platformy Booksy. Ocena 4.9/5 na podstawie 306 opinii. Przeczytaj, co mówią nasi zadowoleni klienci o salonie kosmetycznym w Grodzisku Mazowieckim."
+        description="Opinie klientów Place of Beauty z platformy Booksy. Ocena 4.9/5 na podstawie 313 opinii. Przeczytaj, co mówią nasi zadowoleni klienci o salonie kosmetycznym w Grodzisku Mazowieckim."
         keywords="opinie salon kosmetyczny Grodzisk, Place of Beauty opinie, recenzje salonu, ocena salonu kosmetycznego, opinie Booksy Place of Beauty"
         path="/opinie"
       />
@@ -74,7 +75,7 @@ export default function Reviews() {
           <AnimatedSection>
             <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16" data-testid="rating-summary">
               <div className="text-center">
-                <span className="font-heading text-6xl font-bold text-stone-900">4.9</span>
+                <span className="font-heading text-6xl font-bold text-stone-900">{SALON.rating}</span>
                 <div className="flex justify-center mt-2 mb-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-gold text-gold" />
@@ -83,7 +84,7 @@ export default function Reviews() {
                 <span className="font-body text-sm text-stone-500">na 5.0</span>
               </div>
               <div className="text-center">
-                <span className="font-heading text-4xl font-bold text-stone-900">306</span>
+                <span className="font-heading text-4xl font-bold text-stone-900">{SALON.reviewCount}</span>
                 <p className="font-body text-sm text-stone-500 mt-1">opinii na Booksy</p>
               </div>
               <div className="text-center">
@@ -91,6 +92,10 @@ export default function Reviews() {
                 <p className="font-body text-sm text-stone-500 mt-1">ocen 5 gwiazdek</p>
               </div>
             </div>
+            <p className="font-body text-xs text-stone-500 text-center mt-6">
+              Dane z Booksy, stan na <time dateTime={FACTS_CHECKED.iso}>{FACTS_CHECKED.label}</time>: {SALON.reviewCount} opinii,
+              z czego 307 to oceny 5-gwiazdkowe.
+            </p>
           </AnimatedSection>
         </div>
       </section>

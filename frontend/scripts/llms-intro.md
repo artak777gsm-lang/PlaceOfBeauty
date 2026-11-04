@@ -1,0 +1,3 @@
+Ceny, czasy zabiegów i godziny otwarcia na stronach poniżej są zgodne z rezerwacją online na Booksy — przy każdym cenniku podana jest data sprawdzenia. Salon nie wykonuje zabiegów pielęgnacyjnych twarzy, makijażu, zabiegów medycyny estetycznej ani solarium; na twarzy wykonuje depilację laserową, depilację wąsika nitką oraz regulację i hennę brwi i rzęs. Wizyty według zapisu. Salon mieści się na rogu ulic Garbarskiej i Bałtyckiej; przy salonie jest parking, można płacić kartą.
+
+Ten plik i llms-full.txt są generowane automatycznie przy każdej publikacji strony, z tej samej treści, którą widzą odwiedzający.

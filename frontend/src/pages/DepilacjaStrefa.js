@@ -14,7 +14,7 @@ import {
   FaqList,
   CtaBand,
 } from "@/components/depilacja/Blocks";
-import { SITE_URL, HUB_PATH, CENNIK, STREFY } from "@/data/depilacja";
+import { SITE_URL, HUB_PATH, CENNIK, STREFY, FACTS_CHECKED } from "@/data/depilacja";
 import { serviceJsonLd, faqJsonLd, webPageJsonLd } from "@/lib/seoSchema";
 
 export default function DepilacjaStrefa() {
@@ -132,8 +132,8 @@ export default function DepilacjaStrefa() {
           title={isCennik ? "Pełny cennik depilacji laserowej" : `Cennik — ${data.zone.toLowerCase()}`}
           sub={
             isCennik
-              ? "Ceny zgodne z rezerwacją online na Booksy. Przed pierwszym zabiegiem zapraszamy na bezpłatną konsultację z próbą laserową."
-              : "Cena obejmuje konsultację, przygotowanie skóry, zabieg i pielęgnację po zabiegu."
+              ? `Ceny zgodne z rezerwacją online na Booksy (stan na ${FACTS_CHECKED.label}). Przed pierwszym zabiegiem zapraszamy na bezpłatną konsultację z próbą laserową.`
+              : `Cena obejmuje konsultację, przygotowanie skóry, zabieg i pielęgnację po zabiegu. Ceny zgodne z Booksy (stan na ${FACTS_CHECKED.label}).`
           }
           showLinks={isCennik}
         />

@@ -94,16 +94,51 @@ fi
 
 # Update Nginx config for SEO (proper MIME types, better caching)
 log "Обновление Nginx конфига для SEO..."
+
+# Заголовки безопасности — в отдельном файле, который подключается в КАЖДОМ
+# location с собственным add_header: nginx не наследует add_header с уровня
+# server в location, где есть свой add_header. До 04.11 из-за этого ни один
+# ответ не нёс X-Frame-Options / nosniff / Referrer-Policy.
+mkdir -p /etc/nginx/snippets
+cat > /etc/nginx/snippets/placeof-headers.conf << 'HEADERS_EOF'
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=(self)" always;
+add_header Strict-Transport-Security "max-age=31536000" always;
+HEADERS_EOF
+
 cat > /etc/nginx/sites-available/placeof.beauty << 'NGINX_EOF'
+# /index.html и /<маршрут>/index.html → канонический адрес без index.html.
+# Смотрим $request_uri (исходный запрос), чтобы не поймать внутренние
+# переходы try_files.
+map $request_uri $pob_index_redirect {
+    ~^/index\.html(?:\?.*)?$               /;
+    ~^(?<pob_p>/.+)/index\.html(?:\?.*)?$  $pob_p;
+    default                                "";
+}
+
 server {
     listen 80;
     server_name placeof.beauty www.placeof.beauty;
-    return 301 https://$host$request_uri;
+    return 301 https://placeof.beauty$request_uri;
+}
+
+# www → основной домен (сертификат покрывает оба имени). До 04.11 www отдавал
+# тот же сайт с кодом 200 — второй хост с той же самой выдачей.
+server {
+    listen 443 ssl http2;
+    server_name www.placeof.beauty;
+    ssl_certificate /etc/letsencrypt/live/placeof.beauty/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/placeof.beauty/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    return 301 https://placeof.beauty$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name placeof.beauty www.placeof.beauty;
+    server_name placeof.beauty;
 
     ssl_certificate /etc/letsencrypt/live/placeof.beauty/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/placeof.beauty/privkey.pem;
@@ -113,54 +148,108 @@ server {
     root /var/www/placeof.beauty/frontend/build;
     index index.html;
 
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(self)" always;
+    # Польские буквы в llms.txt, robots.txt, JSON и XML.
+    charset utf-8;
+    charset_types text/plain text/css text/xml application/javascript application/json application/xml application/manifest+json;
 
-    # Gzip compression
+    include /etc/nginx/snippets/placeof-headers.conf;
+
     gzip on;
     gzip_vary on;
     gzip_min_length 256;
     gzip_comp_level 6;
     gzip_types
         text/plain text/css text/xml text/javascript
-        application/json application/javascript application/xml+rss
+        application/json application/javascript application/xml application/ld+json
         application/rss+xml application/atom+xml
         image/svg+xml application/manifest+json;
 
-    # SEO files — proper MIME types
-    location = /robots.txt {
-        add_header Content-Type text/plain;
-        access_log off;
-    }
-    location = /sitemap.xml {
-        add_header Content-Type application/xml;
-        access_log off;
-    }
-    location = /manifest.json {
-        add_header Content-Type application/manifest+json;
+    if ($pob_index_redirect) {
+        return 301 $pob_index_redirect;
     }
 
+    # Настоящий 404. Раньше любой неизвестный адрес (опечатка, /llms.txt,
+    # /uslugi/nieistnieje) получал главную с кодом 200 — мягкий 404 и дубль
+    # главной. 404.html пишет пререндер (страница «Nie znaleziono», noindex).
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "no-cache" always;
+        add_header X-Robots-Tag "noindex" always;
+    }
+
+    # --- файлы для краулеров и AI-агентов -----------------------------------
+    location = /robots.txt {
+        access_log off;
+        try_files $uri =404;
+    }
+    location = /sitemap.xml {
+        types { application/xml xml; }
+        access_log off;
+        try_files $uri =404;
+    }
+    location = /manifest.json {
+        types { application/manifest+json json; }
+        try_files $uri =404;
+    }
+    # llms.txt и llms-full.txt генерирует пререндер при каждой сборке.
+    location ~ ^/llms(-full)?\.txt$ {
+        types { text/plain txt; }
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+    # ACME и security.txt — раньше блокировки файлов с точкой.
+    location ^~ /.well-known/ {
+        try_files $uri =404;
+    }
+
+    # --- редиректы ----------------------------------------------------------
     # Zabiegów na twarz salon nie wykonuje — dawna strona prowadzi do cennika,
     # zamiast obiecywać usługę, której nie ma.
     location ~ ^/uslugi/zabiegi-na-twarz/?$ {
         return 301 /uslugi;
     }
+    # /uslugi/ → /uslugi: sitemap и canonical без слеша. Префиксы, у которых
+    # слеш бывает законно (/api/, /static/, …), объявлены через ^~, и этот
+    # regex до них не доходит.
+    location ~ ^(?<pob_noslash>/.+)/$ {
+        return 301 $pob_noslash$is_args$args;
+    }
 
-    # Frontend SPA
+    # --- приложение ---------------------------------------------------------
+    # Админка — чистая оболочка SPA (не пререндер главной) и вне индекса.
+    location ^~ /admin {
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "no-store" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+        try_files /app-shell.html =404;
+    }
+
+    # Главная + ссылка на llms.txt в заголовке ответа.
+    location = / {
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "no-cache" always;
+        add_header Link '</llms.txt>; rel="alternate"; type="text/plain"' always;
+        try_files /index.html =404;
+    }
+
     location / {
         # $uri/index.html проверяется ПЕРВЫМ. Если первым идёт $uri, nginx
         # находит созданный пререндером каталог и сам отвечает 301 с дописанным
         # слешем — а все URL в sitemap.xml и все canonical идут без слеша, то
         # есть редирект получала бы каждая проиндексированная страница.
-        try_files $uri/index.html $uri /index.html;
-        add_header Cache-Control "no-cache, must-revalidate";
+        # В конце =404, а не /index.html: пререндер кладёт файл (или копию
+        # оболочки, если рендер не удался) для каждого маршрута из sitemap.
+        try_files $uri/index.html $uri =404;
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "no-cache" always;
     }
 
-    # Backend API
-    location /api/ {
+    # Backend API. В robots.txt не закрыт — рендереру Google нужен прайс, —
+    # но сами JSON в индекс попадать не должны.
+    location ^~ /api/ {
         proxy_pass http://127.0.0.1:8000/api/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -168,36 +257,41 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_read_timeout 30s;
         client_max_body_size 10M;
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header X-Robots-Tag "noindex" always;
     }
 
-    # Long-cache static assets (hashed filenames)
-    location /static/ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
+    # Бандлы CRA с хешем в имени — год, immutable. ^~, иначе regex ниже
+    # перехватывает .js/.css и даёт 30 дней.
+    location ^~ /static/ {
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
         access_log off;
+        try_files $uri =404;
     }
 
     # Gallery images (built-in)
-    location /gallery/ {
-        expires 30d;
-        add_header Cache-Control "public";
+    location ^~ /gallery/ {
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "public, max-age=2592000" always;
         access_log off;
+        try_files $uri =404;
     }
 
     # User-uploaded images (persistent — survives rebuilds)
-    # ^~ modifier: takes precedence over regex locations (so .jpg/.jpeg rules don't intercept)
     location ^~ /uploads/ {
         alias /var/www/placeof.beauty/uploads/;
-        expires 30d;
-        add_header Cache-Control "public";
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "public, max-age=2592000" always;
         access_log off;
     }
 
-    # Other static files
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff2?|ttf|eot)$ {
-        expires 30d;
-        add_header Cache-Control "public";
+    # Остальная статика из корня (favicon, og-image, logo, apple-touch-icon).
+    location ~* \.(png|jpe?g|gif|ico|svg|webp|avif|woff2?|ttf|eot)$ {
+        include /etc/nginx/snippets/placeof-headers.conf;
+        add_header Cache-Control "public, max-age=2592000" always;
         access_log off;
+        try_files $uri =404;
     }
 
     # Block access to sensitive files

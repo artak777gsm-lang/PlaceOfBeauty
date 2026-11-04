@@ -1,4 +1,4 @@
-import { SITE_URL, SALON, PHONE, OKOLICE, BOOKSY_URL } from "@/data/depilacja";
+import { SITE_URL, SALON, PHONE, OKOLICE, BOOKSY_URL, FACTS_CHECKED } from "@/data/depilacja";
 
 export const SALON_ID = `${SITE_URL}/#salon`;
 
@@ -17,7 +17,7 @@ export function salonRef() {
     "@type": "BeautySalon",
     "@id": SALON_ID,
     name: SALON.name,
-    url: SITE_URL,
+    url: `${SITE_URL}/`,
   };
 }
 
@@ -62,7 +62,8 @@ export function serviceJsonLd({ name, description, path, image, offers = [], ser
               itemOffered: {
                 "@type": "Service",
                 name: `Depilacja laserowa ${o.name.toLowerCase()}`,
-                ...(o.duration ? { termsOfService: `Czas zabiegu: ${o.duration}` } : {}),
+                // Czas trwania to opis usługi; termsOfService oznacza regulamin.
+                ...(o.duration ? { description: `Czas zabiegu: ${o.duration}` } : {}),
               },
             })),
           },
@@ -99,6 +100,11 @@ export function howToJsonLd({ name, description, steps, totalTime }) {
   };
 }
 
+/**
+ * WebPage spięty z resztą grafu po @id: WebSite i BeautySalon są zadeklarowane
+ * raz, w public/index.html. dateModified — dzień ostatniej weryfikacji cen
+ * z Booksy (FACTS_CHECKED), a nie data budowania strony.
+ */
 export function webPageJsonLd({ name, description, path, image, breadcrumbId }) {
   return {
     "@context": "https://schema.org",
@@ -108,8 +114,9 @@ export function webPageJsonLd({ name, description, path, image, breadcrumbId }) 
     name,
     description,
     inLanguage: "pl-PL",
-    isPartOf: { "@type": "WebSite", "@id": `${SITE_URL}/#website`, name: "Place of Beauty", url: SITE_URL },
+    isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": SALON_ID },
+    dateModified: FACTS_CHECKED.iso,
     ...(image ? { primaryImageOfPage: { "@type": "ImageObject", url: `${SITE_URL}${image}` } } : {}),
     ...(breadcrumbId ? { breadcrumb: { "@id": breadcrumbId } } : {}),
   };

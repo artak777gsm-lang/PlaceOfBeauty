@@ -1,3 +1,15 @@
+# placeof.beauty
+#
+# Wszystkie wyszukiwarki i asystenci AI (Googlebot, Bingbot, OAI-SearchBot,
+# ChatGPT-User, GPTBot, Claude-SearchBot, ClaudeBot, PerplexityBot, Applebot
+# i inne) mają dostęp do całej publicznej części serwisu — jedna grupa "*",
+# bez listy nazwanych botów, żeby nie wykluczyć po cichu nowych crawlerów.
+#
+# /api/ celowo NIE jest zablokowane: Googlebot renderuje strony z JS i pobiera
+# z /api/ cennik. JSON trzyma poza indeksem nagłówek X-Robots-Tag w nginx.
+#
+# Opis salonu i pełna treść stron dla asystentów AI: /llms.txt, /llms-full.txt
+
 User-agent: *
 Allow: /
 Disallow: /admin

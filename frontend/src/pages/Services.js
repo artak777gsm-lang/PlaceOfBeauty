@@ -7,12 +7,41 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
+import { FaqList } from "@/components/depilacja/Blocks";
+import { FACTS_CHECKED } from "@/data/depilacja";
+import { faqJsonLd } from "@/lib/seoSchema";
 import { pluralPl } from "@/lib/utils";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const BOOKSY_URL = "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki";
+
+// Pytania, z którymi ludzie (i asystenci AI) przychodzą na stronę cennika.
+// "Czy robicie zabiegi na twarz" wraca w Search Console po zdjęciu tej
+// kategorii — odpowiadamy wprost, zamiast milczeć.
+const SERVICES_FAQ = [
+  {
+    q: "Jakie usługi wykonuje Place of Beauty?",
+    a: "Place of Beauty w Grodzisku Mazowieckim wykonuje manicure (hybrydowe, klasyczne, męski, laminację Yokaba), pedicure (klasyczne, hybrydowe, kwasowe Mavex i leczniczy), przedłużanie i uzupełnianie paznokci żelowych, depilację laserową Primelase, regulację i hennę brwi, hennę rzęs, depilację wąsika nitką, przekłuwanie uszu, nosa i pępka oraz modelowanie ciała EMS.",
+  },
+  {
+    q: "Czy w salonie można zrobić zabieg na twarz albo makijaż?",
+    a: "Nie. Place of Beauty nie wykonuje zabiegów pielęgnacyjnych twarzy, makijażu ani zabiegów medycyny estetycznej. Na twarzy wykonujemy depilację laserową (wąsik, broda, baczki, szyja i policzki, obszar między brwiami), depilację wąsika nitką oraz regulację i hennę brwi i rzęs.",
+  },
+  {
+    q: "Jak umówić wizytę?",
+    a: "Online przez Booksy — rezerwacja działa całą dobę i od razu widać wolne terminy — albo telefonicznie pod numerem +48 881 777 437. Salon pracuje według zapisu, od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30.",
+  },
+  {
+    q: "Czy można zapłacić kartą?",
+    a: "Tak, w salonie można zapłacić kartą płatniczą albo gotówką.",
+  },
+  {
+    q: "Czy ceny na stronie są aktualne?",
+    a: `Ceny na stronie są zgodne z rezerwacją online na Booksy — sprawdziliśmy je ${FACTS_CHECKED.label}. Jeśli zauważysz rozbieżność, obowiązuje cena widoczna na Booksy w chwili rezerwacji.`,
+  },
+];
 
 function AnimatedSection({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
@@ -83,9 +112,10 @@ export default function Services() {
     <div data-testid="services-page">
       <SEO
         title="Usługi i Cennik"
-        description="Cennik Place of Beauty w Grodzisku Mazowieckim: manicure hybrydowe 140 zł, pedicure od 150 zł, depilacja laserowa od 70 zł, piercing od 120 zł, henna brwi."
+        description="Cennik Place of Beauty w Grodzisku Mazowieckim: manicure hybrydowe 140 zł, pedicure od 150 zł, depilacja laserowa od 70 zł, przekłuwanie uszu od 100 zł, henna brwi."
         keywords="cennik salon kosmetyczny Grodzisk, cena manicure, cena pedicure, cennik depilacji laserowej, cena manicure hybrydowego, cena przedłużania paznokci, usługi kosmetyczne Grodzisk Mazowiecki"
         path="/uslugi"
+        jsonLd={faqJsonLd(SERVICES_FAQ)}
       />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
@@ -108,8 +138,12 @@ export default function Services() {
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl text-white font-semibold mb-4">
               Nasze <span className="italic">usługi</span>
             </h1>
-            <p className="font-body text-base text-stone-400 max-w-xl">
-              Pełna lista zabiegów i usług kosmetycznych z cenami.
+            <p className="font-body text-base text-stone-300 max-w-3xl leading-relaxed">
+              Cennik salonu Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim: manicure
+              hybrydowe kosztuje 140 zł, pedicure od 150 zł, przedłużanie paznokci żelem od 200 zł, depilacja
+              laserowa Primelase od 70 zł, regulacja brwi 20 zł, przekłuwanie uszu od 100 zł, a zabieg EMS
+              100 zł. Ceny są zgodne z rezerwacją online na Booksy (stan na{" "}
+              <time dateTime={FACTS_CHECKED.iso}>{FACTS_CHECKED.label}</time>).
             </p>
           </motion.div>
         </div>
@@ -252,6 +286,16 @@ export default function Services() {
                   ))}
                 </div>
 
+                {/* W bazie są tylko najczęstsze strefy; pełny cennik — 27 pozycji z Booksy. */}
+                {category === "Depilacja laserowa" && (
+                  <Link
+                    to="/uslugi/depilacja-laserowa/cennik"
+                    className="inline-flex items-center gap-1 mt-3 mr-6 font-body text-xs text-gold hover:text-stone-900 transition-colors uppercase tracking-wider"
+                  >
+                    Pełny cennik depilacji laserowej — wszystkie strefy od 70 zł <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                )}
+
                 {items.length > 4 && (
                   <button
                     onClick={() => toggleCat(category)}
@@ -277,6 +321,8 @@ export default function Services() {
           )}
         </div>
       </section>
+
+      <FaqList items={SERVICES_FAQ} sub="O usługach salonu, rezerwacji i cenach." />
 
       {/* CTA */}
       <section className="py-16 bg-stone-900">

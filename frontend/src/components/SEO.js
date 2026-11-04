@@ -14,6 +14,7 @@ export default function SEO({
   imageAlt,
   type = "website",
   jsonLd = null,
+  noindex = false,
 }) {
   const fullTitle = title
     ? `${title}${titleSuffix}`
@@ -26,13 +27,16 @@ export default function SEO({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
-      <link rel="canonical" href={url} />
+      {noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={url} />}
 
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
+      {/* Wymiary znamy tylko dla domyślnej grafiki (1200×630). */}
+      {image === DEFAULT_IMAGE && <meta property="og:image:width" content="1200" />}
+      {image === DEFAULT_IMAGE && <meta property="og:image:height" content="630" />}
       {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
       <meta property="og:type" content={type} />
       <meta property="og:locale" content="pl_PL" />

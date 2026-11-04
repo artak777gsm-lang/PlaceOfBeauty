@@ -17,11 +17,20 @@ export const SALON = {
   city: "Grodzisk Mazowiecki",
   postalCode: "05-825",
   region: "mazowieckie",
-  lat: "52.1065",
-  lng: "20.6314",
+  // Punkt budynku Garbarska 17 — zgodny z wizytówką Google i OpenStreetMap.
+  // Wcześniej stało tu 52.1065, 20.6314, czyli ~0,9 km obok salonu.
+  lat: "52.10447",
+  lng: "20.61830",
   rating: "4.9",
-  reviewCount: "306",
+  reviewCount: "313",
 };
+
+/**
+ * Dzień, w którym ceny, czasy i liczbę opinii ostatnio sprawdzono z Booksy.
+ * Pokazywany przy cennikach i ocenie — silnik odpowiedzi (i klient) widzi,
+ * z kiedy jest dana liczba. Zmieniając ceny albo liczbę opinii, zmień i datę.
+ */
+export const FACTS_CHECKED = { iso: "2026-11-04", label: "4.11.2026" };
 
 export const HUB_PATH = "/uslugi/depilacja-laserowa";
 
@@ -29,7 +38,8 @@ export const HUB_PATH = "/uslugi/depilacja-laserowa";
 /* CENNIK — źródło prawdy dla wszystkich podstron                       */
 /* ------------------------------------------------------------------ */
 
-// Ceny i czasy zgodne z rezerwacją online na Booksy (stan na 14.10.2026).
+// Ceny i czasy zgodne z rezerwacją online na Booksy (sprawdzone 4.11.2026,
+// wszystkie 27 pozycji). Data dla strony — FACTS_CHECKED wyżej.
 // zone wskazuje podstronę, na której pozycja się pokazuje; null — tylko pełny
 // cennik i hub.
 export const CENNIK = [
@@ -850,7 +860,7 @@ export const STREFY = {
         h2: "Co obejmuje depilacja całych nóg",
         paragraphs: [
           "W cenie 550 zł depilujemy nogi w całości: łydki, kolana i uda, wraz z okolicą wewnętrznej strony ud, która przy goleniu podrażnia się najczęściej. Palce i stopy obejmujemy zabiegiem na życzenie, w ramach tego samego czasu.",
-          "Jeśli zależy Ci tylko na wybranym fragmencie — samych łydkach albo samych udach — powiedz o tym przy rezerwacji. Wycenę mniejszego zakresu ustalamy indywidualnie podczas bezpłatnej konsultacji, bo zależy ona od powierzchni i gęstości owłosienia.",
+          "Jeśli zależy Ci tylko na wybranym fragmencie, w rezerwacji wybierz same łydki (340 zł, 30 min) albo same uda (360 zł, 30 min). Całe nogi za 550 zł wychodzą o 150 zł taniej niż łydki i uda zrobione osobno.",
         ],
       },
       {
@@ -893,7 +903,7 @@ export const STREFY = {
       },
       {
         q: "Czy mogę zrobić same łydki albo same uda?",
-        a: "Tak. Zakres i cenę mniejszej partii ustalamy indywidualnie na bezpłatnej konsultacji, ponieważ zależą od powierzchni oraz gęstości owłosienia. Warto jednak wiedzieć, że przy pełnych nogach cena za centymetr skóry wypada zdecydowanie korzystniej.",
+        a: "Tak. Same łydki kosztują 340 zł, same uda 360 zł — każdy z tych zabiegów trwa około 30 minut. Całe nogi za 550 zł są o 150 zł tańsze niż łydki i uda zrobione osobno.",
       },
       {
         q: "Ile zabiegów potrzeba na nogi?",
@@ -1037,7 +1047,7 @@ Object.assign(STREFY, {
       },
       {
         q: "Czy depilacja bikini jest dostępna także dla mężczyzn?",
-        a: "Tak, męska depilacja strefy intymnej jest u nas standardową usługą. Szczegóły zakresu i wycenę ustalamy podczas bezpłatnej konsultacji.",
+        a: "Tak, męska depilacja strefy intymnej jest u nas standardową usługą. Bikini męskie kosztuje 400 zł za zabieg i trwa 30 minut. Pozostałe strefy męskie z cenami znajdziesz na stronie depilacji laserowej dla mężczyzn.",
       },
     ],
     related: ["pachy", "dla-mezczyzn", "cennik"],
@@ -1087,7 +1097,7 @@ Object.assign(STREFY, {
           { title: "Broda — 150 zł", desc: "Owłosienie pojawiające się na tle hormonalnym. Zabieg trwa 10 minut." },
           { title: "Szyja i policzki — 180 zł, baczki — 120 zł", desc: "Wymagają szczególnej ostrożności ze względu na ryzyko efektu paradoksalnego przy cienkim meszku — kwalifikujemy indywidualnie." },
           { title: "Kark — 180 zł", desc: "Często łączony ze strefą brody, zwłaszcza u mężczyzn." },
-          { title: "Środek brwi — 70 zł", desc: "Precyzyjne usunięcie owłosienia między brwiami, alternatywa dla regulacji co dwa tygodnie. Zabieg trwa 5 minut." },
+          { title: "Obszar między brwiami — 70 zł", desc: "Precyzyjne usunięcie owłosienia między brwiami, alternatywa dla regulacji co dwa tygodnie. Zabieg trwa 5 minut." },
         ],
       },
       {
@@ -1193,7 +1203,7 @@ Object.assign(STREFY, {
           { title: "Klatka piersiowa i brzuch", desc: "Pełne usunięcie albo przerzedzenie owłosienia. Zakres ustalamy tak, żeby efekt wyglądał naturalnie." },
           { title: "Pachy — 200 zł", desc: "Krótki zabieg, mniej potu zatrzymywanego przez włosy i koniec z podrażnieniami po dezodorancie." },
           { title: "Nogi — 550 zł", desc: "Wybór kolarzy, triatlonistów i pływaków, ale też mężczyzn, którym po prostu przeszkadza owłosienie łydek." },
-          { title: "Strefa intymna", desc: "Standardowa usługa, wykonywana z zachowaniem pełnej dyskrecji. Zakres i wycenę ustalamy na konsultacji." },
+          { title: "Bikini męskie — 400 zł", desc: "Standardowa usługa, wykonywana z zachowaniem pełnej dyskrecji. Zabieg trwa 30 minut." },
           { title: "Kontur brody", desc: "Wyrównanie linii zarostu na szyi i policzkach, żeby nie trzeba było jej codziennie poprawiać maszynką." },
         ],
       },
@@ -1287,7 +1297,7 @@ Object.assign(STREFY, {
       "Pełny, aktualny cennik depilacji laserowej Primelase wraz z kosztem całej serii — bez gwiazdek i dopłat ujawnianych dopiero na miejscu.",
     facts: [
       { label: "Zakres cen", value: "70–750 zł" },
-      { label: "Najtańsza strefa", value: "Środek brwi — 70 zł" },
+      { label: "Najtańsza strefa", value: "Obszar między brwiami — 70 zł" },
       { label: "Pakiet 3 stref", value: "750 zł" },
       { label: "Oszczędność w pakiecie", value: "220 zł" },
       { label: "Konsultacja", value: "Bezpłatna" },

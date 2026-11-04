@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
@@ -12,7 +12,10 @@ import Contact from "@/pages/Contact";
 import ServiceDetail from "@/pages/ServiceDetail";
 import DepilacjaLaserowa from "@/pages/DepilacjaLaserowa";
 import DepilacjaStrefa from "@/pages/DepilacjaStrefa";
-import Admin from "@/pages/Admin";
+import NotFound from "@/pages/NotFound";
+
+// Panel ładowany osobno: odwiedzający strony publiczne nie pobierają jego kodu.
+const Admin = lazy(() => import("@/pages/Admin"));
 
 function App() {
   useEffect(() => {
@@ -24,7 +27,7 @@ function App() {
       <div className="grain-overlay">
         <BrowserRouter>
           <Routes>
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<Suspense fallback={null}><Admin /></Suspense>} />
             <Route path="*" element={
               <Layout>
                 <Routes>
@@ -39,6 +42,7 @@ function App() {
                   <Route path="/galeria" element={<Gallery />} />
                   <Route path="/opinie" element={<Reviews />} />
                   <Route path="/kontakt" element={<Contact />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
             } />

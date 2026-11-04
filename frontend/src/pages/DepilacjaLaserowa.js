@@ -39,6 +39,7 @@ import {
   STREFY,
   STREFY_LISTA,
   SALON,
+  FACTS_CHECKED,
 } from "@/data/depilacja";
 import { serviceJsonLd, faqJsonLd, howToJsonLd, webPageJsonLd } from "@/lib/seoSchema";
 
@@ -96,7 +97,7 @@ export default function DepilacjaLaserowa() {
       description:
         "Trwałe usuwanie owłosienia laserem diodowym Primelase w Grodzisku Mazowieckim. Cennik, liczba zabiegów, przygotowanie, przeciwwskazania i odpowiedzi na najczęstsze pytania.",
       path: HUB_PATH,
-      image: STREFY.pachy.image,
+      image: "/gallery/1197425395724978.jpg",
       breadcrumbId: `${SITE_URL}${HUB_PATH}#breadcrumb`,
     }),
     breadcrumbLd,
@@ -180,7 +181,7 @@ export default function DepilacjaLaserowa() {
                 </div>
                 <span className="font-body text-sm text-stone-600">
                   <strong className="text-stone-900">{SALON.rating}/5</strong> na podstawie {SALON.reviewCount} opinii
-                  klientów w serwisie Booksy
+                  klientów salonu w serwisie Booksy
                 </span>
               </div>
             </AnimatedSection>
@@ -501,7 +502,7 @@ export default function DepilacjaLaserowa() {
       <CennikTable
         rows={CENNIK}
         title="Cennik depilacji laserowej"
-        sub={`Ceny zgodne z rezerwacją online na Booksy. Pakiet nogi + pachy + bikini kosztuje 750 zł zamiast 970 zł — oszczędzasz ${PAKIET_OSZCZEDNOSC} zł przy każdej wizycie.`}
+        sub={`Ceny zgodne z rezerwacją online na Booksy (stan na ${FACTS_CHECKED.label}). Pakiet nogi + pachy + bikini kosztuje 750 zł zamiast 970 zł — oszczędzasz ${PAKIET_OSZCZEDNOSC} zł przy każdej wizycie.`}
       />
       <div className="bg-white pb-14 md:pb-20">
         <div className="container mx-auto px-4 md:px-8 max-w-4xl text-center">
@@ -522,7 +523,8 @@ export default function DepilacjaLaserowa() {
               Opinie o <span className="italic text-gold">depilacji laserowej</span>
             </h2>
             <p className="font-body text-sm text-stone-400 mt-3">
-              Ocena {SALON.rating}/5 na podstawie {SALON.reviewCount} opinii w serwisie Booksy
+              Ocena całego salonu na Booksy: {SALON.rating}/5 z {SALON.reviewCount} opinii (stan na {FACTS_CHECKED.label}).
+              Poniżej opinie klientek po depilacji laserowej.
             </p>
           </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -633,7 +635,7 @@ export default function DepilacjaLaserowa() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-stone-200 border border-stone-200">
               {[
                 { name: "Depilacja wąsika nitką", path: "/uslugi/kosmetyka", desc: "Szybka alternatywa doraźna — 15 zł" },
-                { name: "Piercing i przekłuwanie uszu", path: "/uslugi/piercing", desc: "Uszy od 120 zł, nos 200 zł" },
+                { name: "Piercing i przekłuwanie uszu", path: "/uslugi/piercing", desc: "Płatek ucha 100 zł, chrząstka, nos i pępek 150 zł" },
                 { name: "Modelowanie ciała EMS", path: "/uslugi/modelowanie-ciala", desc: "Technologia HI-EMT — 100 zł" },
                 { name: "Pełny cennik salonu", path: "/uslugi", desc: "Wszystkie usługi i ceny" },
               ].map((l) => (

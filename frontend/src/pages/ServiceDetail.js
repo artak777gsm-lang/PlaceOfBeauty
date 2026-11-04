@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEO from "@/components/SEO";
 import { breadcrumbJsonLd } from "@/components/depilacja/Blocks";
-import { SITE_URL } from "@/data/depilacja";
-import { salonRef, areaServedNodes } from "@/lib/seoSchema";
+import { SITE_URL, FACTS_CHECKED } from "@/data/depilacja";
+import { salonRef, areaServedNodes, webPageJsonLd } from "@/lib/seoSchema";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -56,10 +56,15 @@ const SERVICE_DATA = {
     seoDesc: "Manicure w Grodzisku Mazowieckim od 80 zł: hybrydowe 140 zł, klasyczne, męski i laminacja Yokaba. Place of Beauty — ocena 4.9/5 na Booksy. Umów wizytę online!",
     seoKeywords: "manicure Grodzisk Mazowiecki, manicure hybrydowe, manicure hybrydowy cena, manicure klasyczne, manicure męski, paznokcie Grodzisk, hybryda paznokcie, manicure blisko mnie, salon paznokci Grodzisk, manicure hybrydowy Grodzisk cena, stylizacja paznokci, lakier hybrydowy",
     image: "/gallery/1023044393163080.jpg",
+    lead: "Manicure hybrydowe w Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim kosztuje 140 zł, a na dłuższych paznokciach 150 zł. Zabieg trwa około godziny, a hybryda utrzymuje się 2–3 tygodnie. Manicure klasyczne kosztuje 80 zł bez malowania i 90 zł z malowaniem, manicure męski 80 zł, a laminacja paznokci Yokaba 120 zł.",
+    h2About: "Na czym polega manicure hybrydowy?",
+    h2Price: "Ile kosztuje manicure w Grodzisku Mazowieckim?",
+    h2Faq: "Manicure — pytania i odpowiedzi",
+    ctaAccent: "manicure",
     description: "Manicure hybrydowe to najpopularniejszy zabieg w naszym salonie — i nie bez powodu. Lakier hybrydowy łączy trwałość żelu z łatwością aplikacji klasycznego lakieru, dając efekt idealnych paznokci na 2-3 tygodnie bez odpryskiwań. W Place of Beauty w Grodzisku Mazowieckim oferujemy profesjonalny manicure hybrydowe, klasyczne z tradycyjnym lakierem, klasyczne bez malowania oraz manicure męski. Każdy zabieg zaczynamy od dokładnej pielęgnacji skórek i nadania kształtu paznokciom, a kończymy perfekcyjną stylizacją. Używamy wyłącznie produktów premium od renomowanych producentów, które zapewniają piękny kolor, blask i długotrwałość.",
     benefits: [
       "Trwałość hybrydy do 3 tygodni bez odpryskiwań",
-      "Ponad 200 kolorów lakierów do wyboru",
+      "Duży wybór kolorów lakierów hybrydowych",
       "Profesjonalne produkty premium",
       "Indywidualne doradztwo w doborze kolorów i kształtów",
       "Pielęgnacja skórek i nawilżenie dłoni w cenie",
@@ -77,6 +82,8 @@ const SERVICE_DATA = {
       { q: "Jak długo utrzymuje się manicure hybrydowy?", a: "Przy prawidłowej pielęgnacji manicure hybrydowe utrzymuje się 2-3 tygodnie bez odpryskiwań. Zalecamy używanie olejku do skórek dla przedłużenia efektu." },
       { q: "Czym różni się manicure hybrydowy od klasycznego?", a: "Manicure hybrydowe utwardzany jest lampą LED i trzyma się 2-3 tygodnie, podczas gdy klasyczny lakier utrzymuje się kilka dni. Hybryda jest odporniejsza na zarysowania i zachowuje blask przez cały okres noszenia." },
       { q: "Czy manicure hybrydowy niszczy paznokcie?", a: "Nie, przy profesjonalnym wykonaniu i zdejmowaniu manicure hybrydowe nie niszczy naturalnej płytki paznokcia. Ważne jest, aby nie zrywać hybrydy samodzielnie — zawsze zdejmuj ją w salonie." },
+      { q: "Ile kosztuje laminacja paznokci Yokaba?", a: "Laminacja paznokci Yokaba kosztuje 120 zł i trwa 30 minut. To zabieg regenerujący i wzmacniający naturalną płytkę paznokcia — polecany przy paznokciach cienkich, łamliwych i zniszczonych, także jako przerwa od stylizacji hybrydowej. Wygładza płytkę i nadaje jej naturalny połysk." },
+      { q: "Ile kosztuje zdjęcie hybrydy?", a: "Samo zdjęcie hybrydy kosztuje 20 zł i trwa 15 minut, a zdjęcie hybrydy połączone z manicure klasycznym — 80 zł (40 minut). Zdjęcie stylizacji wykonanej w innym salonie jest przy manicure hybrydowym płatne dodatkowo." },
       { q: "Czy oferujecie manicure dla mężczyzn?", a: "Tak, oferujemy profesjonalny manicure męski za 80 zł. Zabieg obejmuje pielęgnację skórek, nadanie kształtu i polerowanie płytki — bez malowania." },
       { q: "Ile trwa zabieg manicure?", a: "Manicure hybrydowe trwa około 1 godziny, manicure klasyczne z malowaniem — 30 minut, bez malowania — 30 minut." },
       { q: "Jak przygotować się do zabiegu?", a: "Nie musisz się specjalnie przygotowywać. Hybrydę wykonaną w innym salonie zdejmiemy na miejscu za dodatkową opłatą (20 zł) — zaznacz to przy rezerwacji. Zalecamy nie obcinać skórek samodzielnie przed wizytą." },
@@ -92,6 +99,11 @@ const SERVICE_DATA = {
     seoDesc: "Pedicure w Grodzisku Mazowieckim od 150 zł: klasyczne, hybrydowe, kwasowe Mavex i lecznicze. Sama hybryda u stóp — 140 zł. Place of Beauty — umów wizytę online!",
     seoKeywords: "pedicure Grodzisk Mazowiecki, pedicure hybrydowe, pedicure kwasowe, pedicure leczniczy, pedicure cena, stopy pielęgnacja",
     image: "/gallery/834394008694787.jpg",
+    lead: "Pedicure w Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim kosztuje 150 zł w wersji klasycznej z lakierem i 170 zł z lakierem hybrydowym. Pedicure kwasowe Mavex z hybrydą to 180 zł, pedicure leczniczy od 150 zł, a sama hybryda u stóp 140 zł. Zabieg trwa od 45 minut do 1 godz. 10 min.",
+    h2About: "Jakie rodzaje pedicure wykonujemy?",
+    h2Price: "Ile kosztuje pedicure w Grodzisku Mazowieckim?",
+    h2Faq: "Pedicure — pytania i odpowiedzi",
+    ctaAccent: "pedicure",
     description: "Zadbane stopy to komfort i piękno przez cały rok. Oferujemy pedicure klasyczne, hybrydowe, kwasowe Mavex oraz lecznicze. Każdy zabieg dobieramy indywidualnie do stanu stóp, zapewniając najlepsze efekty pielęgnacyjne.",
     benefits: [
       "Zabieg kwasowy Mavex — głęboka regeneracja",
@@ -101,8 +113,12 @@ const SERVICE_DATA = {
     ],
     faq: [
       { q: "Ile kosztuje pedicure?", a: "Pedicure klasyczne z lakierem — 150 zł, z hybrydą — 170 zł, kwasowe Mavex z hybrydą — 180 zł, sama hybryda u stóp — 140 zł. Pedicure leczniczy — od 150 zł, ostateczną cenę ustalamy po konsultacji." },
-      { q: "Czym jest pedicure kwasowe?", a: "Pedicure kwasowe Mavex to zaawansowany zabieg, który głęboko regeneruje skórę stóp za pomocą kwasów." },
+      { q: "Ile trwa pedicure?", a: "Pedicure klasyczne z lakierem trwa około godziny, pedicure z hybrydą i pedicure kwasowe Mavex z hybrydą — około 1 godz. 10 min, pedicure leczniczy — około godziny, a sama hybryda u stóp — 45 minut." },
+      { q: "Czym jest pedicure kwasowe Mavex?", a: "To pedicure, w którym skórę stóp zmiękcza się i regeneruje preparatami z kwasami marki Mavex. W Place of Beauty kończymy go lakierem hybrydowym — zabieg kosztuje 180 zł i trwa około 1 godz. 10 min." },
+      { q: "Czym jest pedicure leczniczy?", a: "To zabieg podologiczny dostosowany do stanu stóp: opracowanie paznokci i skóry, usunięcie zrogowaceń, modzeli i odcisków oraz pielęgnacja końcowa. Kosztuje od 150 zł i trwa około godziny — ostateczną cenę ustalamy po konsultacji, zależnie od zakresu pracy i problemu." },
+      { q: "Czy mogę zrobić samą hybrydę na paznokciach stóp?", a: "Tak. Hybryda u stóp bez pełnego pedicure kosztuje 140 zł i trwa 45 minut." },
       { q: "Jak często robić pedicure?", a: "Zalecamy pedicure co 3-4 tygodnie, aby stopy były zawsze zadbane." },
+      { q: "Jak umówić się na pedicure?", a: "Przez Booksy — rezerwacja online działa całą dobę i od razu widać wolne terminy — albo telefonicznie pod numerem +48 881 777 437." },
     ],
   },
   // Uwaga: strefa "depilacja-laserowa" ma własny, rozbudowany klaster stron
@@ -115,6 +131,11 @@ const SERVICE_DATA = {
     seoDesc: "Przedłużanie paznokci żelowych w Grodzisku Mazowieckim od 200 zł. Stylizacja, uzupełnienie żelowe. Salon Place of Beauty — piękne paznokcie na każdą okazję!",
     seoKeywords: "paznokcie żelowe Grodzisk Mazowiecki, przedłużanie paznokci, uzupełnienie żelowe, stylizacja paznokci, paznokcie żelowe cena, tipsy Grodzisk",
     image: "/gallery/840030858131102.jpg",
+    lead: "Przedłużanie paznokci żelem w Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim kosztuje od 200 zł i trwa około 1,5 godziny. Uzupełnienie żelowe kosztuje 160 zł (ok. 1 godz. 15 min) i zalecamy je co 3–4 tygodnie. Naprawa jednego paznokcia to 20 zł, zdjęcie paznokci żelowych 25 zł, a akrylowych 50 zł.",
+    h2About: "Na czym polega przedłużanie paznokci żelem?",
+    h2Price: "Ile kosztują paznokcie żelowe?",
+    h2Faq: "Paznokcie żelowe — pytania i odpowiedzi",
+    ctaAccent: "stylizację paznokci",
     description: "Paznokcie żelowe to idealne rozwiązanie dla osób pragnących długich, pięknych paznokci. Oferujemy przedłużanie metodą żelową oraz regularne uzupełnienia. Tworzymy stylizacje na każdą okazję — od eleganckich po artystyczne.",
     benefits: [
       "Trwałość do 4 tygodni",
@@ -126,6 +147,10 @@ const SERVICE_DATA = {
       { q: "Ile kosztuje przedłużanie paznokci żelowych?", a: "Przedłużanie żelowe od 200 zł, uzupełnienie — 160 zł. Naprawa jednego paznokcia żelowego — 20 zł, dwóch — 30 zł, trzech — 50 zł." },
       { q: "Jak długo trwa zabieg?", a: "Przedłużanie zajmuje ok. 1,5 godziny, uzupełnienie — ok. 1 godz. 15 min." },
       { q: "Jak często robić uzupełnienie?", a: "Uzupełnienie paznokci żelowych zalecamy co 3-4 tygodnie." },
+      { q: "Jak długo utrzymują się paznokcie żelowe?", a: "Do 4 tygodni. Potem paznokieć odrasta i stylizację uzupełniamy — uzupełnienie żelowe kosztuje 160 zł." },
+      { q: "Ile kosztuje zdjęcie paznokci żelowych lub akrylowych?", a: "Zdjęcie paznokci żelowych kosztuje 25 zł (15 min), a z manicure klasycznym — 90 zł (45 min). Zdjęcie paznokci akrylowych kosztuje 50 zł (15 min). Przy grubej lub zniszczonej stylizacji cena zdjęcia żelu może się zmienić." },
+      { q: "Czy zdejmiecie paznokcie zrobione w innym salonie?", a: "Tak. Zdjęcie żelu lub hybrydy wykonanych w innym salonie jest płatne dodatkowo, według cennika zdjęć: żel 25 zł, akryl 50 zł." },
+      { q: "Czym jest naprawa paznokcia żelowego?", a: "To poprawka pojedynczego uszkodzonego paznokcia: 20 zł za jeden, 30 zł za dwa i 50 zł za trzy paznokcie, około 15 minut. Naprawa nie oznacza zrobienia paznokcia od nowa — w takim przypadku cena może się zmienić." },
     ],
   },
   kosmetyka: {
@@ -135,6 +160,11 @@ const SERVICE_DATA = {
     seoDesc: "Regulacja brwi i henna brwi w Grodzisku Mazowieckim od 20 zł, henna rzęs 30 zł. Plus depilacja wąsika nitką. Salon Place of Beauty — szybko, precyzyjnie, profesjonalnie!",
     seoKeywords: "regulacja brwi Grodzisk Mazowiecki, henna brwi Grodzisk Mazowiecki, rzęsy Grodzisk Mazowiecki, henna rzęs, depilacja wąsika nitką, brwi Grodzisk, kosmetyczka",
     image: "/gallery/632346295566227.jpg",
+    lead: "Regulacja brwi w Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim kosztuje 20 zł i trwa 10 minut. Henna brwi to 30 zł, henna brwi z regulacją 50 zł (20 minut), a henna rzęs 30 zł. Efekt henny utrzymuje się 3–4 tygodnie. Wąsik usuwamy także nitką — 15 zł, 5 minut.",
+    h2About: "Na czym polega regulacja i henna brwi?",
+    h2Price: "Ile kosztuje regulacja i henna brwi?",
+    h2Faq: "Brwi i rzęsy — pytania i odpowiedzi",
+    ctaAccent: "brwi i rzęsy",
     description: "Brwi nadają twarzy wyraz, dlatego regulację traktujemy jako osobny, precyzyjny zabieg — dobieramy kształt do rysów twarzy, usuwamy zbędne włoski pęsetą i wykańczamy henną, która koloryzuje skórę i włoski jednocześnie, wydłużając efekt do 3-4 tygodni względem samej koloryzacji żelem. Rzęsy henny są tym samym zabiegiem w mniejszej skali — podkreślają spojrzenie bez tuszu na co dzień. Do tego depilacja wąsika metodą nitkową, szybka i delikatna alternatywa dla wosku.",
     benefits: [
       "Regulacja brwi dobrana do kształtu twarzy",
@@ -150,8 +180,8 @@ const SERVICE_DATA = {
       { step: "Wykończenie", desc: "Zmycie henny, korekta finalnego kształtu i nawilżenie skóry wokół brwi." },
     ],
     faq: [
-      { q: "Ile kosztuje regulacja brwi w Grodzisku Mazowieckim?", a: "Sama regulacja brwi — 20 zł. Regulacja z henną — 40 zł. Zabieg trwa 10-20 minut." },
-      { q: "Ile kosztuje henna brwi?", a: "Henna brwi — 30 zł, henna + regulacja — 40 zł, henna rzęs — 30 zł, regulacja brwi — 20 zł." },
+      { q: "Ile kosztuje regulacja brwi w Grodzisku Mazowieckim?", a: "Sama regulacja brwi kosztuje 20 zł i trwa 10 minut. Henna brwi z regulacją kosztuje 50 zł i trwa 20 minut." },
+      { q: "Ile kosztuje henna brwi?", a: "Henna brwi — 30 zł (15 min), henna brwi z regulacją — 50 zł (20 min), henna rzęs — 30 zł (15 min), sama regulacja brwi — 20 zł (10 min)." },
       { q: "Jak długo utrzymuje się henna?", a: "Efekt henny utrzymuje się 3-4 tygodnie, w zależności od typu skóry — dłużej niż zwykła koloryzacja żelem, bo henna barwi też skórę pod włoskami." },
       { q: "Czy henna rzęs jest bezpieczna?", a: "Tak, to zabieg nieinwazyjny — henna barwi tylko włoski i nie wymaga wcześniejszej stymulacji rzęs. Przed pierwszym zabiegiem pytamy o alergie na barwniki." },
       { q: "Czym różni się regulacja brwi od henny?", a: "Regulacja to nadanie kształtu przez usunięcie zbędnych włosków — efekt widać od razu, ale kolor zostaje bez zmian. Henna koloryzuje włoski i skórę pod nimi, pogrubiając wizualnie brwi. Najczęściej robi się je razem." },
@@ -162,28 +192,37 @@ const SERVICE_DATA = {
     category: "Piercing",
     title: "Piercing i przekłuwanie uszu w Grodzisku Mazowieckim",
     seoTitle: "Piercing Grodzisk Mazowiecki — przekłuwanie uszu i nosa",
-    seoDesc: "Przekłuwanie uszu od 120 zł i nosa 200 zł w Grodzisku Mazowieckim. Jednorazowe, sterylne narzędzia, wizyta ok. 10 min. Place of Beauty, Garbarska 17/2.",
-    seoKeywords: "piercing Grodzisk Mazowiecki, przekłuwanie uszu Grodzisk Mazowiecki, przekłuwanie uszu, przekłuwanie nosa, piercing uszu cena, piercing nosa, kolczyk w uchu Grodzisk",
+    seoDesc: "Przekłuwanie uszu w Grodzisku Mazowieckim: płatek 100 zł, oba płatki 180 zł, chrząstka (helix, tragus, conch) 150 zł, nos i pępek 150 zł. Sterylna igła. Place of Beauty.",
+    seoKeywords: "piercing Grodzisk Mazowiecki, przekłuwanie uszu Grodzisk Mazowiecki, przekłuwanie uszu, przekłuwanie nosa, przekłuwanie pępka, piercing uszu cena, helix, tragus, piercing igłą, kolczyk w uchu Grodzisk",
     image: "/gallery/722422606558595.jpg",
-    description: "Przekłuwanie uszu i nosa wykonujemy w salonie Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim. Pracujemy wyłącznie jednorazowymi, sterylnymi narzędziami i używamy biżuterii wysokiej jakości. Samo przekłucie trwa kilka sekund, a cała wizyta — około 10 minut. Przekłuwanie uszu kosztuje od 120 zł, a dokładna cena zależy od miejsca przekłucia; przekłuwanie nosa kosztuje 200 zł. Po zabiegu otrzymujesz szczegółową instrukcję pielęgnacji.",
+    lead: "Przekłuwanie uszu w Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim kosztuje 100 zł za płatek ucha i 180 zł za oba płatki. Przekłucie chrząstki ucha (helix, tragus, conch i inne), nosa albo pępka kosztuje 150 zł. Przekłuwamy sterylną igłą, a wizyta trwa 20–30 minut.",
+    h2About: "Jak wygląda przekłuwanie uszu?",
+    h2Price: "Ile kosztuje przekłuwanie uszu, nosa i pępka?",
+    h2Faq: "Piercing — pytania i odpowiedzi",
+    ctaAccent: "piercing",
+    description: "Przekłuwanie uszu, nosa i pępka wykonujemy w salonie Place of Beauty przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim. Przekłuwamy metodą igłową — sterylną, jednorazową igłą, w sterylnych warunkach. Przed zabiegiem oceniamy budowę ucha, dobieramy miejsce przekłucia i biżuterię, a po zabiegu dostajesz zalecenia dotyczące pielęgnacji i gojenia. Przekłucie płatka ucha kosztuje 100 zł, obu płatków 180 zł, a przekłucia chrząstki ucha (m.in. helix, tragus, conch, daith, rook), nosa i pępka — 150 zł.",
     benefits: [
-      "Sterylne, jednorazowe narzędzia",
-      "Biżuteria wysokiej jakości",
-      "Szybka wizyta — ok. 10 minut",
-      "Instrukcja pielęgnacji po zabiegu",
+      "Metoda igłowa — sterylna, jednorazowa igła",
+      "Ocena budowy ucha przed przekłuciem",
+      "Dobór miejsca przekłucia i biżuterii",
+      "Płatek, chrząstka ucha, nos i pępek",
+      "Zalecenia pielęgnacyjne po zabiegu",
     ],
     process: [
-      { step: "Ustalenie miejsca przekłucia", desc: "Na początku wizyty ustalamy miejsce przekłucia i rodzaj kolczyka. Od miejsca przekłucia zależy cena przekłuwania uszu." },
-      { step: "Dezynfekcja", desc: "Miejsce przekłucia dokładnie dezynfekujemy. Pracujemy wyłącznie jednorazowymi, sterylnymi narzędziami." },
-      { step: "Przekłucie", desc: "Samo przekłucie trwa kilka sekund i jest niemal bezbolesne." },
-      { step: "Instrukcja pielęgnacji", desc: "Na koniec otrzymujesz szczegółową instrukcję, jak dbać o przekłucie do czasu zagojenia." },
+      { step: "Wybór miejsca przekłucia", desc: "Oceniamy budowę ucha, nosa lub pępka i razem wybieramy miejsce przekłucia oraz biżuterię. Od miejsca zależy cena: płatek 100 zł, chrząstka ucha 150 zł." },
+      { step: "Dezynfekcja", desc: "Miejsce przekłucia dokładnie dezynfekujemy. Pracujemy wyłącznie sterylnymi, jednorazowymi narzędziami." },
+      { step: "Przekłucie igłą", desc: "Przekłuwamy sterylną igłą — samo przekłucie trwa kilka sekund." },
+      { step: "Zalecenia pielęgnacyjne", desc: "Na koniec dostajesz zalecenia, jak dbać o przekłucie do czasu zagojenia." },
     ],
     faq: [
-      { q: "Ile kosztuje przekłuwanie uszu w Grodzisku Mazowieckim?", a: "Przekłuwanie uszu w Place of Beauty kosztuje od 120 zł — dokładna cena zależy od miejsca przekłucia. Przekłuwanie nosa kosztuje 200 zł." },
-      { q: "Ile trwa przekłuwanie uszu?", a: "Cała wizyta trwa około 10 minut, a samo przekłucie — kilka sekund." },
-      { q: "Czy piercing jest bolesny?", a: "Samo przekłucie trwa zaledwie kilka sekund i jest niemal bezbolesne." },
-      { q: "Jak pielęgnować piercing po zabiegu?", a: "Po zabiegu otrzymasz szczegółową instrukcję pielęgnacji. Należy dezynfekować miejsce przekłucia 2 razy dziennie przez 4–6 tygodni. Do czasu zagojenia nie zdejmuj biżuterii i nie dotykaj przekłucia nieumytymi rękami." },
-      { q: "Jak umówić się na piercing w Grodzisku Mazowieckim?", a: "Wolne terminy zobaczysz w rezerwacji online na Booksy. Jeśli nie widzisz pasującego terminu, zadzwoń pod numer 881 777 437 — pracujemy według zapisu." },
+      { q: "Ile kosztuje przekłuwanie uszu w Grodzisku Mazowieckim?", a: "Przekłucie płatka ucha (lobe) kosztuje w Place of Beauty 100 zł, a obu płatków — 180 zł. Przekłucie górnej części płatka (upper lobe) oraz chrząstki ucha — helix, forward helix, flat, conch, daith, rook, tragus, anti-tragus, snug — kosztuje 150 zł, tak samo industrial i orbital." },
+      { q: "Ile kosztuje przekłucie nosa i pępka?", a: "Przekłucie skrzydełka nosa (nostril) kosztuje 150 zł, przekłucie pępka — także 150 zł. Każda z tych wizyt trwa około 30 minut." },
+      { q: "Czy przekłuwacie uszy pistoletem czy igłą?", a: "Igłą. Wszystkie przekłucia — płatek, chrząstkę ucha, nos i pępek — wykonujemy metodą igłową, sterylną igłą, w sterylnych warunkach." },
+      { q: "Ile trwa przekłuwanie uszu?", a: "Przekłucie płatka i większości chrząstek ucha to wizyta około 20 minut. Oba płatki, upper lobe, flat, industrial, orbital, nos i pępek — około 30 minut. Samo przekłucie trwa kilka sekund." },
+      { q: "Czy przekłuwacie chrząstkę ucha?", a: "Tak. Wykonujemy przekłucia helix, forward helix, flat, conch, daith, rook, tragus, anti-tragus i snug, a także industrial i orbital — każde za 150 zł. To, czy dane przekłucie da się wykonać, zależy od budowy ucha; oceniamy ją przed zabiegiem." },
+      { q: "Czy piercing jest bolesny?", a: "Samo przekłucie trwa kilka sekund. Odczucia zależą od miejsca — przekłucie płatka ucha jest zwykle łagodniejsze niż przekłucie chrząstki." },
+      { q: "Jak pielęgnować piercing po zabiegu?", a: "Po zabiegu dostajesz zalecenia dotyczące pielęgnacji i gojenia. Przekłucie płatka dezynfekuj 2 razy dziennie przez 4–6 tygodni; przekłucia chrząstki goją się dłużej. Do czasu zagojenia nie zdejmuj biżuterii i nie dotykaj przekłucia nieumytymi rękami." },
+      { q: "Jak umówić się na piercing w Grodzisku Mazowieckim?", a: "Wolne terminy zobaczysz w rezerwacji online na Booksy — każde przekłucie jest tam osobną usługą. Jeśli nie widzisz pasującego terminu, zadzwoń pod numer 881 777 437 — pracujemy według zapisu." },
     ],
   },
   "modelowanie-ciala": {
@@ -193,6 +232,10 @@ const SERVICE_DATA = {
     seoDesc: "Modelowanie ciała EMS w Grodzisku Mazowieckim — 100 zł za zabieg. Technologia HI-EMT: budowanie mięśni i redukcja tkanki tłuszczowej. Salon Place of Beauty!",
     seoKeywords: "EMS Grodzisk Mazowiecki, modelowanie ciała, elektrostymulacja mięśni, HI-EMT, redukcja tkanki tłuszczowej, odchudzanie Grodzisk",
     image: "/gallery/1137041761763342.jpg",
+    h2About: "Na czym polega zabieg EMS?",
+    h2Price: "Ile kosztuje zabieg EMS?",
+    h2Faq: "EMS — pytania i odpowiedzi",
+    ctaAccent: "zabieg EMS",
     description: "Elektrostymulacja mięśni EMS to nowoczesna technologia HI-EMT, która buduje mięśnie i redukuje tkankę tłuszczową bez wysiłku fizycznego. Jeden 30-minutowy zabieg odpowiada kilku tysiącom skurczów mięśni — efekty widoczne już po pierwszej sesji.",
     benefits: [
       "Technologia HI-EMT — najnowsza generacja",
@@ -264,6 +307,13 @@ export default function ServiceDetail() {
   // (salonRef). Pełny węzeł BeautySalon z adresem bez @id robił z każdej
   // strony usługi drugi, osobny salon.
   const jsonLd = [
+    webPageJsonLd({
+      name: data.title,
+      description: data.lead || data.seoDesc,
+      path,
+      image: data.image,
+      breadcrumbId: `${pageUrl}#breadcrumb`,
+    }),
     {
       "@context": "https://schema.org",
       "@type": "Service",
@@ -327,6 +377,11 @@ export default function ServiceDetail() {
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl text-white font-semibold mb-4">
               {data.title}
             </h1>
+            {/* Odpowiedź w pierwszym akapicie: cena, adres, czas. To zdanie
+                silniki odpowiedzi cytują bez reszty strony. */}
+            {data.lead && (
+              <p className="font-body text-base md:text-lg text-stone-300 leading-relaxed max-w-3xl">{data.lead}</p>
+            )}
           </motion.div>
         </div>
       </section>
@@ -337,7 +392,7 @@ export default function ServiceDetail() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             <AnimatedSection>
               <h2 className="font-heading text-3xl font-semibold text-stone-900 mb-6">
-                O <span className="italic">zabiegu</span>
+                {data.h2About || <>O <span className="italic">zabiegu</span></>}
               </h2>
               <p className="font-body text-base text-stone-600 leading-relaxed mb-8">{data.description}</p>
               <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer">
@@ -442,9 +497,12 @@ export default function ServiceDetail() {
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
           <AnimatedSection>
             <h2 className="font-heading text-3xl font-semibold text-stone-900 mb-2 text-center">
-              Cennik
+              {data.h2Price || "Cennik"}
             </h2>
-            <p className="font-body text-sm text-stone-400 text-center mb-10">Kategoria: {data.category}</p>
+            <p className="font-body text-sm text-stone-500 text-center mb-10">
+              Ceny zgodne z rezerwacją online na Booksy — stan na{" "}
+              <time dateTime={FACTS_CHECKED.iso}>{FACTS_CHECKED.label}</time>.
+            </p>
           </AnimatedSection>
 
           <div className="space-y-1">
@@ -490,7 +548,7 @@ export default function ServiceDetail() {
         <div className="container mx-auto px-4 md:px-8 max-w-4xl">
           <AnimatedSection className="text-center mb-12">
             <h2 className="font-heading text-3xl font-semibold text-stone-900">
-              Najczęstsze <span className="italic">pytania</span>
+              {data.h2Faq || <>Najczęstsze <span className="italic">pytania</span></>}
             </h2>
           </AnimatedSection>
 
@@ -515,7 +573,7 @@ export default function ServiceDetail() {
         <div className="container mx-auto px-4 md:px-8 max-w-7xl text-center">
           <AnimatedSection>
             <h2 className="font-heading text-2xl sm:text-3xl text-white font-semibold mb-4">
-              Umów wizytę na <span className="italic text-gold">{data.category.toLowerCase()}</span>
+              Umów wizytę na <span className="italic text-gold">{data.ctaAccent || data.category.toLowerCase()}</span>
             </h2>
             <p className="font-body text-sm text-stone-400 mb-8 max-w-md mx-auto">
               Zarezerwuj termin online przez Booksy lub zadzwoń.

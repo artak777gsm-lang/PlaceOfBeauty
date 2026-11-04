@@ -4,6 +4,7 @@ import { Award, Users, Heart, Clock, MapPin, Car, CreditCard, Dog, Baby } from "
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
+import { SALON } from "@/data/depilacja";
 
 function AnimatedSection({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
@@ -40,7 +41,7 @@ export default function About() {
     <div data-testid="about-page">
       <SEO
         title="O nas"
-        description="Place of Beauty — profesjonalny salon kosmetyczny w sercu Grodziska Mazowieckiego. Indywidualne podejście, pasja i najwyższa jakość. Ocena 4.9/5 na podstawie 306 opinii."
+        description="Place of Beauty — profesjonalny salon kosmetyczny w sercu Grodziska Mazowieckiego. Indywidualne podejście, pasja i najwyższa jakość. Ocena 4.9/5 na podstawie 313 opinii na Booksy."
         keywords="o nas Place of Beauty, salon kosmetyczny Grodzisk opinie, najlepszy salon kosmetyczny, Carika specjalistka, kosmetyczka Grodzisk Mazowiecki"
         path="/o-nas"
       />
@@ -88,7 +89,7 @@ export default function About() {
                 </div>
                 <div className="absolute -bottom-6 -right-6 bg-gold p-6 hidden md:block">
                   <div className="text-center">
-                    <span className="font-heading text-3xl font-bold text-white block">4.9</span>
+                    <span className="font-heading text-3xl font-bold text-white block">{SALON.rating}</span>
                     <span className="font-body text-xs uppercase tracking-wider text-white/80">Ocena</span>
                   </div>
                 </div>
@@ -108,7 +109,7 @@ export default function About() {
                   Nasz salon to miejsce, gdzie nowoczesne technologie spotykają się z ciepłą, przyjazną atmosferą. Każdy klient jest dla nas wyjątkowy, dlatego indywidualnie dobieramy zabiegi i produkty do potrzeb skóry.
                 </p>
                 <p>
-                  Z dumą możemy pochwalić się oceną 4.9 na podstawie 306 opinii naszych zadowolonych klientów. To dla nas najlepsza motywacja do dalszego rozwoju i doskonalenia naszych usług.
+                  Z dumą możemy pochwalić się oceną {SALON.rating} na podstawie {SALON.reviewCount} opinii naszych klientów na Booksy. To dla nas najlepsza motywacja do dalszego rozwoju i doskonalenia naszych usług.
                 </p>
               </div>
             </AnimatedSection>

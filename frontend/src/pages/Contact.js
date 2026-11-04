@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { MapPin, Phone, Clock, Facebook, ArrowRight, Navigation } from "lucide-react";
+import { MapPin, Phone, Clock, Facebook, Instagram, ArrowRight, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import SEO from "@/components/SEO";
+import { FaqList } from "@/components/depilacja/Blocks";
+import { faqJsonLd } from "@/lib/seoSchema";
 
 const BOOKSY_URL = "https://booksy.com/pl-pl/103643_place-of-beauty-carika_paznokcie_4424_grodzisk-mazowiecki";
 
@@ -23,6 +25,34 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
     </motion.div>
   );
 }
+
+// Udogodnienia (parking, karta, dzieci, zwierzęta) — jak na profilu Booksy.
+const CONTACT_FAQ = [
+  {
+    q: "Gdzie dokładnie jest salon Place of Beauty?",
+    a: "Przy ul. Garbarskiej 17/2 w Grodzisku Mazowieckim (05-825), na rogu ulicy Bałtyckiej. Z Milanówka, Brwinowa, Podkowy Leśnej i Pruszkowa dojazd samochodem zajmuje kilkanaście minut.",
+  },
+  {
+    q: "Czy salon jest czynny w soboty?",
+    a: "Nie. Place of Beauty jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30. W soboty i niedziele salon jest zamknięty.",
+  },
+  {
+    q: "Czy trzeba się wcześniej umówić?",
+    a: "Tak, pracujemy według zapisu. Wolne terminy zobaczysz w rezerwacji online na Booksy. Jeśli nie widzisz pasującego terminu, zadzwoń pod numer 881 777 437 — postaramy się go znaleźć.",
+  },
+  {
+    q: "Czy przy salonie można zaparkować?",
+    a: "Tak, przy salonie jest parking dla klientów.",
+  },
+  {
+    q: "Jak można zapłacić?",
+    a: "Kartą płatniczą albo gotówką.",
+  },
+  {
+    q: "Czy mogę przyjść z dzieckiem lub z psem?",
+    a: "Tak. Salon jest przyjazny dla dzieci, a zwierzęta są mile widziane.",
+  },
+];
 
 const hours = [
   { day: "Poniedziałek", time: "9:00–16:00", open: true },
@@ -51,13 +81,14 @@ export default function Contact() {
         description="Place of Beauty, Garbarska 17/2, Grodzisk Mazowiecki. Tel. +48 881 777 437. Pon.–pt. 9:00–16:00 (czw. do 15:30), według zapisu. Parking, płatność kartą."
         keywords="Place of Beauty kontakt, adres salon Grodzisk Mazowiecki, telefon salon kosmetyczny, godziny otwarcia, Garbarska 17 Grodzisk, dojazd do salonu"
         path="/kontakt"
+        jsonLd={faqJsonLd(CONTACT_FAQ)}
       />
       {/* Header */}
       <section className="relative py-24 md:py-32 bg-stone-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
             src="/gallery/1080256257441893.jpg"
-            alt="Kontakt Place of Beauty — gabinet presoterapii"
+            alt="Wnętrze salonu Place of Beauty w Grodzisku Mazowieckim"
             className="w-full h-full object-cover"
             loading="lazy"
             decoding="async"
@@ -71,10 +102,13 @@ export default function Contact() {
           >
             <span className="font-body text-xs uppercase tracking-[0.3em] text-gold mb-4 block">Kontakt</span>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl text-white font-semibold mb-4">
-              Skontaktuj się <span className="italic">z nami</span>
+              Kontakt i <span className="italic">dojazd</span>
             </h1>
-            <p className="font-body text-base text-stone-400 max-w-xl">
-              Odwiedź nas lub zadzwoń — chętnie odpowiemy na wszystkie pytania.
+            <p className="font-body text-base text-stone-300 max-w-3xl leading-relaxed">
+              Place of Beauty mieści się przy ul. Garbarskiej 17/2 (róg Bałtyckiej), 05-825 Grodzisk
+              Mazowiecki. Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do
+              15:30; w weekendy jest zamknięty. Pracujemy według zapisu — wizytę umówisz online na Booksy
+              albo pod numerem +48 881 777 437. Przy salonie jest parking, można płacić kartą.
             </p>
           </motion.div>
         </div>
@@ -101,7 +135,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-body text-xs uppercase tracking-[0.15em] text-stone-400 mb-1">Adres</h3>
-                      <p className="font-body text-base text-stone-900 font-medium">Garbarska 17/2</p>
+                      <p className="font-body text-base text-stone-900 font-medium">Garbarska 17/2 (róg Bałtyckiej)</p>
                       <p className="font-body text-sm text-stone-600">05-825 Grodzisk Mazowiecki</p>
                       <a
                         href="https://maps.google.com/?daddr=Garbarska%2017%2F2%2C%2005-825%20Grodzisk%20Mazowiecki%2C%20Poland"
@@ -134,18 +168,28 @@ export default function Contact() {
                 <AnimatedSection delay={0.3}>
                   <div className="flex items-start gap-5" data-testid="contact-social">
                     <div className="w-12 h-12 bg-gold/10 flex items-center justify-center flex-shrink-0">
-                      <Facebook className="w-5 h-5 text-gold" />
+                      <Instagram className="w-5 h-5 text-gold" />
                     </div>
                     <div>
                       <h3 className="font-body text-xs uppercase tracking-[0.15em] text-stone-400 mb-1">Social media</h3>
-                      <a
-                        href="https://www.facebook.com/placeofbeauty"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-body text-base text-stone-900 font-medium hover:text-gold transition-colors"
-                      >
-                        Facebook
-                      </a>
+                      <div className="flex flex-wrap gap-x-6 gap-y-1">
+                        <a
+                          href="https://www.instagram.com/place_of_beauty_carika/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-body text-base text-stone-900 font-medium hover:text-gold transition-colors"
+                        >
+                          Instagram
+                        </a>
+                        <a
+                          href="https://www.facebook.com/placeofbeauty"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 font-body text-base text-stone-900 font-medium hover:text-gold transition-colors"
+                        >
+                          <Facebook className="w-4 h-4" aria-hidden="true" /> Facebook
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </AnimatedSection>
@@ -200,7 +244,9 @@ export default function Contact() {
               <div className="h-full min-h-[500px]" data-testid="contact-map">
                 <iframe
                   title="Place of Beauty - Lokalizacja"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2449.2!2d20.628!3d52.107!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47193e5e91d3c7db%3A0x4c72ef1f78e7a0e0!2sGarbarska%2017%2C%2005-825%20Grodzisk%20Mazowiecki!5e0!3m2!1spl!2spl!4v1700000000000!5m2!1spl!2spl"
+                  // Wyszukanie po nazwie i adresie trafia w wizytówkę salonu;
+                  // dawny osadzony link wskazywał inne miejsce (~250 m obok).
+                  src="https://maps.google.com/maps?q=Place%20of%20Beauty%20Carika%2C%20Garbarska%2017%2F2%2C%2005-825%20Grodzisk%20Mazowiecki&hl=pl&z=16&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0, minHeight: "500px" }}
@@ -214,6 +260,8 @@ export default function Contact() {
           </div>
         </div>
       </section>
+
+      <FaqList items={CONTACT_FAQ} sub="Dojazd, godziny, parking i płatność." />
     </div>
   );
 }
