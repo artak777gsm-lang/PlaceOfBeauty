@@ -27,6 +27,8 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
 }
 
 // Udogodnienia (parking, karta, dzieci, zwierzęta) — jak na profilu Booksy.
+// Godziny: salon pracuje pn–sob 9–20, a Booksy celowo pokazuje terminy tylko
+// do 16:00 — wizyty po 16:00 salon umawia telefonicznie (05.11.2026).
 const CONTACT_FAQ = [
   {
     q: "Gdzie dokładnie jest salon Place of Beauty?",
@@ -34,11 +36,15 @@ const CONTACT_FAQ = [
   },
   {
     q: "Czy salon jest czynny w soboty?",
-    a: "Nie. Place of Beauty jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30. W soboty i niedziele salon jest zamknięty.",
+    a: "Tak. Place of Beauty jest czynny od poniedziałku do soboty w godzinach 9:00–20:00. W niedziele salon jest zamknięty.",
+  },
+  {
+    q: "Dlaczego na Booksy nie widać terminów po 16:00?",
+    a: "Rezerwacja online na Booksy obejmuje wizyty do 16:00. Salon pracuje do 20:00 — na wizytę po 16:00 umówisz się telefonicznie pod numerem 881 777 437.",
   },
   {
     q: "Czy trzeba się wcześniej umówić?",
-    a: "Tak, pracujemy według zapisu. Wolne terminy zobaczysz w rezerwacji online na Booksy. Jeśli nie widzisz pasującego terminu, zadzwoń pod numer 881 777 437 — postaramy się go znaleźć.",
+    a: "Tak, pracujemy według zapisu. Wolne terminy do 16:00 zobaczysz w rezerwacji online na Booksy. Na późniejszą godzinę albo gdy nie widzisz pasującego terminu, zadzwoń pod numer 881 777 437.",
   },
   {
     q: "Czy przy salonie można zaparkować?",
@@ -55,12 +61,12 @@ const CONTACT_FAQ = [
 ];
 
 const hours = [
-  { day: "Poniedziałek", time: "9:00–16:00", open: true },
-  { day: "Wtorek", time: "9:00–16:00", open: true },
-  { day: "Środa", time: "9:00–16:00", open: true },
-  { day: "Czwartek", time: "9:00–15:30", open: true },
-  { day: "Piątek", time: "9:00–16:00", open: true },
-  { day: "Sobota", time: "Zamknięte", open: false },
+  { day: "Poniedziałek", time: "9:00–20:00", open: true },
+  { day: "Wtorek", time: "9:00–20:00", open: true },
+  { day: "Środa", time: "9:00–20:00", open: true },
+  { day: "Czwartek", time: "9:00–20:00", open: true },
+  { day: "Piątek", time: "9:00–20:00", open: true },
+  { day: "Sobota", time: "9:00–20:00", open: true },
   { day: "Niedziela", time: "Zamknięte", open: false },
 ];
 
@@ -78,7 +84,7 @@ export default function Contact() {
     <div data-testid="contact-page">
       <SEO
         title="Kontakt"
-        description="Place of Beauty, Garbarska 17/2, Grodzisk Mazowiecki. Tel. +48 881 777 437. Pon.–pt. 9:00–16:00 (czw. do 15:30), według zapisu. Parking, płatność kartą."
+        description="Place of Beauty, Garbarska 17/2, Grodzisk Mazowiecki. Tel. +48 881 777 437. Pon.–sob. 9:00–20:00, według zapisu (po 16:00 telefonicznie). Parking, płatność kartą."
         keywords="Place of Beauty kontakt, adres salon Grodzisk Mazowiecki, telefon salon kosmetyczny, godziny otwarcia, Garbarska 17 Grodzisk, dojazd do salonu"
         path="/kontakt"
         jsonLd={faqJsonLd(CONTACT_FAQ)}
@@ -106,9 +112,9 @@ export default function Contact() {
             </h1>
             <p className="font-body text-base text-stone-300 max-w-3xl leading-relaxed">
               Place of Beauty mieści się przy ul. Garbarskiej 17/2 (róg Bałtyckiej), 05-825 Grodzisk
-              Mazowiecki. Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do
-              15:30; w weekendy jest zamknięty. Pracujemy według zapisu — wizytę umówisz online na Booksy
-              albo pod numerem +48 881 777 437. Przy salonie jest parking, można płacić kartą.
+              Mazowiecki. Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00, w niedziele jest
+              zamknięty. Pracujemy według zapisu — online na Booksy rezerwujesz wizyty do 16:00, a na
+              późniejsze godziny pod numerem +48 881 777 437. Przy salonie jest parking, można płacić kartą.
             </p>
           </motion.div>
         </div>
@@ -222,7 +228,8 @@ export default function Contact() {
                       ))}
                     </div>
                     <p className="font-body text-xs text-stone-500 mt-4">
-                      Pracujemy według zapisu — jeśli na Booksy nie widzisz pasującego terminu, zadzwoń:{" "}
+                      Pracujemy według zapisu. Online na Booksy rezerwujesz wizyty do 16:00 — na późniejsze godziny
+                      albo gdy nie widzisz pasującego terminu, zadzwoń:{" "}
                       <a href="tel:+48881777437" className="text-gold hover:underline">881 777 437</a>.
                     </p>
                   </div>

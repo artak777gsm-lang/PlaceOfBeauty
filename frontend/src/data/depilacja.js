@@ -708,7 +708,7 @@ export const HUB_FAQ = [
   },
   {
     q: "Jak umówić się na depilację laserową?",
-    a: "Najwygodniej przez Booksy — rezerwacja online działa 24/7 i od razu widzisz wolne terminy. Możesz też zadzwonić pod numer +48 881 777 437. Salon jest czynny od poniedziałku do piątku (9:00–16:00, w czwartki do 15:30), pracujemy według zapisu.",
+    a: "Najwygodniej przez Booksy — rezerwacja online działa 24/7 i od razu widzisz wolne terminy. Możesz też zadzwonić pod numer +48 881 777 437. Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00; na Booksy widać terminy do 16:00, wizyty po 16:00 umawiamy telefonicznie.",
   },
 ];
 

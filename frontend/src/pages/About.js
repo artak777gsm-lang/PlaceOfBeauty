@@ -222,7 +222,7 @@ export default function About() {
               { q: "Jakie usługi oferuje salon?", a: "Oferujemy manicure hybrydowe i klasyczne, pedicure, stylizację paznokci żelowych, laminację paznokci, depilację laserową Primelase, hennę i regulację brwi, hennę rzęs, piercing oraz modelowanie ciała EMS." },
               { q: "Ile kosztuje manicure hybrydowy?", a: "Manicure hybrydowy kosztuje 140 zł (na dłuższych paznokciach — 150 zł) i trwa około 1 godziny. Manicure klasyczny bez malowania — 80 zł, z malowaniem — 90 zł." },
               { q: "Ile kosztuje depilacja laserowa?", a: "Ceny depilacji laserowej Primelase: pachy — 200 zł, wąsik — 100 zł, bikini płytkie — 220 zł, bikini głębokie — 300 zł, całe nogi — 550 zł, pakiet (nogi + pachy + bikini) — 750 zł." },
-              { q: "W jakich godzinach otwarty jest salon?", a: "Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30. Pracujemy według zapisu — jeśli na Booksy nie widzisz pasującego terminu, zadzwoń pod numer +48 881 777 437." },
+              { q: "W jakich godzinach otwarty jest salon?", a: "Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00, w niedziele jest zamknięty. Pracujemy według zapisu: online na Booksy rezerwujesz wizyty do 16:00, a na późniejsze godziny umówisz się telefonicznie pod numerem +48 881 777 437." },
               { q: "Czy w salonie można płacić kartą?", a: "Tak, akceptujemy płatności kartą oraz gotówką. Dostępny jest również parking dla klientów." },
             ].map((item, i) => (
               <AnimatedSection key={i} delay={i * 0.05}>

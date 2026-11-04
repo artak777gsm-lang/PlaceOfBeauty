@@ -31,7 +31,7 @@ const SERVICES_FAQ = [
   },
   {
     q: "Jak umówić wizytę?",
-    a: "Online przez Booksy — rezerwacja działa całą dobę i od razu widać wolne terminy — albo telefonicznie pod numerem +48 881 777 437. Salon pracuje według zapisu, od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30.",
+    a: "Online przez Booksy — rezerwacja działa całą dobę i od razu widać wolne terminy do 16:00 — albo telefonicznie pod numerem +48 881 777 437, także na wizyty po 16:00. Salon pracuje według zapisu, od poniedziałku do soboty w godzinach 9:00–20:00.",
   },
   {
     q: "Czy można zapłacić kartą?",

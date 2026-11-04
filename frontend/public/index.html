@@ -55,7 +55,9 @@
              dwa różne "Place of Beauty". Strony odwołują się do węzłów po @id
              (src/lib/seoSchema.js: salonRef, webPageJsonLd) i NIE powtarzają
              aggregateRating — jedna ocena zbiorcza na całą encję.
-             Liczby (ocena, liczba opinii) — z Booksy, stan na 4.11.2026. -->
+             Liczby (ocena, liczba opinii) — z Booksy, stan na 4.11.2026.
+             Godziny — rzeczywiste (pn–sob 9–20), NIE z Booksy: tam terminy
+             online celowo kończą się o 16:00, późniejsze wizyty są telefoniczne. -->
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -95,15 +97,9 @@
                     "openingHoursSpecification": [
                         {
                             "@type": "OpeningHoursSpecification",
-                            "dayOfWeek": ["https://schema.org/Monday", "https://schema.org/Tuesday", "https://schema.org/Wednesday", "https://schema.org/Friday"],
+                            "dayOfWeek": ["https://schema.org/Monday", "https://schema.org/Tuesday", "https://schema.org/Wednesday", "https://schema.org/Thursday", "https://schema.org/Friday", "https://schema.org/Saturday"],
                             "opens": "09:00",
-                            "closes": "16:00"
-                        },
-                        {
-                            "@type": "OpeningHoursSpecification",
-                            "dayOfWeek": "https://schema.org/Thursday",
-                            "opens": "09:00",
-                            "closes": "15:30"
+                            "closes": "20:00"
                         }
                     ],
                     "aggregateRating": {

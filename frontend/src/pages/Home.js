@@ -229,8 +229,8 @@ function SalonSummary() {
               oraz modelowanie ciała EMS.
             </p>
             <p className="font-body text-base text-stone-600 leading-relaxed mb-5">
-              Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00, w czwartki do 15:30.
-              Pracujemy według zapisu: wizytę umówisz online na Booksy albo pod numerem{" "}
+              Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00. Pracujemy według zapisu:
+              online na Booksy rezerwujesz wizyty do 16:00, a na późniejsze godziny umówisz się pod numerem{" "}
               <a href="tel:+48881777437" className="text-stone-900 hover:text-gold transition-colors">+48 881 777 437</a>.
             </p>
             <p className="font-body text-sm text-stone-500">
@@ -546,7 +546,7 @@ function InfoBar() {
               </div>
               <div>
                 <h4 className="font-body text-xs uppercase tracking-[0.15em] text-stone-400 mb-1">Godziny otwarcia</h4>
-                <p className="font-body text-sm text-stone-900">Pon.–pt.: 9:00–16:00 (czw. do 15:30)<br />Pracujemy według zapisu</p>
+                <p className="font-body text-sm text-stone-900">Pon.–sob.: 9:00–20:00<br />Po 16:00 zapisy telefoniczne</p>
               </div>
             </div>
           </AnimatedSection>

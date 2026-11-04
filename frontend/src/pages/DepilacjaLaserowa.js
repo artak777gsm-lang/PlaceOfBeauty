@@ -567,8 +567,8 @@ export default function DepilacjaLaserowa() {
             <p className="font-body text-base text-stone-600 leading-relaxed mb-8 text-center max-w-2xl mx-auto">
               Na depilację laserową przyjeżdżają do nas klienci z całego powiatu grodziskiego i zachodnich okolic
               Warszawy. Dojazd od strony Milanówka, Brwinowa i Pruszkowa zajmuje kilkanaście minut, a wolne terminy
-              widać na bieżąco w rezerwacji online. Salon jest czynny od poniedziałku do piątku w godzinach 9:00–16:00 (w czwartki do 15:30) i pracuje
-              według zapisu, a na epilację laserową można umówić się zarówno na pojedynczą strefę, jak i na cały pakiet.
+              widać na bieżąco w rezerwacji online. Salon jest czynny od poniedziałku do soboty w godzinach 9:00–20:00 i pracuje
+              według zapisu (wizyty po 16:00 umawiamy telefonicznie), a na epilację laserową można umówić się zarówno na pojedynczą strefę, jak i na cały pakiet.
             </p>
           </AnimatedSection>
           <AnimatedSection delay={0.1}>

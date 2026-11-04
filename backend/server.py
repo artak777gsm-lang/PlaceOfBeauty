@@ -206,12 +206,14 @@ SALON_INFO = {
     "phone": "+48 881 777 437",
     "email": "",
     "hours": {
-        "Poniedziałek": "9:00–16:00",
-        "Wtorek": "9:00–16:00",
-        "Środa": "9:00–16:00",
-        "Czwartek": "9:00–15:30",
-        "Piątek": "9:00–16:00",
-        "Sobota": "Zamknięte",
+        # Rzeczywiste godziny. Booksy celowo pokazuje terminy online tylko do
+        # 16:00 — wizyty po 16:00 umawiane są telefonicznie.
+        "Poniedziałek": "9:00–20:00",
+        "Wtorek": "9:00–20:00",
+        "Środa": "9:00–20:00",
+        "Czwartek": "9:00–20:00",
+        "Piątek": "9:00–20:00",
+        "Sobota": "9:00–20:00",
         "Niedziela": "Zamknięte"
     },
     "rating": 4.9,

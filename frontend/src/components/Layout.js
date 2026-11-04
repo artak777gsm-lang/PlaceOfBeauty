@@ -277,7 +277,7 @@ function Footer() {
                 </div>
                 <div className="flex items-start gap-3">
                   <Clock className="w-4 h-4 text-gold mt-1 flex-shrink-0" />
-                  <span>Pon.–pt.: 9:00–16:00 (czw. do 15:30)<br />Sob.–niedz.: zamknięte<br />Pracujemy według zapisu</span>
+                  <span>Pon.–sob.: 9:00–20:00<br />Niedz.: zamknięte<br />Po 16:00 zapisy telefoniczne</span>
                 </div>
               </div>
               <a
